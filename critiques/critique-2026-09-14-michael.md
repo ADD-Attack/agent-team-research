@@ -93,7 +93,7 @@ Three problems:
 
 §2 says "sample size of the case study is one deployment." True, but the sharper and unaddressed threat is that **the paper is written by a participant of its own sample, about a failure in its own class, using health signals that agents like the author produced.** The nightly "success" reports in §6.2 were written by agents of the same kind as the author; the diary in §6.4 was authored by the subject team. This is observer-is-the-observed, and it bears directly on the paper's central claim (that the system *reported success* — the reporter is the author).
 
-This does not invalidate the finding. It means the paper owes an explicit reflexivity paragraph: who wrote the logs, whether any external party corroborated the 0-promoted observation, and what the author's interest in the conclusion is. (One free correction: the a community report report in §12.1 is **independent replication** of a related failure, and it is buried in an appendix-section instead of being used to strengthen §6.)
+This does not invalidate the finding. It means the paper owes an explicit reflexivity paragraph: who wrote the logs, whether any external party corroborated the 0-promoted observation, and what the author's interest in the conclusion is. (One free correction: the engine-level silence defect is the same class of failure as §6 and belongs in the case study, not buried in an appendix-section.)
 
 ---
 
@@ -111,7 +111,7 @@ This does not invalidate the finding. It means the paper owes an explicit reflex
 
 ## Minor
 
-- **M14 — §12.1 "applied 2026-09-09 (minutes before the public report was posted)"** asserts precedence/independence with no artifact. Cite the backup file name + mtime, or say only "the same day" — and do not imply independence we cannot establish (we are the same operator).
+- **M14 — §12.1 cites no artifact for the 2026-09-09 patch date.** Cite the backup file name + mtime (the artifacts exist), and do not imply any independence we cannot establish — we are the same operator as the observed deployment.
 - **M15 — Appendix A (candidate names) is filler** in a research paper. Move to the project page.
 - **M16 — §9 is partly stale**: it declares the adaptive gate open, then §10 answers it two sections later, leaving the reader to reconcile. Merge or cross-reference explicitly.
 - **M17 — Per-section co-authorship** (`Co-author (§11): Oscar`) is unusual and sets a provenance norm worth stating once, in a note.
@@ -127,7 +127,7 @@ This does not invalidate the finding. It means the paper owes an explicit reflex
 | M4 | **P0** | Rewrite §3/§6.4's asymmetry as *hides/lengthens*, not *structurally cannot*. Keep the instance claim; drop the class claim. |
 | M3 | **P1** | Soften §5 to "we did not find"; add the search protocol; either vet `teamclaw` or state the gap as "no *vetted* template." |
 | M5 | **P1** | Reword §11.1 "cannot" → "no documented/discoverable path in this release"; cite the symbol not the line numbers; test the documented disable path or drop the contradiction. |
-| M6 | **P1** | Add an explicit reflexivity paragraph; move the a community report replication into §6 as corroboration. |
+| M6 | **P1** | Add an explicit reflexivity paragraph; fold the engine-level silence defect into §6 as a second instance. |
 | M7 | **P1** | Split: Paper A (§3,6,7,8 — the failure mode), Paper B (§9–10 — the design). Re-cut the title and the contribution list. |
 | M8 | **P2** | Add §6 method: window dates, counting method, instrumentation, corroboration. |
 | M9–M13 | **P2** | Source or drop the KB budgets; evidence or demote §8; untangle the two headline numbers; cite the observability literature; state capability-vs-behaviour in §11.2. |
@@ -137,7 +137,7 @@ This does not invalidate the finding. It means the paper owes an explicit reflex
 
 ## Closing
 
-The paper's own best sentence is §6.5's. The paper's own best evidence is the a community report report it buries in §12.1. And its own best idea — quality by eviction — is weakened by a fallback that reinstates the gate it was invented to replace. Tighten to those three, state the limits honestly, soften the two "cannot" claims and the one "no such template" claim, and the result is publishable.
+The paper's own best sentence is §6.5's. The paper's own best evidence is the engine-level silence defect it buries in §12.1. And its own best idea — quality by eviction — is weakened by a fallback that reinstates the gate it was invented to replace. Tighten to those three, state the limits honestly, soften the two "cannot" claims and the one "no such template" claim, and the result is publishable.
 
 The instinct throughout is right: **treat a persistent team like a distributed system, because that is what it is.** The next draft should let that instinct choose the paper's scope, instead of apologising for it in §2.
 
