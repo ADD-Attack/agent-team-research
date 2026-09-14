@@ -34,6 +34,9 @@ Two systems can both say "the manager delegates to a worker agent" while sharing
 4. A **case study of an empirical failure mode unique to the second species** (§6).
 5. Design principles worth borrowing, and ones worth ignoring (§7).
 6. A reference architecture and a set of open problems (§8, §9).
+7. A concrete design for tiered agent memory that answers §9's adaptive-gate problem (§10).
+8. An audit of the platform's prompt-guardrail enforcement surface (§11).
+9. A consolidated summary of the changes proposed, and the channel each must land through (§12).
 
 ---
 
@@ -343,7 +346,34 @@ If an agent can modify its own harness or permissions, any prompt-based guardrai
 
 ---
 
-## 12. References
+## 12. Summary of proposed and ideal changes
+
+The paper argues for changes in three places. This section consolidates them as one list, because they share a property that is easy to miss: **the channel a change lands through matters as much as the change itself.**
+
+Several of these are not ours to edit. They live in the platform's compiled runtime, so a local fix is a patch the next update overwrites. Where a local convention can stand in for the patch, we prefer it — reversible, no fork. Where it cannot, the fix belongs upstream.
+
+| # | Area | Today | Proposed | Channel | Status |
+|---|---|---|---|---|---|
+| 1 | **Agent memory** (§10) | One tier; a strict absolute gate promoted **0 of 1,229** entries for a week while reporting success | Three tiers (STM → MTM → LTM); promotion driven by **recall**, not score; **loose** percentile gates; **size**-triggered eviction | **Workspace convention** first (own `memory/midterm.md`, single writer); upstream request for a native middle tier | Proposal drafted (`proposals/2026-09-14-memory-tiers.md`) |
+| 2 | **Prompt guardrails** (§11) | One hardcoded `## Safety` block, injected into every agent; not file- or config-editable | Split the block: drop the decorative capability enumeration, keep and sharpen the oversight/escalation rail, add an explicit **self-modification perimeter** | **Upstream** — make the block overridable, or extend the three overridable sections to cover it. A local dist patch works but does not survive an update | Analysis complete; the change is platform-level |
+| 3 | **Voluntary silence / run handling** (§12.1) | A turn with no visible content can surface "Agent couldn't generate a response," even when silence was intentional | Let genuine voluntary silence reach the existing silent-reply path; keep the error for real failures | **Upstream** — a one-line guard already applied on the subject deployment; not durable across updates | Fix documented in the wild and applied here |
+
+**Ideal end state.** None of these should require patching the compiled runtime. The paper's core claim — that persistent teams inherit distributed-systems failure modes — extends to their *fixes*: **a fix that lives in a file an update overwrites is not a fix; it is a deferral.**
+
+### 12.1 Case in point: an upstream fix, already in the wild and already applied
+
+Row 3 is not hypothetical. A public report (a community report, 2026-09-09) documents the same failure and the same fix: a DeepSeek turn that returns reasoning with no visible content can exhaust the reasoning-only retry path and be surfaced as an error, even when the turn was intentionally silent. The root cause is **ordering** — the reasoning-only exhaustion check runs *before* the existing silent-reply path. The report's fix is a one-line guard: synthesize the error only when the empty reply is **not** a valid silent reply (`&& !emptyAssistantReplyIsSilent`).
+
+The subject deployment already carries that exact guard, plus a companion change to the silence classifier, applied on 2026-09-09 (minutes before the public report was posted). Two points follow:
+
+1. The bug is reproducible, not one operator's misconfiguration.
+2. Both changes live in the compiled runtime and are lost on the next update. The deployment therefore *also* adopted a non-empty minimal acknowledgment as a fallback, precisely because the model could not be relied on to emit the silent-reply token. That belt-and-suspenders is itself an argument for fixing the engine, not the model's obedience.
+
+**The change belongs upstream.**
+
+---
+
+## 13. References
 
 **Papers**
 
@@ -372,6 +402,10 @@ If an agent can modify its own harness or permissions, any prompt-based guardrai
 14. Delegate architecture. `docs/concepts/delegate-architecture.md`
 15. Dreaming (memory consolidation). `docs/concepts/dreaming.md`
 16. OpenClaw. https://github.com/openclaw/openclaw
+
+**Community**
+
+17. *OpenClaw + DeepSeek: "Agent couldn't generate a response" when NO_REPLY is intentional — root cause + workaround.* a community report, 2026-09-09. [redacted]
 
 ---
 

@@ -5,7 +5,8 @@
 > A working paper surveying multi-agent LLM systems — and arguing that "manager + worker agents" describes two fundamentally different architectures that fail in fundamentally different ways.
 
 📄 **[Read the full paper → PAPER.md](./PAPER.md)**  
-🔒 **[New: §11 Prompt guardrails: what is enforceable in project Cadre → PAPER.md#11-prompt-guardrails-what-is-enforceable](./PAPER.md#11-prompt-guardrails-what-is-enforceable)**
+🔒 **[§11 Prompt guardrails: what is enforceable → PAPER.md#11-prompt-guardrails-what-is-enforceable](./PAPER.md#11-prompt-guardrails-what-is-enforceable)**
+📋 **[New: §12 Summary of proposed and ideal changes → PAPER.md#12-summary-of-proposed-and-ideal-changes](./PAPER.md#12-summary-of-proposed-and-ideal-changes)**
 
 ---
 
@@ -28,6 +29,7 @@ Multi-agent systems share a vocabulary — *roles*, *supervisors*, *workers*, *h
 | §9 | **Open problems** — 5 unsolved |
 | §10 | **A design for tiered memory** — STM/MTM/LTM cascade, loose adaptive gates, size-triggered eviction |
 | §11 | **Prompt guardrails** — what is enforceable (platform constraints & the self-modification perimeter) |
+| §12 | **Summary of proposed and ideal changes** — the changes, and the channel each must land through |
 | App. A | Candidate project names |
 
 **Also in this repo**
