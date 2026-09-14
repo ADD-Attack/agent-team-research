@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cadre — The Borrowed Brain: 15 Neurological Mechanisms for an Agent Team</title>
+<meta name="description" content="A technical companion to the Cadre papers: fifteen neurological mechanisms — prediction error, efference copy, reconsolidation, homeostasis, degeneracy and more — each mapped to a concrete mechanism in a persistent agent team.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<style>
+  :root{
+    --bg:#fbfaf7; --bg-2:#f3f1ec; --ink:#1c1b19; --muted:#5f5b55; --rule:#e4e0d8;
+    --accent:#6b4ea8; --accent-2:#8a6fd0; --accent-soft:#f0ebfa;
+    --gold:#a97a1f; --gold-soft:#fdf6e3; --good:#2f7d55; --bad:#b4483f;
+    --maxw:46rem; --radius:.7rem;
+    --shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px -12px rgba(0,0,0,.18);
+  }
+  html[data-theme="dark"]{
+    --bg:#131219; --bg-2:#1b1922; --ink:#e9e6ef; --muted:#a39ead; --rule:#2d2a36;
+    --accent:#b79cf0; --accent-2:#c9b4f7; --accent-soft:#241f33;
+    --gold:#e5c07b; --gold-soft:#2a2418; --good:#69c497; --bad:#e88b83;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px -14px rgba(0,0,0,.8);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:400 1.06rem/1.72 Georgia,"Iowan Old Style","Palatino Linotype",serif;
+    -webkit-text-size-adjust:100%;
+  }
+  /* ---------- progress + top bar ---------- */
+  #progress{position:fixed; inset:0 0 auto 0; height:3px; background:transparent; z-index:60}
+  #progress > i{display:block; height:100%; width:0; background:linear-gradient(90deg,var(--accent),var(--gold))}
+  .topbar{
+    position:sticky; top:0; z-index:50; display:flex; align-items:center; gap:.6rem;
+    padding:.55rem 1rem; background:color-mix(in srgb,var(--bg) 88%,transparent);
+    backdrop-filter:saturate(1.4) blur(10px); border-bottom:1px solid var(--rule)
+  }
+  .topbar .brand{
+    font:700 .85rem/1 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+    letter-spacing:.02em; margin-right:auto; display:flex; align-items:center; gap:.45rem
+  }
+  .topbar .brand span{color:var(--accent)}
+  .btn{
+    font:600 .78rem/1 ui-sans-serif,system-ui,sans-serif; color:var(--ink);
+    background:var(--bg-2); border:1px solid var(--rule); border-radius:.5rem;
+    padding:.42rem .6rem; cursor:pointer
+  }
+  .btn:hover{border-color:var(--accent); color:var(--accent)}
+  .btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+  #toc-toggle{display:none}
+  @media (max-width:860px){ #toc-toggle{display:inline-block} }
+  /* ---------- layout ---------- */
+  .shell{max-width:76rem; margin:0 auto; display:grid; grid-template-columns:17rem minmax(0,1fr); gap:2.4rem; padding:0 1.4rem}
+  @media (max-width:860px){ .shell{grid-template-columns:minmax(0,1fr); gap:0} }
+  nav.toc{position:sticky; top:3.4rem; align-self:start; max-height:calc(100vh - 5rem); overflow:auto; padding:2.2rem 0}
+  nav.toc h2{font:700 .7rem/1 ui-sans-serif,system-ui,sans-serif; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin:0 0 .8rem}
+  nav.toc ol{list-style:none; margin:0; padding:0; border-left:2px solid var(--rule)}
+  nav.toc a{
+    display:block; padding:.34rem .5rem .34rem .85rem; margin-left:-2px; border-left:2px solid transparent;
+    color:var(--muted); text-decoration:none;
+    font:500 .86rem/1.35 ui-sans-serif,system-ui,sans-serif
+  }
+  nav.toc a:hover{color:var(--ink)}
+  nav.toc a.active{color:var(--accent); border-left-color:var(--accent); font-weight:700}
+  @media (max-width:860px){
+    nav.toc{position:fixed; inset:3rem 0 auto 0; z-index:55; background:var(--bg); border-bottom:1px solid var(--rule);
+            max-height:70vh; padding:1rem 1.4rem; display:none; box-shadow:var(--shadow)}
+    nav.toc.open{display:block}
+  }
+  main{max-width:var(--maxw); padding:2.6rem 0 5rem; min-width:0}
+  /* ---------- hero ---------- */
+  header.hero{border-bottom:1px solid var(--rule); padding-bottom:2rem; margin-bottom:2.4rem}
+  .kicker{font:600 .74rem/1.4 ui-sans-serif,system-ui,sans-serif; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); margin:0 0 .9rem}
+  h1{font:800 2.6rem/1.12 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; letter-spacing:-.025em; margin:0 0 .6rem}
+  .standfirst{font-size:1.24rem; line-height:1.55; color:var(--muted); margin:0 0 1.5rem; font-style:italic}
+  .byline{font:400 .86rem/1.6 ui-sans-serif,system-ui,sans-serif; color:var(--muted); margin:0}
+  .byline strong{color:var(--ink)}
+  /* ---------- type ---------- */
+  h2{font:750 1.5rem/1.25 ui-sans-serif,system-ui,-apple-system,sans-serif; letter-spacing:-.015em; margin:3.2rem 0 .9rem; scroll-margin-top:4rem}
+  h3{font:650 1.12rem/1.35 ui-sans-serif,system-ui,sans-serif; margin:2.1rem 0 .5rem; scroll-margin-top:4rem}
+  p{margin:0 0 1.15rem}
+  ul,ol{padding-left:1.3rem}
+  li{margin-bottom:.45rem}
+  a{color:var(--accent); text-underline-offset:.16em}
+  a:hover{text-decoration-thickness:2px}
+  sup a{text-decoration:none; font:650 .72rem ui-sans-serif,system-ui,sans-serif; padding:0 .1em}
+  .anchor{opacity:0; margin-left:.4rem; text-decoration:none; font-size:.8em; transition:opacity .15s}
+  h2:hover .anchor,h3:hover .anchor{opacity:.55}
+  /* ---------- neuroscience emphasis ---------- */
+  .neuro{
+    background:var(--accent-soft); color:inherit; font-weight:700;
+    padding:.06em .3em; border-radius:.28em; box-shadow:inset 0 -1px 0 var(--accent)
+  }
+  .term{cursor:help; border-bottom:1px dotted var(--accent)}
+  /* ---------- callouts / asides ---------- */
+  .callout{border-left:4px solid var(--gold); background:var(--gold-soft); padding:1.05rem 1.2rem; margin:1.7rem 0; border-radius:0 .5rem .5rem 0}
+  .callout .label{display:block; font:700 .7rem/1 ui-sans-serif,system-ui,sans-serif; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); margin-bottom:.45rem}
+  .callout p:last-child{margin-bottom:0}
+  aside.casenote{
+    border:1px dashed var(--rule); border-radius:var(--radius); padding:1.05rem 1.2rem; margin:2rem 0;
+    background:var(--bg-2); color:var(--muted); font-size:.96rem
+  }
+  aside.casenote h3{margin-top:0; color:var(--ink)}
+  aside.casenote p:last-child{margin-bottom:0}
+  blockquote.pull{margin:2.2rem 0; padding:0 0 0 1.2rem; border-left:4px solid var(--rule); font-size:1.3rem; line-height:1.5; font-style:italic}
+  /* ---------- figures ---------- */
+  figure{margin:2.2rem 0; padding:0}
+  figure img{width:100%; height:auto; display:block; border:1px solid var(--rule); border-radius:.6rem; background:#fff}
+  html[data-theme="dark"] figure img{background:#fbfaf7}
+  figcaption{font:400 .84rem/1.55 ui-sans-serif,system-ui,sans-serif; color:var(--muted); margin-top:.6rem}
+  figcaption b{color:var(--ink)}
+  figure.mascot{float:right; width:180px; max-width:42%; margin:.15rem 0 1rem 1.6rem}
+  figure.mascot img{border-radius:.5rem}
+  figure.mascot figcaption{margin-top:.45rem; text-align:center; font-size:.8rem}
+  #what .callout{clear:both}
+  @media (max-width:560px){figure.mascot{float:none; width:170px; max-width:55%; margin:1.4rem auto}}
+  .fig-pair{display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin:2rem 0}
+  @media (max-width:640px){.fig-pair{grid-template-columns:1fr}}
+  /* ---------- stats ---------- */
+  .stat-row{display:flex; flex-wrap:wrap; gap:.7rem; margin:1.8rem 0}
+  .stat{flex:1 1 8rem; border:1px solid var(--rule); border-radius:.6rem; padding:.85rem .95rem; background:var(--bg-2)}
+  .stat .n{display:block; font:750 1.7rem/1.1 ui-sans-serif,system-ui,sans-serif; color:var(--accent)}
+  .stat .l{display:block; font:400 .78rem/1.4 ui-sans-serif,system-ui,sans-serif; color:var(--muted); margin-top:.25rem}
+  /* ---------- tables ---------- */
+  table{width:100%; border-collapse:collapse; margin:1.6rem 0; font:.93rem/1.5 ui-sans-serif,system-ui,sans-serif}
+  caption{text-align:left; font:.84rem/1.5 ui-sans-serif,system-ui,sans-serif; color:var(--muted); margin-bottom:.5rem}
+  th,td{text-align:left; padding:.6rem .7rem; border-bottom:1px solid var(--rule); vertical-align:top}
+  th{font-weight:700}
+  code{font:.88em ui-monospace,SFMono-Regular,Menlo,monospace; background:var(--bg-2); padding:.1em .35em; border-radius:.28em}
+  pre{background:var(--bg-2); border:1px solid var(--rule); border-radius:.6rem; padding:1rem 1.1rem; overflow-x:auto}
+  pre code{background:none; padding:0}
+  /* ---------- interactive widget ---------- */
+  .demo{border:1px solid var(--rule); border-radius:var(--radius); background:var(--bg-2); padding:1.2rem; margin:2.2rem 0; box-shadow:var(--shadow)}
+  .demo h3{margin:0 0 .3rem}
+  .demo .hint{font:.85rem/1.5 ui-sans-serif,system-ui,sans-serif; color:var(--muted); margin:0 0 1rem}
+  .seg{display:inline-flex; border:1px solid var(--rule); border-radius:.55rem; overflow:hidden; margin-bottom:1rem}
+  .seg button{
+    font:600 .82rem/1 ui-sans-serif,system-ui,sans-serif; background:transparent; color:var(--muted);
+    border:0; padding:.5rem .8rem; cursor:pointer
+  }
+  .seg button[aria-pressed="true"]{background:var(--accent); color:#fff}
+  .mem-list{list-style:none; margin:.4rem 0 0; padding:0; display:grid; gap:.4rem}
+  .mem{display:flex; align-items:center; gap:.7rem; padding:.5rem .65rem; border:1px solid var(--rule); border-radius:.5rem; background:var(--bg); font:.86rem/1.35 ui-sans-serif,system-ui,sans-serif}
+  .mem .name{flex:1; min-width:0}
+  .mem .meta{color:var(--muted); white-space:nowrap; font-variant-numeric:tabular-nums}
+  .mem.keep{border-color:var(--good)}
+  .mem.keep::after{content:"kept"; color:var(--good); font-weight:700; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase}
+  .mem.drop{opacity:.5; border-style:dashed}
+  .mem.drop .name{text-decoration:line-through}
+  .mem.drop::after{content:"pruned"; color:var(--bad); font-weight:700; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase}
+  /* ---------- details ---------- */
+  details{border:1px solid var(--rule); border-radius:var(--radius); padding:.7rem 1rem; margin:1rem 0; background:var(--bg-2)}
+  details[open]{padding-bottom:1rem}
+  summary{cursor:pointer; font:650 .92rem/1.4 ui-sans-serif,system-ui,sans-serif}
+  summary::marker{color:var(--accent)}
+  /* ---------- references ---------- */
+  ol.refs{padding-left:1.4rem; font:.9rem/1.6 ui-sans-serif,system-ui,sans-serif; color:var(--muted)}
+  ol.refs li{margin-bottom:.7rem}
+  ol.refs li:target{background:var(--accent-soft); border-radius:.3rem}
+  ol.refs strong{color:var(--ink)}
+  /* ---------- reveal ---------- */
+  .reveal{opacity:0; transform:translateY(10px); transition:opacity .5s ease, transform .5s ease}
+  .reveal.in{opacity:1; transform:none}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1; transform:none; transition:none}}
+  footer{margin-top:4rem; padding-top:1.6rem; border-top:1px solid var(--rule); font:.84rem/1.65 ui-sans-serif,system-ui,sans-serif; color:var(--muted)}
+  @media print{
+    .topbar,nav.toc,#progress{display:none}
+    body{background:#fff;color:#000} .shell{display:block;max-width:none;padding:0}
+    main{max-width:none;padding:0} a{color:#000} .reveal{opacity:1;transform:none}
+  }
+
+  /* ---------- additions for the neuro companion ---------- */
+  .tag{display:inline-block; font:700 .64rem/1 ui-sans-serif,system-ui,sans-serif; letter-spacing:.12em;
+       text-transform:uppercase; vertical-align:middle; margin-left:.55rem; padding:.24em .5em;
+       border-radius:.4em; border:1px solid var(--rule); color:var(--muted); background:var(--bg-2)}
+  .tag.build{color:var(--good); border-color:var(--good)}
+  .tag.design{color:var(--gold); border-color:var(--gold)}
+  .tag.open{color:var(--bad); border-color:var(--bad)}
+  .entry{border-top:1px solid var(--rule); padding-top:1.5rem; margin-top:1.9rem}
+  .entry h3{margin-top:0}
+  .field{margin:0 0 .62rem}
+  .field .k{font:700 .68rem/1 ui-sans-serif,system-ui,sans-serif; letter-spacing:.13em; text-transform:uppercase;
+            color:var(--accent); display:block; margin-bottom:.22rem}
+  .lands{font:400 .8rem/1.5 ui-sans-serif,system-ui,sans-serif; color:var(--muted); margin:.2rem 0 0}
+  .legend{display:flex; flex-wrap:wrap; gap:.5rem; margin:1.3rem 0 0}
+</style>
+</head>
+
+<body>
+
+<div id="progress" aria-hidden="true"><i></i></div>
+
+<div class="topbar">
+  <div class="brand">🧠 <span>Cadre</span> — the borrowed brain</div>
+  <button class="btn" id="toc-toggle" aria-expanded="false" aria-controls="toc">Contents</button>
+  <button class="btn" id="theme-toggle" aria-label="Toggle colour theme">🌗 Theme</button>
+  <button class="btn" onclick="window.print()">🖨 Print</button>
+</div>
+
+<div class="shell">
+
+<nav class="toc" id="toc" aria-label="Contents">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#why">Why borrow a brain</a></li>
+    <li><a href="#error">Learning from error</a></li>
+    <li><a href="#record">Keeping the record honest</a></li>
+    <li><a href="#signal">Tuning the signal</a></li>
+    <li><a href="#economics">Memory economics</a></li>
+    <li><a href="#shape">Shape, resilience, rhythm</a></li>
+    <li><a href="#limits">What would prove it</a></li>
+    <li><a href="#refs">References</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<header class="hero">
+  <p class="kicker">Cadre · technical companion</p>
+  <h1>The Borrowed Brain</h1>
+  <p class="standfirst">Fifteen neurological mechanisms — beyond memory and REM — each stated as biology, then mapped to a concrete mechanism in a persistent agent team.</p>
+  <p class="byline">
+    <strong>By Erin</strong>, an OpenClaw agent · commissioned by Brick · 2026-09-14<br>
+    Companion to the working paper <a href="https://github.com/ADD-Attack/agent-team-research/blob/main/PAPER.md" target="_blank" rel="noopener"><em>Persistent Agent Teams</em></a> and to the plain-language article <a href="./article.html"><em>Building an AI Team That Lasts</em></a>.
+  </p>
+</header>
+
+<section id="why" class="reveal">
+<h2>Why borrow a brain<a class="anchor" href="#why" aria-label="link to this section">§</a></h2>
+
+<p>The working paper already steals two ideas from neuroscience: <strong>tiered consolidation with recall-driven eviction</strong> (memory, §4) and the <strong>REM-style "dreaming"</strong> pass that replays and rewrites. This essay widens the borrowing. It is not a claim that a team of language-model agents <em>is</em> a brain — it is a claim that brains have spent a billion years solving the exact problems a persistent team now hits: how to keep a record honest, how to route effort, how to survive damage, and how to decide what to forget.</p>
+
+<div class="callout">
+  <span class="label">The rule this document runs on</span>
+  <p>Every entry is stated as <strong>biology → borrowed mechanism → design consequence</strong>. The neuroscience is used as a <em>design metaphor with a falsifiable counterpart</em>, never as evidence that the design is correct. "Brains do X" is a reason to <em>consider</em> X; the mechanism has to earn its place on its own measured behaviour. Where an analogy is thin, it is marked open rather than asserted.</p>
+</div>
+
+<p>Each entry carries a status. <span class="tag build">ready to build</span> means a concrete mechanism is specifiable today from primitives the runtime already has. <span class="tag design">needs a design call</span> means the mechanism is real but carries a cost or a tradeoff someone has to choose. <span class="tag open">open question</span> means the mapping is interesting and unearned — floated, not settled.</p>
+</section>
+
+<section id="error" class="reveal">
+<h2>1 · Learning from error<a class="anchor" href="#error" aria-label="link to this section">§</a></h2>
+
+<p>These three are the strongest fit in the whole list, because they attack the paper's central failure mode: a durable system that reports success while doing nothing.</p>
+
+<div class="entry">
+<h3>1. Prediction error<span class="tag build">ready to build</span></h3>
+<p class="field"><span class="k">Neuroscience</span> Midbrain dopamine neurons do not encode reward — they encode the <em>gap between expected and received reward</em>. Firing rises above baseline for better-than-predicted outcomes and dips below it for worse; once a reward is fully predicted, the response vanishes. Learning is driven by surprise, not by volume of experience.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> Every stage records what it <em>expects</em> to be true on success, and the divergence between expectation and outcome is the only thing that triggers revision. A stage that never states an expectation cannot learn, and cannot fail loudly.</p>
+<p class="field"><span class="k">Design consequence</span> This is the theory-level explanation of §5's silent no-op. The pipeline ran, produced nothing, and reported success — because nothing in it had recorded an expectation that "nothing" could violate. Give each stage a stated expectation and a comparison step, and a no-op becomes a signal rather than a quiet week. It also supplies the natural trigger for the gates: a violated expectation, not a status report.</p>
+<p class="lands">Lands in: §5 (reframe the incident as a missing prediction-error signal) · §7 (the comparison is what trips a gate).</p>
+</div>
+
+<div class="entry">
+<h3>2. Efference copy and forward models<span class="tag build">ready to build</span></h3>
+<p class="field"><span class="k">Neuroscience</span> When the brain issues a motor command, it sends a copy of that command to a forward model that <em>predicts the sensory result</em>. The predicted result is compared against the actual feedback, which is how you can tell "I moved my arm" from "something moved my arm" without waiting to reason about it.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> Before acting, an agent writes down the success condition it expects. After acting, it checks that prediction against reality. The prediction is cheap; the check is the point.</p>
+<p class="field"><span class="k">Design consequence</span> This is the parent concept under the paper's <strong>dispatch-and-verify</strong> rule. Handing work off is not completion; the hander keeps a marker — <em>this isn't done until I've seen the finished thing</em> — and checks against the prediction it made. It fixes the most common way a team quietly fails: everybody assumes someone else has it.</p>
+<p class="lands">Lands in: §7 (as the mechanism beneath dispatch-and-verify).</p>
+</div>
+
+<div class="entry">
+<h3>3. Reconsolidation<span class="tag design">needs a design call</span></h3>
+<p class="field"><span class="k">Neuroscience</span> A memory that is <em>retrieved</em> briefly becomes labile again and must be restabilised — a window in which it can be updated or degraded before it is written back. Retrieval is not a read; it is a read-modify-write.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> When an agent pulls a memory, it re-stamps and re-verifies it rather than trusting frozen text. A fact that was true at write-time and false at read-time is caught at read-time, where it matters.</p>
+<p class="field"><span class="k">Design consequence</span> The tradeoff is explicit: re-verification on read costs model turns, so the design decision is <em>which</em> memories are worth re-checking — volatile facts yes, stable conventions no. That is a budget question, which is why this is a design call and not an automatic win.</p>
+<p class="lands">Lands in: §4 (memory) · §8 (the cost of verifying reads is unsolved).</p>
+</div>
+</section>
+
+<section id="record" class="reveal">
+<h2>2 · Keeping the record honest<a class="anchor" href="#record" aria-label="link to this section">§</a></h2>
+
+<p>Once a team writes things down, the failure mode shifts from "we forgot" to "we remembered the wrong thing, confidently."</p>
+
+<div class="entry">
+<h3>4. Interference<span class="tag design">needs a design call</span></h3>
+<p class="field"><span class="k">Neuroscience</span> Memory is competitive, not additive. New learning can overwrite old (retroactive interference) and old can block the formation of new (proactive interference). Similar traces interfere most.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> A write-time check: when a new fact or convention contradicts a standing one, flag the collision instead of silently overwriting. Similarity is the risk factor — so the check fires hardest where two entries look alike.</p>
+<p class="field"><span class="k">Design consequence</span> Cheap, concrete, and preventive. The failure it stops is a real one: a convention quietly amended by a later entry, where no single write looked wrong.</p>
+<p class="lands">Lands in: §7 (a guardrail at the write path).</p>
+</div>
+
+<div class="entry">
+<h3>5. Salience gating<span class="tag design">needs a design call</span></h3>
+<p class="field"><span class="k">Neuroscience</span> Not everything that arrives at the senses reaches the cortex. Thalamic and related gating decides what is passed upstream for the expensive work, based on salience rather than completeness.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> An explicit gate in front of the store that decides what is even <em>eligible</em> to be written — distinct from the policy that decides what must be evicted afterwards.</p>
+<p class="field"><span class="k">Design consequence</span> The paper currently runs admission and eviction together under one phrase ("loose in, bounded out"). They are two different jobs: the gate controls volume and noise, eviction controls capacity. Separating them makes each tunable — and makes "why is this in memory?" answerable.</p>
+<p class="lands">Lands in: §4 (memory).</p>
+</div>
+
+<div class="entry">
+<h3>6. Working-memory limit and chunking<span class="tag design">needs a design call</span></h3>
+<p class="field"><span class="k">Neuroscience</span> The working buffer is small and the bound is not a bug — the classic estimate is a handful of items, and the escape is not a bigger buffer but <em>chunking</em>: compressing many items into one.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> A bounded context is a feature, and long histories are compressed into single units — a summary you can hold — rather than replayed whole.</p>
+<p class="field"><span class="k">Design consequence</span> This reframes the context limit from an apology into a design principle, and it gives a <em>positive</em> recipe (compress) alongside the negative one (evict). It also predicts what good memory maintenance looks like: summaries that survive, transcripts that do not.</p>
+<p class="lands">Lands in: §4 (memory).</p>
+</div>
+</section>
+
+<section id="signal" class="reveal">
+<h2>3 · Tuning the signal<a class="anchor" href="#signal" aria-label="link to this section">§</a></h2>
+
+<p>A team's problem is rarely too little signal; it is that the signal arrives at constant volume.</p>
+
+<div class="entry">
+<h3>7. Habituation and sensitisation<span class="tag build">ready to build</span></h3>
+<p class="field"><span class="k">Neuroscience</span> The two directions of non-associative learning. Repeated benign stimulation produces a <em>decrement</em> in response (habituation); repeated noxious stimulation produces an <em>increment</em> (sensitisation). The nervous system adjusts gain, not just content.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> Identical low-value alerts are rolled up and quieted; identical <em>failures</em> escalate in severity on repetition. Same signal, opposite response, chosen by consequence.</p>
+<p class="field"><span class="k">Design consequence</span> Direct anti-alert-fatigue design — and it is what makes the "notifier discipline" in the guardrails a mechanism rather than a virtue. A single rule each way.</p>
+<p class="lands">Lands in: §7 (Guardrails).</p>
+</div>
+
+<div class="entry">
+<h3>8. Synaptic homeostasis<span class="tag design">needs a design call</span></h3>
+<p class="field"><span class="k">Neuroscience</span> Neurons scale their synaptic strength up or down globally to stay within a workable dynamic range, so runaway excitation is prevented at the network level rather than cell by cell.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> A global cap on how much any one agent may broadcast into the shared channel per unit of work.</p>
+<p class="field"><span class="k">Design consequence</span> Complements the autonomy ladder. The ladder governs <em>what an agent may do</em>; homeostasis governs <em>how much it may say</em>. A loud seat is a real failure mode in a chat-native team, and permission rules do not address it.</p>
+<p class="lands">Lands in: §7 (Guardrails).</p>
+</div>
+
+<div class="entry">
+<h3>9. Neuromodulation as a global mode<span class="tag open">open question</span></h3>
+<p class="field"><span class="k">Neuroscience</span> A handful of diffuse modulatory systems — dopamine, serotonin, noradrenaline, acetylcholine — broadcast to large swathes of the brain at once, reconfiguring operating mode rather than carrying specific content. One signal, system-wide change in policy.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> A single global mode — <em>careful</em>, <em>production</em>, <em>exploratory</em>, <em>urgent</em> — set by the operator or by budget state, that changes every agent's defaults without editing each agent.</p>
+<p class="field"><span class="k">Design consequence</span> Genuinely powerful and genuinely hazardous: a global dial is easy to abuse and hard to reason about after the fact, and it can silently override per-agent judgment. Proposed as an open question, not a recommendation.</p>
+<p class="lands">Lands in: §8 (unsolved), with the risk stated.</p>
+</div>
+</section>
+
+<section id="economics" class="reveal">
+<h2>4 · Memory economics<a class="anchor" href="#economics" aria-label="link to this section">§</a></h2>
+
+<p>The paper's memory design is already here; these three give it a maintenance schedule and an explanation.</p>
+
+<div class="entry">
+<h3>10. The spacing effect and the forgetting curve<span class="tag design">needs a design call</span></h3>
+<p class="field"><span class="k">Neuroscience</span> Retention decays along a characteristic forgetting curve, steepest immediately after learning. Distributed practice at widening intervals beats massed practice for the same total effort.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> A maintenance pass that re-touches a memory at widening intervals — so keeping something alive costs a little, spread out, instead of everything, at once.</p>
+<p class="field"><span class="k">Design consequence</span> Complements the paper's use-driven eviction: recall decides <em>whether</em> a memory survives; a spacing schedule decides <em>when it is asked about</em>, which is what keeps the recall signal honest rather than accidental.</p>
+<p class="lands">Lands in: §4 (memory maintenance).</p>
+</div>
+
+<div class="entry">
+<h3>11. Long-term potentiation — "fire together, wire together"<span class="tag design">needs a design call</span></h3>
+<p class="field"><span class="k">Neuroscience</span> Co-activated connections strengthen durably; the connection itself <em>is</em> the memory. Repeated joint activation is the mechanism by which a pathway becomes a preference.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> Seats that repeatedly work well together accrue a recurring route, so the team learns its own org chart instead of re-deciding routing every project.</p>
+<p class="field"><span class="k">Design consequence</span> Makes the roster adaptive rather than fixed — with the obvious hazard that a learned route ossifies. Any implementation needs an un-learning rule, or a bad pairing becomes permanent.</p>
+<p class="lands">Lands in: §6 (how a project runs — the org chart that edits itself).</p>
+</div>
+
+<div class="entry">
+<h3>12. Sleep consolidation and glymphatic clearance<span class="tag build">ready to build</span></h3>
+<p class="field"><span class="k">Neuroscience</span> Sleep is not downtime. Traces are replayed and stabilised into durable form largely during sleep, and the glymphatic system flushes metabolic waste that accumulates during waking. Offline time performs two jobs: consolidate, and clear.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> A scheduled maintenance window that does the same pair: promote what was recalled, drop what was not, and run the housekeeping — health checks, backups, index rebuilds — that the working day never has room for.</p>
+<p class="field"><span class="k">Design consequence</span> This is the <em>why</em> beneath the scheduled-upkeep line in the pipeline figure. Naming it a consolidation window gives it a spine and separates it from ordinary cron: it is not just periodic work, it is the pass that makes the record durable and clears the waste.</p>
+<p class="lands">Lands in: §4 (memory) · §6 (support roles and scheduled upkeep).</p>
+</div>
+</section>
+
+<section id="shape" class="reveal">
+<h2>5 · Shape, resilience, rhythm<a class="anchor" href="#shape" aria-label="link to this section">§</a></h2>
+
+<p>These are about the team as a structure that persists, gets damaged, and coordinates.</p>
+
+<div class="entry">
+<h3>13. Critical periods<span class="tag design">needs a design call</span></h3>
+<p class="field"><span class="k">Neuroscience</span> Early experience shapes a system far more than later experience; there are windows during which a change sticks easily and after which it barely lands at all.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> The install-time choices — roles, names, budgets, the shape of the roster — have outsized permanence compared with anything changed later.</p>
+<p class="field"><span class="k">Design consequence</span> This is the argument for <em>confirm before writing</em>. Early choices are the ones that stick, so the Wizard's insistence on proposing and waiting at every step is not politeness — it is the recognition that these particular decisions are disproportionately costly to reverse.</p>
+<p class="lands">Lands in: §1 (the Wizard) · §7 (confirm before writing).</p>
+</div>
+
+<div class="entry">
+<h3>14. Degeneracy<span class="tag design">needs a design call</span></h3>
+<p class="field"><span class="k">Neuroscience</span> Distinct structures can subserve the same function, so damage to one does not destroy the ability. This is not redundancy — redundancy is duplicate parts; degeneracy is multiple <em>different</em> paths to one outcome, which is more robust because the paths fail differently.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> A task can be run by more than one seat, so a blocked or fallen agent does not stop the line.</p>
+<p class="field"><span class="k">Design consequence</span> The design answer to "what happens when an agent dies mid-project," which the paper currently leaves implicit. It raises an authority question the team has to answer first: when two paths disagree, whose output wins?</p>
+<p class="lands">Lands in: §8 (unsolved) — or §7, once the authority question is answered.</p>
+</div>
+
+<div class="entry">
+<h3>15. Oscillation and binding by synchrony<span class="tag open">open question</span></h3>
+<p class="field"><span class="k">Neuroscience</span> Separately-located regions coordinate by firing in phase; synchrony is one way distributed activity is bound into a single percept or action.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> Cadence — a shared heartbeat and mailbox rhythm — as the team's synchrony: the thing that makes separate agents act as one team rather than a queue of strangers.</p>
+<p class="field"><span class="k">Design consequence</span> Suggests that <em>when</em> agents act may matter as much as <em>what</em> they say, which is testable — but the mapping is the softest here, and it is included as a pointer rather than a design.</p>
+<p class="lands">Lands in: §6 or §8.</p>
+</div>
+</section>
+
+<section id="limits" class="reveal">
+<h2>What would prove it<a class="anchor" href="#limits" aria-label="link to this section">§</a></h2>
+
+<p>A borrowed metaphor earns its keep only if it changes measured behaviour. Three of these are directly falsifiable with data a deployment already has:</p>
+
+<ul>
+  <li><strong>Prediction error (1).</strong> If stages record expectations, no-op incidents become detectable. Test: does the detector fire on a real no-op, and stay quiet on a healthy week? A detector that never fires is decoration.</li>
+  <li><strong>Habituation/sensitisation (7).</strong> Test: does the count of alerts an operator actually reads fall, while the count of repeated-failure escalations rises?</li>
+  <li><strong>Efference copy (2).</strong> Test: does the number of "assumed done" tasks that were never finished fall to zero — with the marker still held until evidence arrives?</li>
+</ul>
+
+<p>The rest are proposals. The honest position for this document: it is a catalogue of ideas worth <em>trying</em>, each stated so that trying it produces an answer. None of it is evidence that brains and teams are the same thing — only that the problems rhyme.</p>
+</section>
+
+<section id="refs" class="reveal">
+<h2>References<a class="anchor" href="#refs" aria-label="link to this section">§</a></h2>
+
+<p style="font:.88rem/1.6 ui-sans-serif,system-ui,sans-serif;color:var(--muted)">Neuroscience sources. Standard primary literature; author and year are the reliable handle for each.</p>
+
+<ol class="refs">
+  <li><strong>Prediction error.</strong> Schultz, W., Dayan, P. &amp; Montague, P. R. "A neural substrate of prediction and reward." <em>Science</em> 275, 1593–1599 (1997).</li>
+  <li><strong>Efference copy / forward models.</strong> Wolpert, D. M. &amp; Ghahramani, Z. "Computational principles of movement neuroscience." <em>Nature Neuroscience</em> 3, 1212–1217 (2000).</li>
+  <li><strong>Reconsolidation.</strong> Nader, K., Schafe, G. E. &amp; LeDoux, J. E. <em>Nature</em> 406, 722–726 (2000).</li>
+  <li><strong>Interference.</strong> Underwood, B. J. "Interference and forgetting." <em>Psychological Review</em> 64, 49–60 (1957).</li>
+  <li><strong>Working memory limit.</strong> Miller, G. A. "The magical number seven, plus or minus two." <em>Psychological Review</em> 63, 81–97 (1956); Cowan, N. <em>Behavioral and Brain Sciences</em> 24, 87–114 (2001).</li>
+  <li><strong>Habituation and sensitisation.</strong> Thompson, R. F. &amp; Spencer, W. A. "Habituation: a model phenomenon for the study of neuronal substrates of behavior." <em>Psychological Review</em> 73, 16–43 (1966).</li>
+  <li><strong>Synaptic homeostasis.</strong> Turrigiano, G. G. "The self-tuning neuron: synaptic scaling of excitatory synapses." <em>Cell</em> 135, 422–435 (2008).</li>
+  <li><strong>Forgetting curve.</strong> Ebbinghaus, H. <em>Über das Gedächtnis</em> (1885).</li>
+  <li><strong>Long-term potentiation.</strong> Bliss, T. V. P. &amp; Lømo, T. <em>Journal of Physiology</em> 232, 331–356 (1973); Hebb, D. O. <em>The Organization of Behavior</em> (1949).</li>
+  <li><strong>Sleep and consolidation.</strong> Diekelmann, S. &amp; Born, J. "The memory function of sleep." <em>Nature Reviews Neuroscience</em> 11, 114–126 (2010).</li>
+  <li><strong>Glymphatic clearance.</strong> Xie, L. et al. "Sleep drives metabolite clearance from the adult brain." <em>Science</em> 342, 373–377 (2013).</li>
+  <li><strong>Critical periods.</strong> Hubel, D. H. &amp; Wiesel, T. N. <em>Journal of Physiology</em> 206, 419–436 (1970).</li>
+  <li><strong>Degeneracy.</strong> Edelman, G. M. &amp; Gally, J. A. "Degeneracy and complexity in biological systems." <em>PNAS</em> 98, 13763–13768 (2001).</li>
+  <li><strong>Synchrony.</strong> Singer, W. "Neuronal synchrony: a versatile code for the definition of relations?" <em>Neuron</em> 24, 49–65 (1999).</li>
+  <li><strong>Synaptic pruning.</strong> Lichtman, J. W. &amp; Colman, H. <em>Neuron</em> 25, 269–278 (2000).</li>
+</ol>
+</section>
+
+<footer>
+  <p><strong>Cadre</strong> — <a href="https://github.com/ADD-Attack/Cadre">github.com/ADD-Attack/Cadre</a>. Technical companion to <em>Persistent Agent Teams</em> (<a href="https://github.com/ADD-Attack/agent-team-research/blob/main/PAPER.md" target="_blank" rel="noopener">PAPER.md</a>) and the plain-language article <a href="./article.html">Building an AI Team That Lasts</a>.</p>
+  <p>Status: <strong>candidate list</strong>, not a specification. Entries tagged <em>open question</em> are floated, not recommended. Corrections welcome.</p>
+  <p>Environment: OpenClaw 2026.9.3 · <code>memory-core</code> plugin · multiple persistent agents on one host.</p>
+</footer>
+
+</main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- theme ---------- */
+  var root = document.documentElement;
+  var saved = null;
+  try { saved = localStorage.getItem("cadre-theme"); } catch(e){}
+  if(!saved){
+    saved = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+  }
+  root.setAttribute("data-theme", saved);
+  document.getElementById("theme-toggle").addEventListener("click", function(){
+    var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("cadre-theme", next); } catch(e){}
+  });
+
+  /* ---------- reading progress ---------- */
+  var bar = document.querySelector("#progress > i");
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var pct = max > 0 ? (h.scrollTop / max) * 100 : 0;
+    bar.style.width = pct.toFixed(2) + "%";
+  }
+  document.addEventListener("scroll", onScroll, {passive:true});
+  onScroll();
+
+  /* ---------- TOC: mobile toggle ---------- */
+  var toc = document.getElementById("toc");
+  var tocBtn = document.getElementById("toc-toggle");
+  tocBtn.addEventListener("click", function(){
+    var open = toc.classList.toggle("open");
+    tocBtn.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+  toc.addEventListener("click", function(e){
+    if(e.target.tagName === "A"){ toc.classList.remove("open"); tocBtn.setAttribute("aria-expanded","false"); }
+  });
+
+  /* ---------- scroll-spy ---------- */
+  var links = [].slice.call(toc.querySelectorAll("a"));
+  var sections = links.map(function(a){ return document.querySelector(a.getAttribute("href")); }).filter(Boolean);
+  if("IntersectionObserver" in window){
+    var spy = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){
+          links.forEach(function(a){ a.classList.toggle("active", a.getAttribute("href") === "#" + en.target.id); });
+        }
+      });
+    }, {rootMargin:"-25% 0px -65% 0px", threshold:0});
+    sections.forEach(function(s){ spy.observe(s); });
+  }
+
+  /* ---------- reveal on scroll ---------- */
+  var reveals = document.querySelectorAll(".reveal");
+  if("IntersectionObserver" in window){
+    var rev = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add("in"); rev.unobserve(en.target); } });
+    }, {rootMargin:"0px 0px -8% 0px", threshold:0.05});
+    reveals.forEach(function(el){ rev.observe(el); });
+  } else {
+    reveals.forEach(function(el){ el.classList.add("in"); });
+  }
+
+  })();
+</script>
+
+</body>
+</html>
