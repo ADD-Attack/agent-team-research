@@ -16,21 +16,21 @@
   <text x="40" y="72" font-size="14" fill="#64748b">One wizard at setup. Then a fixed path &#8212; with support roles on call beside it.</text>
 
   <!-- ===== entry: operator -> wizard ===== -->
-  <rect x="60" y="104" width="210" height="72" rx="10" fill="#e0e7ff" stroke="#4338ca" stroke-width="2.5"/>
+  <rect x="60" y="104" width="200" height="72" rx="10" fill="#e0e7ff" stroke="#4338ca" stroke-width="2.5"/>
   <text x="80" y="134" font-size="15" font-weight="700" fill="#1e1b4b">Human operator</text>
-  <text x="80" y="157" font-size="12" fill="#3730a3">one chat channel worth of interface</text>
+  <text x="80" y="157" font-size="12" fill="#3730a3">one chat channel</text>
 
-  <path d="M 272 140 L 308 140" fill="none" stroke="#475569" stroke-width="2.4" marker-end="url(#p-arrow)"/>
-  <text x="290" y="128" font-size="10.5" fill="#64748b" text-anchor="middle">once</text>
+  <path d="M 262 140 L 304 140" fill="none" stroke="#475569" stroke-width="2.4" marker-end="url(#p-arrow)"/>
+  <text x="283" y="130" font-size="10.5" fill="#64748b" text-anchor="middle">once</text>
 
-  <rect x="310" y="104" width="230" height="72" rx="10" fill="#f3e8ff" stroke="#7c3aed" stroke-width="2.5"/>
-  <text x="330" y="132" font-size="15" font-weight="700" fill="#3b0764">&#129497; Wizard</text>
-  <text x="330" y="153" font-size="12" fill="#6d28d9">runs once, at install</text>
-  <text x="330" y="169" font-size="11" font-style="italic" fill="#8b5cf6">confirms roles &#183; budgets &#183; nothing written until you say yes</text>
+  <rect x="308" y="104" width="250" height="72" rx="10" fill="#f3e8ff" stroke="#7c3aed" stroke-width="2.5"/>
+  <text x="328" y="132" font-size="15" font-weight="700" fill="#3b0764">&#129497; Wizard</text>
+  <text x="328" y="153" font-size="12" fill="#6d28d9">runs once, at install</text>
+  <text x="328" y="169" font-size="11" font-style="italic" fill="#8b5cf6">roles + budgets confirmed</text>
 
   <!-- wizard -> pipeline start -->
-  <path d="M 425 176 L 425 214 L 155 214 L 155 258" fill="none" stroke="#475569" stroke-width="2.4" marker-end="url(#p-arrow)"/>
-  <text x="300" y="206" font-size="11" fill="#64748b">team is configured, then the pipeline takes over</text>
+  <path d="M 433 176 L 433 208 L 155 208 L 155 258" fill="none" stroke="#475569" stroke-width="2.4" marker-end="url(#p-arrow)"/>
+  <text x="200" y="232" font-size="11" fill="#64748b">team configured once &#8212; then the pipeline takes over</text>
 
   <!-- ===== pipeline row ===== -->
   <text x="60" y="252" font-size="12" font-weight="700" fill="#94a3b8" letter-spacing="0.08em">PROJECT PIPELINE</text>
