@@ -208,11 +208,17 @@ Marked as opinion because it is.
 
 **Roles.**
 
+Five role *families* covered the architecture generically; building it out (§12.2) added two more, and the realization expands all seven into named seats. Names differ; the function does not.
+
 - **Supervisor** — owns the plan, decomposes work, dispatches, adjudicates. Does not do the work.
 - **Builder(s)** — do the work in their specialization.
 - **QA / Verifier** — independent check; must be a *different agent* than the builder, or it is not verification.
 - **Liaison** — relays, unblocks, carries messages between the operator and a busy supervisor.
 - **Support** — the personal/operational lane, unbothered by project work.
+- **Security / IT** — owns the exposure surface: audits configuration, permissions, and the self-modification perimeter (§11.3). **Advises, never edits** — an agent able to rewrite its own guardrails is not a guardrail.
+- **Consultant** — an independent second opinion and red team. Holds no authority; its value is *disagreement on demand*.
+
+The last two are not in the surveyed prior art. They emerged from building the architecture out (§12.2): a team that can modify itself needs a role whose only job is to watch the perimeter, and one whose only job is to argue with the plan. Both are cheap to omit and expensive to omit *silently*.
 
 **Durable layer.**
 
@@ -388,7 +394,7 @@ What shipped, mapped to the paper:
 
 | Paper | Cadre artifact | State |
 |---|---|---|
-| §8 roles (Supervisor, Builder, QA, Liaison, Support) | `reference/agents.md` — a nine-role roster with charters, budgets, and authority; the wizard confirms which to create | Shipped |
+| §8 roles — seven functional roles (Supervisor, Builder(s), QA/Verifier, Liaison, Support, **Security/IT**, **Consultant**) | `reference/agents.md` — a nine-seat concrete roster: the five original families expand to PM (Supervisor), RA + PD (Builders), QA (Verifier), SMM (Liaison), FM + AR (Support), and the two roles §8 gained while building — **Security/IT** and **Consultant**; the wizard confirms which to create | Shipped |
 | §8 guardrails 1–4 | `reference/guardrails.md` — routing limit (6-hop cap), file-claim lease, promotion gate, no-op detector | Shipped as **specification** |
 | §8 durable shared ledger | `templates/SHARED.md` — the append-only team ledger, claim-guarded | Shipped |
 | §10 tiered memory (STM/MTM/LTM) | `reference/memory.md` + `templates/SHARED.md` | Shipped as workspace convention |

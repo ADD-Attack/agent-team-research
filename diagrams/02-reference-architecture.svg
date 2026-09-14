@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620" width="1000" height="620" role="img" aria-labelledby="fig2-title fig2-desc" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 720" width="1000" height="720" role="img" aria-labelledby="fig2-title fig2-desc" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif">
   <title id="fig2-title">Proposed reference architecture for a persistent agent team with durable memory and guardrails</title>
-  <desc id="fig2-desc">A vertical architecture diagram. At the top, a human operator connects through a single chat channel into a Supervisor agent, which decomposes work. The supervisor dispatches to four specialist agents: a Builder, a QA verifier, a Liaison, and a Support agent. All agents read and write to one shared durable layer on the right, consisting of an append-only memory file, per-agent session stores, and a shared task board. Three guardrail boxes are called out beneath: a routing limit that caps agent-to-agent hops, a file-claim lease that prevents two agents writing the same file, and a promotion gate that governs what enters long-term memory. A verification loop arrow returns from QA back to the supervisor, labelled evidence before claims. A footer notes the two failure modes this design targets: silent no-ops and write collisions.</desc>
+  <desc id="fig2-desc">A vertical architecture diagram. At the top, a human operator connects through a single chat channel into a Supervisor agent, which decomposes work. The supervisor dispatches to six specialist agents: a Builder, a QA verifier, a Liaison, a Support agent, a Security/IT agent, and a Consultant. All agents read and write to one shared durable layer on the right, consisting of an append-only memory file, per-agent session stores, and a shared task board. Four guardrail boxes are called out beneath: a routing limit that caps agent-to-agent hops, a file-claim lease that prevents two agents writing the same file, a promotion gate that governs what enters long-term memory, and a heartbeat/no-op detector. A verification loop arrow returns from QA back to the supervisor, labelled evidence before claims. A footer notes the two failure modes this design targets: silent no-ops and write collisions.</desc>
   <defs>
     <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
@@ -9,7 +9,7 @@
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
     </marker>
   </defs>
-  <rect x="0" y="0" width="1000" height="620" fill="#f8fafc"/>
+  <rect x="0" y="0" width="1000" height="720" fill="#f8fafc"/>
   <text x="40" y="46" font-size="24" font-weight="700" fill="#0f172a">Reference architecture: persistent agent team</text>
   <text x="40" y="72" font-size="14" fill="#64748b">Role hierarchy + durable memory + explicit guardrails.</text>
 
@@ -26,7 +26,7 @@
 
   <path d="M 150 162 L 150 204" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#a2)"/>
 
-  <!-- workers -->
+  <!-- workers: 5 original families + Security/IT + Consultant -->
   <rect x="330" y="180" width="150" height="66" rx="9" fill="#e0e7ff" stroke="#4338ca" stroke-width="1.8"/>
   <text x="405" y="206" font-size="12.5" font-weight="700" fill="#1e1b4b" text-anchor="middle">Builder</text>
   <text x="405" y="226" font-size="10.5" fill="#4338ca" text-anchor="middle">does the work</text>
@@ -43,10 +43,20 @@
   <text x="405" y="434" font-size="12.5" font-weight="700" fill="#1e1b4b" text-anchor="middle">Support</text>
   <text x="405" y="454" font-size="10.5" fill="#4338ca" text-anchor="middle">personal lane</text>
 
+  <rect x="330" y="484" width="150" height="66" rx="9" fill="#fde2e2" stroke="#b91c1c" stroke-width="1.8"/>
+  <text x="405" y="510" font-size="12.5" font-weight="700" fill="#7f1d1d" text-anchor="middle">Security / IT</text>
+  <text x="405" y="530" font-size="10.5" fill="#b91c1c" text-anchor="middle">advises, never edits</text>
+
+  <rect x="330" y="560" width="150" height="66" rx="9" fill="#e0e7ff" stroke="#4338ca" stroke-width="1.8"/>
+  <text x="405" y="586" font-size="12.5" font-weight="700" fill="#1e1b4b" text-anchor="middle">Consultant</text>
+  <text x="405" y="606" font-size="10.5" fill="#4338ca" text-anchor="middle">second opinion</text>
+
   <path d="M 240 240 L 328 213" fill="none" stroke="#475569" stroke-width="1.8" marker-end="url(#a2)"/>
   <path d="M 240 243 L 328 289" fill="none" stroke="#475569" stroke-width="1.8" marker-end="url(#a2)"/>
   <path d="M 240 246 L 328 365" fill="none" stroke="#475569" stroke-width="1.8" marker-end="url(#a2)"/>
   <path d="M 240 249 L 328 441" fill="none" stroke="#475569" stroke-width="1.8" marker-end="url(#a2)"/>
+  <path d="M 240 252 L 328 517" fill="none" stroke="#475569" stroke-width="1.8" marker-end="url(#a2)"/>
+  <path d="M 240 255 L 328 593" fill="none" stroke="#475569" stroke-width="1.8" marker-end="url(#a2)"/>
 
   <!-- verification loop -->
   <path d="M 330 289 C 292 289 292 250 250 250" fill="none" stroke="#b45309" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#a2r)"/>
@@ -55,7 +65,7 @@
   <text x="268" y="318" font-size="10.5" fill="#b45309" text-anchor="middle">claims</text>
 
   <!-- durable memory -->
-  <rect x="600" y="150" width="350" height="300" rx="10" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
+  <rect x="600" y="150" width="350" height="480" rx="10" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
   <text x="775" y="180" font-size="14" font-weight="700" fill="#134e4a" text-anchor="middle">SHARED DURABLE LAYER</text>
 
   <rect x="628" y="200" width="294" height="52" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.4"/>
@@ -70,19 +80,27 @@
   <text x="775" y="350" font-size="12" font-weight="700" fill="#134e4a" text-anchor="middle">Shared task board (claims)</text>
   <text x="775" y="368" font-size="10.5" fill="#0f766e" text-anchor="middle">who owns which file, right now</text>
 
-  <text x="775" y="410" font-size="11" font-style="italic" fill="#0f766e" text-anchor="middle">memory is the continuity layer, not a cache</text>
+  <rect x="628" y="392" width="294" height="52" rx="7" fill="#ccfbf1" stroke="#0f766e" stroke-width="1.4"/>
+  <text x="775" y="414" font-size="12" font-weight="700" fill="#134e4a" text-anchor="middle">SHARED.md (team ledger)</text>
+  <text x="775" y="432" font-size="10.5" fill="#0f766e" text-anchor="middle">team-scoped truth, claim-guarded</text>
 
-  <path d="M 480 213 L 626 226" fill="none" stroke="#0f766e" stroke-width="1.8" marker-end="url(#a2)"/>
-  <path d="M 480 289 L 626 290" fill="none" stroke="#0f766e" stroke-width="1.8" marker-end="url(#a2)"/>
-  <path d="M 480 365 L 626 354" fill="none" stroke="#0f766e" stroke-width="1.8" marker-end="url(#a2)"/>
-  <path d="M 480 441 L 626 380" fill="none" stroke="#0f766e" stroke-width="1.8" marker-end="url(#a2)"/>
+  <text x="775" y="486" font-size="11" font-style="italic" fill="#0f766e" text-anchor="middle">memory is the continuity layer, not a cache</text>
+  <text x="775" y="506" font-size="11" font-style="italic" fill="#0f766e" text-anchor="middle">every agent reads it; any agent appends under lease</text>
+
+  <path d="M 480 213 L 626 230" fill="none" stroke="#0f766e" stroke-width="1.8" marker-end="url(#a2)"/>
+  <path d="M 480 289 L 626 270" fill="none" stroke="#0f766e" stroke-width="1.8" marker-end="url(#a2)"/>
+  <path d="M 480 365 L 626 310" fill="none" stroke="#0f766e" stroke-width="1.8" marker-end="url(#a2)"/>
+  <path d="M 480 441 L 626 350" fill="none" stroke="#0f766e" stroke-width="1.8" marker-end="url(#a2)"/>
+  <path d="M 480 517 L 626 400" fill="none" stroke="#0f766e" stroke-width="1.8" marker-end="url(#a2)"/>
+  <path d="M 480 593 L 626 440" fill="none" stroke="#0f766e" stroke-width="1.8" marker-end="url(#a2)"/>
 
   <!-- guardrails -->
-  <rect x="60" y="408" width="240" height="150" rx="10" fill="#fff7ed" stroke="#c2410c" stroke-width="2"/>
+  <rect x="60" y="408" width="240" height="180" rx="10" fill="#fff7ed" stroke="#c2410c" stroke-width="2"/>
   <text x="180" y="436" font-size="13" font-weight="700" fill="#7c2d12" text-anchor="middle">GUARDRAILS</text>
   <text x="80" y="462" font-size="11" fill="#9a3412">1. Routing limit &#8212; cap agent hops</text>
   <text x="80" y="486" font-size="11" fill="#9a3412">2. File-claim lease &#8212; one writer</text>
   <text x="80" y="510" font-size="11" fill="#9a3412">3. Promotion gate &#8212; what enters memory</text>
   <text x="80" y="534" font-size="11" fill="#9a3412">4. Heartbeat / no-op detector</text>
-  <text x="180" y="552" font-size="10.5" font-style="italic" fill="#c2410c" text-anchor="middle">targets: silent no-ops + write collisions</text>
+  <text x="80" y="558" font-size="10.5" font-style="italic" fill="#9a3412">+ self-modification perimeter (&#167;11.3)</text>
+  <text x="180" y="578" font-size="10.5" font-style="italic" fill="#c2410c" text-anchor="middle">targets: silent no-ops + write collisions</text>
 </svg>
