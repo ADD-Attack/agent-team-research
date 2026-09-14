@@ -111,7 +111,11 @@
   html[data-theme="dark"] figure img{background:#fbfaf7}
   figcaption{font:400 .84rem/1.55 ui-sans-serif,system-ui,sans-serif; color:var(--muted); margin-top:.6rem}
   figcaption b{color:var(--ink)}
-  figure.mascot{max-width:180px}
+  figure.mascot{float:right; width:180px; max-width:42%; margin:.15rem 0 1rem 1.6rem}
+  figure.mascot img{border-radius:.5rem}
+  figure.mascot figcaption{margin-top:.45rem; text-align:center; font-size:.8rem}
+  #what .callout{clear:both}
+  @media (max-width:560px){figure.mascot{float:none; width:170px; max-width:55%; margin:1.4rem auto}}
   .fig-pair{display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin:2rem 0}
   @media (max-width:640px){.fig-pair{grid-template-columns:1fr}}
   /* ---------- stats ---------- */
@@ -212,6 +216,11 @@
 <section id="what" class="reveal">
 <h2>1. What Cadre is<a class="anchor" href="#what" aria-label="link to this section">§</a></h2>
 
+<figure class="mascot">
+  <img src="./assets/cadre-wizard.png" alt="The Cadre Wizard: a green frog in a purple wizard robe holding a glowing sigil">
+  <figcaption><b>The Cadre Wizard.</b></figcaption>
+</figure>
+
 <p>Most AI assistants forget you the moment the tab closes. Ask a question, get an answer, and the system drops you entirely. That's fine for a web search. It is useless for an assistant that is supposed to know you.</p>
 
 <p><strong>Cadre</strong> is the other thing. It isn't a package you install or a service you subscribe to. It is a <strong>folder of plain Markdown files plus a setup procedure</strong> that your own agent reads and carries out — turning one lonely assistant into a small, coordinated team: a manager, a few specialists, and a shared way of getting work done.</p>
@@ -219,11 +228,6 @@
 <p><em>Names, because these two get tangled:</em> a <strong>persistent agent team</strong> is the <em>kind</em> of system — the category. <strong>Cadre</strong> is one instance of it: a specific roster and set of conventions a deployment installs. Cadre <em>is</em> a persistent agent team; not every persistent agent team is Cadre.</p>
 
 <p>The entry point is the <strong>Cadre Wizard</strong> — and it is a conversation, not a script. It doesn't sit there waiting to be invoked: it opens by asking whether you're ready to start Cadre, then interviews you — what you want the team for, which roles you need, what to call them, what they may spend. It shows you what it found before asking anything, and it <strong>writes nothing until you confirm each step</strong>. A Cadre Wizard that installs silently is a bug.</p>
-
-<figure class="mascot">
-  <img src="./assets/cadre-wizard.png" alt="The Cadre Wizard: a green frog in a purple wizard robe holding a glowing sigil">
-  <figcaption><b>The Cadre Wizard.</b></figcaption>
-</figure>
 
 <div class="callout">
   <span class="label">Why plain files matter</span>
