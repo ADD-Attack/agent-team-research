@@ -133,7 +133,7 @@ This section reports a first-party observation. It is the paper's most concrete 
 
 ### 6.1 Setup
 
-The subject deployment — an OpenClaw 2026.9.3 deployment of multiple persistent agents, each with its own workspace, memory files, and session store — is the team named **Cadre**. (The same name now denotes the published system extracted from it, §12.2; throughout §6–§11, *Cadre* means the live deployment.) The `memory-core` plugin provides a nightly consolidation pipeline ("dreaming") that ranks short-term recall candidates and promotes durable ones into a curated `MEMORY.md`.
+The subject deployment — an OpenClaw 2026.9.3 deployment of multiple persistent agents, each with its own workspace, memory files, and session store — is the team named **Cadre**. (There is **one Cadre, not two**: the live team. §12.2 describes that same team's conventions packaged as an installable system — a distillation of it, not a separate system. Throughout §6–§11, *Cadre* means the team as it runs in production.) The `memory-core` plugin provides a nightly consolidation pipeline ("dreaming") that ranks short-term recall candidates and promotes durable ones into a curated `MEMORY.md`.
 
 ### 6.2 Observation
 
@@ -404,7 +404,7 @@ The deployment carries that guard today, plus a companion change to the silence 
 
 ### 12.2 Cadre: the reference architecture, realized
 
-§8 proposed a reference architecture and §10 a memory design. As of 2026-09-14 they are **shipped artifacts**: **Cadre** (`github.com/ADD-Attack/Cadre`, MIT, v0.1) is a downloadable, wizard-installable instantiation of this paper's architecture for any OpenClaw deployment — a folder of Markdown conventions plus a setup procedure the deployment's main agent reads and executes.
+§8 proposed a reference architecture and §10 a memory design. As of 2026-09-14 they are **shipped artifacts**: **Cadre** (`github.com/ADD-Attack/Cadre`, MIT, v0.1) — the *same Cadre* as the subject deployment of §6, with its conventions packaged for anyone to install — is a downloadable, wizard-installable instantiation of this paper's architecture for any OpenClaw deployment: a folder of Markdown conventions plus a setup procedure the deployment's main agent reads and executes. The team and the system share one name because they are one thing, described at two moments: what ran, and what it became.
 
 What shipped, mapped to the paper:
 
