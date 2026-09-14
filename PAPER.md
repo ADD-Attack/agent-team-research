@@ -218,6 +218,8 @@ The architecture is easier to state as **the path a project takes** than as an o
 4. **QA / Verifier** — an independent check on the way out; must be a *different agent* than the builder, or it is not verification. If the requirements are not met, QA has an option to send the work **back to the Project Manager** — the shortest loop that can fix it.
 5. **Finished product.**
 
+**A worker is a seat, not a throwaway run.** Every worker the PM dispatches to is a **persistent agent in its own right** — its own workspace, persona files, memory, session store and mailboxes — exactly as the PM or QA has. It keeps its identity and its accumulated context across projects, so a worker gets better at its job the way the rest of the team does. The disposable mechanism is the **spawned subagent**: bounded scratch work any agent may spin up and discard, which is a *different thing* from the worker seat. Conflating the two is the same confusion §3 separates at the species level — a pipeline's "worker" is an ephemeral node; a team's worker is a colleague.
+
 **Rework.** Work is never patched mid-flight; when it comes back, it re-enters at a defined gate — and there are three exits, shortest first. If **QA** finds the requirements unmet, the work returns to the **Project Manager**, the station that owns the plan and can re-dispatch. If the **PM** surfaces a **new requirement** while planning, it returns to the **Requirements Analyst**, where requirements belong, rather than being absorbed mid-plan. If something has already **shipped**, two things send it back to the start: a **scope change or new feature** to what just shipped, or a **new product** entirely. Either way it re-enters at the Requirements Analyst and runs the pipeline again. It costs a lap; it buys a specification — the enforced-intermediate-artifact discipline the pipeline literature got right (MetaGPT's PRD-before-code), applied to a durable team.
 
 **Support roles ride beside the line, never on it.** **Security / IT** — owns the exposure surface and the self-modification perimeter (§11.3); **advises, never edits**, because an agent able to rewrite its own guardrails is not a guardrail. **Consultant** — an independent second opinion and red team; holds no authority, its value is *disagreement on demand*. It is also the one seat deliberately allowed the **heavier models and deeper reasoning**, spent to clarify a hard problem or research a novel challenge rather than to guess cheaply. Plus **Social Media Manager**, **Finance Manager** and **Agent Resources**. They attach to whichever project needs them and go quiet when it doesn't; none is a mandatory station. Alongside project duty they also carry **scheduled, repetitive upkeep** — health checks, backups, housekeeping — that keeps the flow environment healthy between projects.
@@ -521,7 +523,7 @@ The collaboration guards themselves — routing limit, claim lease, dispatch-and
 
 ## Appendix A — Candidate project names
 
-**Chosen: Cadre** — confirmed by the operator, 2026-09-14. *A small permanent nucleus of specialists that can expand: exactly the model — a durable core plus disposable subagents.*
+**Chosen: Cadre** — confirmed by the operator, 2026-09-14. *A small permanent nucleus of specialists that can expand: exactly the model — a durable core of persistent seats (the workers among them), plus disposable spawned subagents for scratch work.*
 
 The remaining candidates are retained for provenance, not as live options:
 
