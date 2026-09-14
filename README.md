@@ -29,6 +29,14 @@ Multi-agent systems share a vocabulary — *roles*, *supervisors*, *workers*, *h
 | §11 | **Prompt guardrails** — what is enforceable (platform constraints & the self-modification perimeter) |
 | App. A | Candidate project names |
 
+**Also in this repo**
+
+| Path | What it is |
+|---|---|
+| `critiques/critique-persistent-agent-teams.md` | External critique of the paper (verbatim, unedited) |
+| `proposals/2026-09-14-memory-tiers.md` | Proposal: three-tier memory (STM → MTM → LTM), loose adaptive gates, size-triggered eviction |
+| `diagrams/` | SVG figures (with screen-reader titles/descriptions) |
+
 ---
 
 ## Headline finding

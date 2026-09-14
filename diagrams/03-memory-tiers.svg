@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="1000" height="600" role="img" aria-labelledby="fig3-title fig3-desc" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif">
-  <title id="fig3-title">Three-tier agent memory cascade: short-term promoted to mid-term promoted to long-term, with decay</title>
-  <desc id="fig3-desc">A vertical cascade diagram. Top stage, SHORT-TERM (STM): high churn, accepts everything, 7-day expiry, holds recent session candidates. An arrow labelled 'recalled' (loose gate: top 40 percent, score floor 0.30, recall at least 1) carries entries down to MID-TERM (MTM), which is moderate churn, 60-day expiry, and survives across weeks. A second arrow labelled 'recalled again' (loose gate: top 25 percent, score floor 0.40, recall at least 2) carries entries down to LONG-TERM (LTM): zero churn, permanent, append-only, human-curated, the durable MEMORY.md. A curved decay arrow on the right returns from MID-TERM and SHORT-TERM to a waste bin labelled 'expired / dropped', and a separate arrow shows decay never applies to long-term. A footer states the governing principle: loose promotion, quality by decay, not by a strict entry gate.</desc>
+  <title id="fig3-title">Three-tier agent memory cascade: short-term promoted to mid-term promoted to long-term, with size-triggered eviction</title>
+  <desc id="fig3-desc">A vertical cascade diagram. Top stage, SHORT-TERM (STM): high churn, accepts everything, approximately 256 kilobyte budget, holds recent session candidates, evicts the lowest-value entries when over budget. An arrow labelled 'recalled' (loose gate: top 40 percent, score floor 0.30, recall at least 1) carries entries down to MID-TERM (MTM): moderate churn, approximately 128 kilobyte budget, consolidated recurring knowledge. A second arrow labelled 'recalled again' (loose gate: top 25 percent, score floor 0.40, recall at least 2) carries entries down to LONG-TERM (LTM): budget-bounded and permanent, append-only, human-curated, the durable MEMORY.md. Dashed eviction arrows on the right carry short-term and mid-term overflow to a bin labelled 'EVICTED', and long-term is flagged for human curation rather than auto-evicted. A side note explains that eviction is triggered by size, never by age: value equals recall count first, score second, and recency only as a tie-break. A footer states the governing principle: loose promotion, quality by eviction, recall is the only vote that counts.</desc>
   <defs>
     <marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
@@ -11,14 +11,14 @@
   </defs>
   <rect x="0" y="0" width="1000" height="600" fill="#f8fafc"/>
   <text x="40" y="46" font-size="24" font-weight="700" fill="#0f172a">Three-tier memory cascade</text>
-  <text x="40" y="72" font-size="14" fill="#64748b">Promotion is driven by recall. Decay does the quality control.</text>
+  <text x="40" y="72" font-size="14" fill="#64748b">Promotion is driven by recall. Eviction is driven by size &#8212; never by age.</text>
 
   <!-- STM -->
   <rect x="60" y="104" width="420" height="104" rx="10" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2.5"/>
   <text x="82" y="134" font-size="16" font-weight="700" fill="#172554">SHORT-TERM (STM)</text>
-  <text x="82" y="158" font-size="12.5" fill="#1e40af">Accepts everything &#183; high churn &#183; 7-day TTL</text>
+  <text x="82" y="158" font-size="12.5" fill="#1e40af">Accepts everything &#183; high churn &#183; ~256 KB budget</text>
   <text x="82" y="178" font-size="12.5" fill="#1e40af">Recent session candidates, raw snippets</text>
-  <text x="82" y="196" font-size="11" font-style="italic" fill="#3b82f6">cap by size, FIFO eviction when full</text>
+  <text x="82" y="196" font-size="11" font-style="italic" fill="#3b82f6">over budget &#8594; evict lowest value</text>
 
   <!-- STM->MTM arrow -->
   <path d="M 270 208 L 270 246" fill="none" stroke="#475569" stroke-width="2.4" marker-end="url(#m1)"/>
@@ -28,9 +28,9 @@
   <!-- MTM -->
   <rect x="60" y="252" width="420" height="104" rx="10" fill="#cffafe" stroke="#0e7490" stroke-width="2.5"/>
   <text x="82" y="282" font-size="16" font-weight="700" fill="#164e63">MID-TERM (MTM)</text>
-  <text x="82" y="306" font-size="12.5" fill="#0e7490">Consolidated &#183; moderate churn &#183; 60-day TTL</text>
-  <text x="82" y="326" font-size="12.5" fill="#0e7490">Survives weeks; the working knowledge layer</text>
-  <text x="82" y="344" font-size="11" font-style="italic" fill="#0891b2">not recalled in 60d &#8594; archived</text>
+  <text x="82" y="306" font-size="12.5" fill="#0e7490">Consolidated &#183; moderate churn &#183; ~128 KB budget</text>
+  <text x="82" y="326" font-size="12.5" fill="#0e7490">The working knowledge layer</text>
+  <text x="82" y="344" font-size="11" font-style="italic" fill="#0891b2">over budget &#8594; evict lowest value</text>
 
   <!-- MTM->LTM arrow -->
   <path d="M 270 356 L 270 394" fill="none" stroke="#475569" stroke-width="2.4" marker-end="url(#m1)"/>
@@ -40,9 +40,9 @@
   <!-- LTM -->
   <rect x="60" y="400" width="420" height="104" rx="10" fill="#dcfce7" stroke="#15803d" stroke-width="2.5"/>
   <text x="82" y="430" font-size="16" font-weight="700" fill="#14532d">LONG-TERM (LTM)</text>
-  <text x="82" y="454" font-size="12.5" fill="#166534">Curated &#183; zero churn &#183; permanent</text>
+  <text x="82" y="454" font-size="12.5" fill="#166534">Curated &#183; budget-bounded &#183; permanent</text>
   <text x="82" y="474" font-size="12.5" fill="#166534">Append-only, human-readable &#8212; MEMORY.md</text>
-  <text x="82" y="492" font-size="11" font-style="italic" fill="#15803d">demotion requires explicit human action</text>
+  <text x="82" y="492" font-size="11" font-style="italic" fill="#15803d">over budget &#8594; flag for human curation</text>
 
   <!-- decay -->
   <path d="M 480 156 C 560 156 560 300 480 304" fill="none" stroke="#b91c1c" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#m1r)"/>
@@ -50,19 +50,19 @@
 
   <!-- bin -->
   <rect x="600" y="272" width="330" height="86" rx="10" fill="#fee2e2" stroke="#b91c1c" stroke-width="2"/>
-  <text x="765" y="302" font-size="14" font-weight="700" fill="#7f1d1d" text-anchor="middle">EXPIRED / DROPPED</text>
-  <text x="765" y="324" font-size="12" fill="#991b1b" text-anchor="middle">quality comes from churn, not filtering</text>
-  <text x="765" y="344" font-size="12" fill="#991b1b" text-anchor="middle">LONG-TERM is exempt from decay</text>
+  <text x="765" y="302" font-size="14" font-weight="700" fill="#7f1d1d" text-anchor="middle">EVICTED</text>
+  <text x="765" y="324" font-size="12" fill="#991b1b" text-anchor="middle">triggered by size, not age</text>
+  <text x="765" y="344" font-size="12" fill="#991b1b" text-anchor="middle">lowest value goes first: recall, score, recency</text>
 
   <!-- side notes -->
   <rect x="600" y="104" width="330" height="140" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
   <text x="622" y="132" font-size="14" font-weight="700" fill="#0f172a">Why loose works</text>
   <text x="622" y="158" font-size="12" fill="#475569">&#8226; a strict entry gate is what silently</text>
   <text x="636" y="175" font-size="12" fill="#475569">promoted nothing for a week</text>
-  <text x="622" y="199" font-size="12" fill="#475569">&#8226; loose in, decay out: the tier that</text>
+  <text x="622" y="199" font-size="12" fill="#475569">&#8226; loose in, evict out: the tier that</text>
   <text x="636" y="216" font-size="12" fill="#475569">matters is earned by <tspan font-weight="700">recurrence</tspan></text>
   <text x="622" y="238" font-size="11" font-style="italic" fill="#94a3b8">0 promotions / cycle = anomaly, not normal</text>
 
-  <text x="40" y="546" font-size="13" font-weight="600" fill="#334155">Loose promotion. Quality by decay. Recall is the only vote that counts.</text>
-  <text x="40" y="570" font-size="12" fill="#94a3b8">Each tier keeps its own adaptive threshold, clamped so a quiet week cannot block or a busy week cannot flood.</text>
+  <text x="40" y="546" font-size="13" font-weight="600" fill="#334155">Loose promotion. Quality by eviction. Recall is the only vote that counts.</text>
+  <text x="40" y="570" font-size="12" fill="#94a3b8">Each tier keeps its own adaptive threshold and its own size budget; recency only breaks ties.</text>
 </svg>

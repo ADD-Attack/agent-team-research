@@ -17,26 +17,28 @@ Two failures, one root:
 
 ## 2. Design principle
 
-> **Loose promotion. Quality by decay. Recall is the only vote that counts.**
+> **Loose promotion. Quality by eviction. Recall is the only vote that counts.**
 
 Instead of a high entry bar doing the filtering, let things in **cheaply** and let **recurrence** earn them a higher tier. Quality comes from churn and demotion, not from admission.
 
-This inverts the current design. Today: strict in, permanent out. Proposed: loose in, decay out.
+This inverts the current design. Today: strict in, permanent out. Proposed: loose in, size-bounded out.
 
 ## 3. The tiers
 
-| Tier | Store | Churn | Retention | Contents |
+| Tier | Store | Churn | Budget (size cap) | Contents |
 |---|---|---|---|---|
-| **STM** — short-term | staged candidates / session recall | **high** | 7 days | raw snippets, recent observations |
-| **MTM** — mid-term | `memory/midterm.md` *(new)* | moderate | 60 days idle | consolidated, recurring knowledge |
-| **LTM** — long-term | `MEMORY.md` | **zero** | permanent | curated, append-only, human-readable |
+| **STM** — short-term | staged candidates / session recall | **high** | ~256 KB | raw snippets, recent observations |
+| **MTM** — mid-term | `memory/midterm.md` *(new)* | moderate | ~128 KB | consolidated, recurring knowledge |
+| **LTM** — long-term | `MEMORY.md` | low (budget-bounded) | ~64 KB | curated, append-only, human-readable |
+
+Caps are **tunable defaults**, not magic numbers. LTM's cap should track the platform's bootstrap-safe file budget.
 
 ## 4. Promotion cascade
 
 ```
 STM  ──recalled──▶  MTM  ──recalled again──▶  LTM
  │                    │
- └────── expires ─────┴──────▶ dropped
+ └── over budget ─────┴──────▶ evicted
 ```
 
 - **STM → MTM** when a short-term entry is *recalled* (surfaces again in a later session/query).
@@ -79,16 +81,27 @@ MTM → LTM fallback:  score ≥ 0.40, recall ≥ 2, queries ≥ 1
 
 No gate. Accept everything; cap by count/size with FIFO eviction. STM is cheap by design — that is what makes it churn.
 
-## 6. Decay and demotion
+## 6. Eviction — **size-triggered, never time-based**
+
+Memory is not lost because it is *old*. Memory is lost when a tier **exceeds its budget** and something has to give. Age is only a tie-breaker.
 
 | Tier | Trigger | Action |
 |---|---|---|
-| STM | age > 7 days | drop |
-| STM | capacity exceeded | FIFO evict oldest |
-| MTM | idle > 60 days (never recalled) | archive to `memory/archive/` |
-| LTM | — | never automatic |
+| STM | size > budget | evict lowest-value entries until under budget |
+| MTM | size > budget | evict lowest-value entries until under budget |
+| LTM | size > budget | **flag for human curation** — never auto-evict |
 
-**Decay is the quality mechanism.** A fact that never recurs is, by definition, not worth keeping — regardless of how good it looked on entry.
+**Eviction order** — lowest value goes first:
+
+```
+value = recallCount        # primary
+      , score              # secondary
+      , recency            # tie-break only
+```
+
+Recency **breaks ties**; it never triggers eviction on its own. A frequently-recalled old entry outlives a rarely-recalled new one — which is the entire point.
+
+**This is the quality mechanism.** A fact that never recurs falls to the bottom of the value order and is evicted when space is needed — regardless of how good it looked on entry, and regardless of its age.
 
 ## 7. Safety valves
 
@@ -124,7 +137,8 @@ The Gates already patched (2026-09-13) stay, but are re-scoped as the **MTM → 
 
 ## 10. Risks and open questions
 
-- **Noise risk.** Loose promotion means more in STM/MTM. Acceptable *only* if decay actually runs — a loose gate with no decay is just a bigger pile.
+- **Noise risk.** Loose promotion means more in STM/MTM. Acceptable *only* if eviction actually runs — a loose gate with no eviction is just a bigger pile.
+- **Budget measurement must be deterministic.** Eviction depends on how "size" is measured (bytes, lines, tokens) and on a stable value order. Two writers disagreeing on either is a data-loss bug. Measure the real file; keep one writer per tier file.
 - **Recall is undefined for a quiet instance.** If nothing recalls, nothing promotes. Needs a floor — this is the residual weakness of any recall-driven design. Mitigation: the fallback + the `uniqueQueries ≥ 1` rule.
 - **Who writes MTM?** Must be a single writer. A workspace pass keeps that true; two agents writing it does not.
 - **Does `memory-core` have a second-tier hook we haven't found?** Not in the schema. Worth a docs/source check before committing to (b).
