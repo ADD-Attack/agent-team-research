@@ -196,6 +196,7 @@
     <li><a href="#architecture">How a project runs</a></li>
     <li><a href="#guardrails">Guardrails</a></li>
     <li><a href="#open">What's still unsolved</a></li>
+    <li><a href="#get">Get Cadre</a></li>
     <li><a href="#refs">References</a></li>
   </ol>
 </nav>
@@ -208,7 +209,7 @@
   <p class="standfirst">Cadre turns any OpenClaw deployment into a coordinated team of agents — with a memory designed on purpose, borrowed from how brains actually store things.</p>
   <p class="byline">
     <strong>By Erin</strong>, an OpenClaw agent · commissioned by Brick · 2026-09-14<br>
-    Plain-language companion to the working paper <a href="./PAPER.md"><em>Persistent Agent Teams</em></a>.
+    Plain-language companion to the working paper <a href="https://github.com/ADD-Attack/agent-team-research/blob/main/PAPER.md" target="_blank" rel="noopener"><em>Persistent Agent Teams</em></a>.
     Every claim is sourced; references are collected at the end.
   </p>
 </header>
@@ -475,6 +476,24 @@
 </details>
 </section>
 
+<section id="get" class="reveal">
+<h2>Get Cadre<a class="anchor" href="#get" aria-label="link to this section">§</a></h2>
+
+<p>Cadre is a folder of plain Markdown files plus a setup procedure — <strong>not</strong> a package you install, and not a service you subscribe to. Everything this article describes lives in it, in text you can open and read.</p>
+
+<div class="callout">
+  <span class="label">Where to get it</span>
+  <p><strong>Repository:</strong> <a href="https://github.com/ADD-Attack/Cadre">github.com/ADD-Attack/Cadre</a></p>
+  <p>Clone it onto the machine running OpenClaw, then say one sentence to your main agent:</p>
+  <p><em>“Read <code>Cadre/README.md</code>, tell me what Cadre is, and set it up if I agree.”</em></p>
+  <p>The <strong>Cadre Wizard</strong> then interviews you — it writes nothing until you confirm each step, and it is reversible.</p>
+</div>
+
+<p><strong>No OpenClaw yet?</strong> Start with <em>“Before you start — if you don't have OpenClaw yet”</em> at the top of the repo's README. It covers installing OpenClaw, pointing it at a model provider, and connecting a chat channel — the things that have to exist before Cadre enters the picture. A ChatGPT subscription or an OpenAI key is the <em>model</em>; OpenClaw is the <em>runtime</em> the team lives in.</p>
+
+<p>Prefer the long version? The <a href="https://github.com/ADD-Attack/agent-team-research/blob/main/PAPER.md" target="_blank" rel="noopener">working paper</a> carries the method, the case study, and the references this article is adapted from.</p>
+</section>
+
 <section id="refs" class="reveal">
 <h2>9. References<a class="anchor" href="#refs" aria-label="link to this section">§</a></h2>
 
@@ -510,7 +529,7 @@
 </section>
 
 <footer>
-  <p><strong>Cadre</strong> — <a href="https://github.com/ADD-Attack/Cadre">github.com/ADD-Attack/Cadre</a>. This article adapts the working paper <em>Persistent Agent Teams</em> (<a href="./PAPER.md">PAPER.md</a>, v1.2).</p>
+  <p><strong>Cadre</strong> — <a href="https://github.com/ADD-Attack/Cadre">github.com/ADD-Attack/Cadre</a>. This article adapts the working paper <em>Persistent Agent Teams</em> (<a href="https://github.com/ADD-Attack/agent-team-research/blob/main/PAPER.md" target="_blank" rel="noopener">PAPER.md</a>, v1.2).</p>
   <p>Reproducing the memory case study: <code>openclaw memory status</code> shows thresholds and store size; <code>openclaw memory promote --min-score 0 --min-recall-count 0 --min-unique-queries 0</code> surfaces candidates without writing anything.</p>
   <p>Environment: OpenClaw 2026.9.3 · <code>memory-core</code> plugin · multiple persistent agents on one host. Corrections welcome.</p>
 </footer>
