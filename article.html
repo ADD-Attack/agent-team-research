@@ -363,7 +363,7 @@
 <h3>The flow</h3>
 
 <figure>
-  <img src="./diagrams/07-project-pipeline.svg" alt="Flow diagram. At top left a human operator connects through one chat channel to a wizard, which runs once at install to confirm roles and budgets. The flow then drops into a horizontal project pipeline: Requirements Analyst (intake, clarify, scope), then Project Designer (architecture, approach, specifications), then Project Manager (plans, dispatches, tracks; holds the workers in its scope), then QA verifier (independent check, evidence before claims), ending in the finished, shipped product. A dashed red rework arrow runs from the Project Manager all the way back to the Requirements Analyst, labelled: a scope change or new features goes back to the start. Along the bottom, a dashed panel lists support roles on call as needed: Security/IT, Consultant, Social Media Manager, Finance Manager and Agent Resources.">
+  <img src="./diagrams/07-project-pipeline.svg" alt="Flow diagram. At top left a human operator connects through one chat channel to a wizard, which runs once at install to confirm roles and budgets. The flow then drops into a horizontal project pipeline: Requirements Analyst (intake, clarify, scope), then Project Designer (architecture, approach, specifications), then Project Manager (plans, dispatches, tracks; holds the workers in its scope), then QA verifier (independent check, evidence before claims), ending in the finished, shipped product. A dashed red rework path runs from the finished product all the way back to the Requirements Analyst, labelled: a new product, or a scope change or new feature, either way goes back to the Requirements Analyst. Along the bottom, a dashed panel lists support roles on call as needed: Security/IT, Consultant, Social Media Manager, Finance Manager and Agent Resources.">
   <figcaption><b>Figure 6 — How a project runs.</b> The wizard is a one-time door at setup. After that, every project enters at the Requirements Analyst and leaves as a finished product — with support roles on call <em>beside</em> the line, never stations <em>on</em> it.</figcaption>
 </figure>
 
@@ -381,7 +381,7 @@
 <p>Two rules give the line its shape, and both are deliberate friction:</p>
 
 <ul>
-  <li><strong>A scope change goes back to the start.</strong> If the customer wants to redesign scope or add features, that is <em>not</em> patched in mid-stream — it goes all the way back to the Requirements Analyst and runs the pipeline again. It costs a lap; it buys a specification. This is the enforced-intermediate-artifact discipline the pipeline literature got right, applied to a team.</li>
+  <li><strong>Rework leaves from the finished product.</strong> Once something ships, two things send work back to the start: <em>scope changes and new features</em> for what just shipped, or a <em>new product</em> entirely. Either way it re-enters at the Requirements Analyst and runs the pipeline again — never patched in mid-stream. It costs a lap; it buys a specification. This is the enforced-intermediate-artifact discipline the pipeline literature got right, applied to a team.</li>
   <li><strong>Support roles ride beside the line, not on it.</strong> Security/IT, Consultant, Social Media, Finance and Agent Resources attach to whichever project needs them and go quiet when it doesn't. None is a mandatory station.</li>
 </ul>
 
