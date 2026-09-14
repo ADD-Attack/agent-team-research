@@ -7,6 +7,7 @@
 📄 **[Read the full paper → PAPER.md](./PAPER.md)**  
 🔒 **[§11 Prompt guardrails: what is enforceable → PAPER.md#11-prompt-guardrails-what-is-enforceable](./PAPER.md#11-prompt-guardrails-what-is-enforceable)**
 📋 **[New: §12 Summary of proposed and ideal changes → PAPER.md#12-summary-of-proposed-and-ideal-changes](./PAPER.md#12-summary-of-proposed-and-ideal-changes)**
+🎨 **[New: read the plain-language article — *The Team That Forgot* → article.html](./article.html)** — pop-sci adaptation, no CS background needed
 
 ---
 

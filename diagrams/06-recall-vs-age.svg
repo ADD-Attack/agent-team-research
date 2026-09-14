@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 440" width="820" height="440" role="img" aria-labelledby="t06 d06">
+  <title id="t06">Retention by use versus retention by age</title>
+  <desc id="d06">A line chart comparing two retention models over time. A dashed curve shows classic age-based decay, falling steeply at first and then flattening toward the baseline. A solid curve labelled use-based retention stays high for memories that keep being recalled, and falls only for memories that are not recalled. The two curves diverge after the first recall.</desc>
+
+  <rect x="0" y="0" width="820" height="440" fill="#fbfaf7"/>
+  <rect x="1" y="1" width="818" height="438" fill="none" stroke="#e2ded6" stroke-width="2" rx="12"/>
+
+  <!-- title -->
+  <text x="40" y="46" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="700" fill="#1c1b19">Retention: by age vs by use</text>
+  <text x="40" y="70" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#5f5b55">What a memory system keeps over time, under two different rules</text>
+
+  <!-- axes -->
+  <line x1="80" y1="110" x2="80" y2="350" stroke="#c9c4ba" stroke-width="2"/>
+  <line x1="80" y1="350" x2="760" y2="350" stroke="#c9c4ba" stroke-width="2"/>
+
+  <!-- y label -->
+  <text x="36" y="235" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#5f5b55" transform="rotate(-90 36 235)" text-anchor="middle">retention</text>
+  <!-- x label -->
+  <text x="420" y="392" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#5f5b55" text-anchor="middle">time since encoding  →</text>
+
+  <!-- gridlines -->
+  <g stroke="#eeebe4" stroke-width="1">
+    <line x1="80" y1="170" x2="760" y2="170"/>
+    <line x1="80" y1="230" x2="760" y2="230"/>
+    <line x1="80" y1="290" x2="760" y2="290"/>
+  </g>
+
+  <!-- classic decay curve (dashed) -->
+  <path d="M 80 118 C 130 150, 170 235, 240 278 C 330 320, 470 338, 760 344"
+        fill="none" stroke="#a97a1f" stroke-width="3" stroke-dasharray="8 6" stroke-linecap="round"/>
+
+  <!-- use-based curve (solid): high plateau, step down only where unrecalled -->
+  <path d="M 80 118 C 140 122, 200 140, 250 150 C 300 158, 360 150, 420 142 C 480 136, 560 132, 760 128"
+        fill="none" stroke="#6b4ea8" stroke-width="4" stroke-linecap="round"/>
+  <!-- dips for un-recalled items -->
+  <path d="M 250 150 C 285 210, 320 250, 380 262 C 440 272, 520 268, 760 262"
+        fill="none" stroke="#6b4ea8" stroke-width="2.5" stroke-dasharray="2 5" stroke-linecap="round" opacity="0.75"/>
+
+  <!-- recall markers on the use-based curve -->
+  <g fill="#6b4ea8">
+    <circle cx="250" cy="150" r="6"/>
+    <circle cx="420" cy="142" r="6"/>
+    <circle cx="600" cy="130" r="6"/>
+  </g>
+  <g font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#6b4ea8" font-weight="700">
+    <text x="262" y="140">recalled</text>
+    <text x="432" y="132">recalled</text>
+  </g>
+
+  <!-- labels -->
+  <g font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">
+    <text x="560" y="300" fill="#6b4ea8" font-weight="700">use-based retention</text>
+    <text x="560" y="318" fill="#5f5b55">recalled items stay; the rest are pruned</text>
+    <text x="470" y="374" fill="#a97a1f" font-weight="700">classic age-based decay</text>
+    <text x="470" y="390" fill="#5f5b55">fades with elapsed time (Ebbinghaus)</text>
+  </g>
+
+  <!-- legend chips -->
+  <g transform="translate(80,96)">
+    <line x1="0" y1="0" x2="26" y2="0" stroke="#6b4ea8" stroke-width="4" stroke-linecap="round"/>
+    <text x="34" y="4" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#1c1b19">by use</text>
+    <line x1="92" y1="0" x2="118" y2="0" stroke="#a97a1f" stroke-width="3" stroke-dasharray="8 6" stroke-linecap="round"/>
+    <text x="126" y="4" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#1c1b19">by age</text>
+  </g>
+
+  <!-- footnote -->
+  <text x="80" y="418" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11.5" fill="#8b8579">The policy under test evicts by size, ranked first by recall count — never by age alone.</text>
+</svg>

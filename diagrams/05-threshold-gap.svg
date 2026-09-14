@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 520" width="1000" height="520" role="img" aria-labelledby="fig2-title fig2-desc" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif">
+  <title id="fig2-title">Two charts showing why no candidate cleared the deep-sleep gates</title>
+  <desc id="fig2-desc">Two-part figure. Left panel is a bar chart of the single highest-weighted candidate per agent, plotted on a 0 to 1 score axis with a dashed red threshold line at minScore equals 0.75. The Erin bar reaches 0.737, stopping just below the threshold line. The Michael bar reaches 0.631, clearly below the line. Right panel is a recall-count distribution of 192 staged candidates: 189 candidates had 0 recalls, 2 had 1 recall, and 1 had 2 recalls, all below the required 3. A note states the gate requires 0.75 score plus 3 recalls plus 3 unique queries, and that the highest score observed was 0.737. Caption: one candidate hit 3 recalls and still lost on score, 0.737 is less than 0.75, and everything else failed the recall gate outright.</desc>
+  <rect x="0" y="0" width="1000" height="520" fill="#f8fafc"/>
+  <text x="40" y="46" font-size="24" font-weight="700" fill="#0f172a">Why nothing promoted: the math never reached the gate</text>
+  <text x="40" y="72" font-size="14" fill="#64748b">Measured on a live two-agent instance (permissive re-run, 2026-09-13).</text>
+
+  <!-- chart area -->
+  <line x1="120" y1="400" x2="620" y2="400" stroke="#94a3b8" stroke-width="2"/>
+  <line x1="120" y1="120" x2="120" y2="400" stroke="#94a3b8" stroke-width="2"/>
+
+  <!-- y ticks -->
+  <line x1="112" y1="120" x2="120" y2="120" stroke="#94a3b8" stroke-width="1"/>
+  <text x="104" y="125" font-size="11" fill="#64748b" text-anchor="end">1.00</text>
+  <line x1="112" y1="190" x2="120" y2="190" stroke="#94a3b8" stroke-width="1"/>
+  <text x="104" y="195" font-size="11" fill="#64748b" text-anchor="end">0.75</text>
+  <line x1="112" y1="260" x2="120" y2="260" stroke="#94a3b8" stroke-width="1"/>
+  <text x="104" y="265" font-size="11" fill="#64748b" text-anchor="end">0.50</text>
+  <line x1="112" y1="330" x2="120" y2="330" stroke="#94a3b8" stroke-width="1"/>
+  <text x="104" y="335" font-size="11" fill="#64748b" text-anchor="end">0.25</text>
+  <line x1="112" y1="400" x2="120" y2="400" stroke="#94a3b8" stroke-width="1"/>
+  <text x="104" y="405" font-size="11" fill="#64748b" text-anchor="end">0.00</text>
+
+  <!-- threshold line at 0.75 (y=190) -->
+  <line x1="120" y1="190" x2="620" y2="190" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="8 5"/>
+  <text x="628" y="186" font-size="13" font-weight="700" fill="#dc2626">minScore = 0.75</text>
+
+  <!-- bar: erin best 0.7369 -> y = 400 - 0.7369*280 = 400-206.3 = 193.7 -->
+  <rect x="180" y="194" width="110" height="206" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1.5"/>
+  <text x="235" y="184" font-size="14" font-weight="700" fill="#1e3a8a" text-anchor="middle">0.737</text>
+  <text x="235" y="424" font-size="13" fill="#334155" text-anchor="middle">Erin (best)</text>
+
+  <!-- bar: main best 0.6305 -> y = 400 - 0.6305*280 = 400-176.5 = 223.5 -->
+  <rect x="380" y="224" width="110" height="176" fill="#60a5fa" stroke="#1d4ed8" stroke-width="1.5"/>
+  <text x="435" y="214" font-size="14" font-weight="700" fill="#1e3a8a" text-anchor="middle">0.631</text>
+  <text x="435" y="424" font-size="13" fill="#334155" text-anchor="middle">Michael (best)</text>
+
+  <!-- recall gate panel -->
+  <rect x="660" y="120" width="300" height="270" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="684" y="152" font-size="15" font-weight="700" fill="#0f172a">Recall gate also unreachable</text>
+  <text x="684" y="178" font-size="12.5" fill="#475569">Staged candidates by recall count</text>
+
+  <!-- bars -->
+  <text x="684" y="216" font-size="12.5" fill="#334155">0 recalls</text>
+  <rect x="800" y="204" width="120" height="16" fill="#f87171"/>
+  <text x="928" y="217" font-size="12" font-weight="700" fill="#b91c1c">189</text>
+
+  <text x="684" y="248" font-size="12.5" fill="#334155">1 recall</text>
+  <rect x="800" y="236" width="4" height="16" fill="#f87171"/>
+  <text x="816" y="249" font-size="12" font-weight="700" fill="#b91c1c">2</text>
+
+  <text x="684" y="280" font-size="12.5" fill="#334155">2 recalls</text>
+  <rect x="800" y="268" width="3" height="16" fill="#f87171"/>
+  <text x="815" y="281" font-size="12" font-weight="700" fill="#b91c1c">1</text>
+
+  <text x="684" y="312" font-size="12.5" font-weight="700" fill="#dc2626">3 recalls (= gate)</text>
+  <text x="924" y="312" font-size="12" font-weight="700" fill="#b91c1c" text-anchor="end">1</text>
+
+  <line x1="660" y1="330" x2="960" y2="330" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="684" y="354" font-size="12" fill="#475569">Highest observed score: 0.737</text>
+  <text x="684" y="374" font-size="12" fill="#475569">Gate requires: 0.75 + 3 recalls + 3 queries</text>
+
+  <text x="40" y="480" font-size="13" fill="#334155" font-weight="600">One candidate hit 3 recalls — and still lost on score (0.737 &lt; 0.75). Everything else failed the recall gate outright.</text>
+  <text x="40" y="502" font-size="12" fill="#94a3b8">Bars show the single highest-weighted candidate per agent. Distribution measured with all gates disabled.</text>
+</svg>

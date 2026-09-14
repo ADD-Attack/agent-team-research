@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 460" width="1000" height="460" role="img" aria-labelledby="fig1-title fig1-desc" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif">
+  <title id="fig1-title">OpenClaw dreaming pipeline with the deep-sleep gate blocking all promotions</title>
+  <desc id="fig1-desc">Left-to-right flow diagram with four stages. (1) Session transcripts, labelled interactive only, feed into (2) LIGHT SLEEP, which stages candidates and holds 192 staged items. (3) Those flow into the DEEP SLEEP GATE, a red box listing three conditions that must ALL pass: minScore at least 0.75, minRecallCount at least 3, minUniqueQueries at least 3. From the gate, an arrow routes up to MEMORY.md, drawn with a dashed red border and marked never written and 0 promoted with a cross. A second arrow routes down to DREAMS.md, drawn in green and marked diary still written and looks healthy with a tick. Caption text reads: the sweep reported success every night, Ranked 0 candidates, Promoted 0, no error, no warning.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrowRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#dc2626"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="460" fill="#f8fafc"/>
+  <text x="40" y="46" font-size="24" font-weight="700" fill="#0f172a">OpenClaw Dreaming Pipeline — the silent no-op</text>
+  <text x="40" y="72" font-size="14" fill="#64748b">Daily sweep at 03:00. Every stage works. Exactly zero memories survived the gate.</text>
+
+  <!-- connectors first -->
+  <path d="M 210 240 L 296 240" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M 486 240 L 572 240" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M 762 214 L 838 140" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#arrowRed)"/>
+  <path d="M 762 266 L 838 380" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 1. sources -->
+  <rect x="40" y="180" width="170" height="120" rx="10" fill="#e0e7ff" stroke="#4338ca" stroke-width="2"/>
+  <text x="125" y="222" font-size="15" font-weight="700" fill="#1e1b4b" text-anchor="middle">Session</text>
+  <text x="125" y="242" font-size="15" font-weight="700" fill="#1e1b4b" text-anchor="middle">transcripts</text>
+  <text x="125" y="270" font-size="12" fill="#4338ca" text-anchor="middle">interactive only</text>
+
+  <!-- 2. light sleep -->
+  <rect x="296" y="180" width="190" height="120" rx="10" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+  <text x="391" y="216" font-size="15" font-weight="700" fill="#172554" text-anchor="middle">LIGHT SLEEP</text>
+  <text x="391" y="240" font-size="13" fill="#1e40af" text-anchor="middle">stages candidates</text>
+  <text x="391" y="264" font-size="13" fill="#1e40af" text-anchor="middle">status: staged</text>
+  <text x="391" y="285" font-size="11" fill="#3b82f6" text-anchor="middle">192 staged here</text>
+
+  <!-- 3. gate -->
+  <rect x="572" y="160" width="190" height="160" rx="10" fill="#fee2e2" stroke="#b91c1c" stroke-width="3"/>
+  <text x="667" y="192" font-size="15" font-weight="700" fill="#7f1d1d" text-anchor="middle">DEEP SLEEP GATE</text>
+  <text x="667" y="220" font-size="12.5" fill="#991b1b" text-anchor="middle">minScore &#8805; 0.75</text>
+  <text x="667" y="242" font-size="12.5" fill="#991b1b" text-anchor="middle">minRecallCount &#8805; 3</text>
+  <text x="667" y="264" font-size="12.5" fill="#991b1b" text-anchor="middle">minUniqueQueries &#8805; 3</text>
+  <text x="667" y="296" font-size="12" font-weight="700" fill="#b91c1c" text-anchor="middle">ALL must pass</text>
+
+  <!-- blocked -->
+  <rect x="838" y="92" width="140" height="96" rx="10" fill="#fee2e2" stroke="#dc2626" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="908" y="128" font-size="14" font-weight="700" fill="#7f1d1d" text-anchor="middle">MEMORY.md</text>
+  <text x="908" y="150" font-size="12" fill="#b91c1c" text-anchor="middle">never written</text>
+  <text x="908" y="170" font-size="16" fill="#dc2626" text-anchor="middle">&#10007; 0 promoted</text>
+
+  <!-- dreams.md (still written) -->
+  <rect x="838" y="340" width="140" height="86" rx="10" fill="#dcfce7" stroke="#15803d" stroke-width="2"/>
+  <text x="908" y="372" font-size="14" font-weight="700" fill="#14532d" text-anchor="middle">DREAMS.md</text>
+  <text x="908" y="394" font-size="12" fill="#166534" text-anchor="middle">diary still written</text>
+  <text x="908" y="412" font-size="12" fill="#166534" text-anchor="middle">&#10003; looks healthy</text>
+
+  <text x="40" y="440" font-size="12" fill="#94a3b8">The sweep reported success every night: &#8220;Ranked 0 candidate(s) &#8230; Promoted 0.&#8221; No error. No warning.</text>
+</svg>
