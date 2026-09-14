@@ -227,7 +227,7 @@
 
 <p><em>Names, because these two get tangled:</em> a <strong>persistent agent team</strong> is the <em>kind</em> of system — the category. <strong>Cadre</strong> is one instance of it: a specific roster and set of conventions a deployment installs. Cadre <em>is</em> a persistent agent team; not every persistent agent team is Cadre.</p>
 
-<p>The entry point is the <strong>Cadre Wizard</strong> — and it is a conversation, not a script. It doesn't sit there waiting to be invoked: it opens by asking whether you're ready to start Cadre, then interviews you — what you want the team for, which roles you need, what to call them, what they may spend. It shows you what it found before asking anything, and it <strong>writes nothing until you confirm each step</strong>. A Cadre Wizard that installs silently is a bug.</p>
+<p>The entry point is the <strong>Cadre Wizard</strong> — and it is a conversation, not a script. Your main agent <strong>spawns</strong> it as a separate installer agent, so the wizard stands outside the team it is building rather than being the main agent in disguise. It doesn't sit there waiting to be invoked: it opens by asking whether you're ready to start Cadre, then interviews you — what you want the team for, which roles you need, what to call them, what they may spend. It shows you what it found before asking anything, and it <strong>writes nothing until you confirm each step</strong>. A Cadre Wizard that installs silently is a bug.</p>
 
 <div class="callout">
   <span class="label">Why plain files matter</span>
@@ -384,7 +384,7 @@
 <p>Walk it once:</p>
 
 <ul>
-  <li><strong>The Cadre Wizard runs once</strong>, at install — it configures the team, then gets out of the way. It is not part of the day-to-day flow.</li>
+  <li><strong>The Cadre Wizard runs once</strong>, at install — a separate agent your main agent spawns, which configures the team, then gets out of the way and retires. It is not part of the day-to-day flow.</li>
   <li><strong>Requirements Analyst</strong> — where every project enters: intake, clarification, scope. Nothing starts anywhere else.</li>
   <li><strong>Project Designer</strong> — turns the requirement into an architecture and an approach.</li>
   <li><strong>Project Manager</strong> — owns the plan and dispatches. <strong>The workers are in the PM's scope:</strong> the PM holds them, tasks them and tracks them, rather than the operator driving each one by hand.</li>
@@ -441,7 +441,7 @@
 
 <p>The real limits live <strong>outside</strong> the words: in which tools an agent may use, what approvals it needs, what the sandbox permits, what budgets cap, and what gets written to the audit log. And one boundary outranks all others — <strong>no agent may edit its own permissions, prompt, or safety configuration.</strong> If it can rewrite its own rules, every rule you wrote is decoration.</p>
 
-<p>Four concrete guardrails ship with the architecture: a <strong>routing limit</strong> (a hard cap on agent-to-agent hops); a <strong>file-claim lease</strong> so two agents can never write the same file at once — two writers is a data-loss bug that pipelines can't have and teams must prevent by construction; the <strong>promotion gate</strong> for memory; and the <strong>no-op detector</strong>. (The claim lease isn't a diagram — it runs: a shared <code>team-board.sh</code> plus a pre-commit hook that refuses to commit another lane's files.)</p>
+<p>Four concrete guardrails ship with the architecture: a <strong>routing limit</strong> (a hard cap on agent-to-agent hops); a <strong>file-claim lease</strong> so two agents can never write the same file at once — two writers is a data-loss bug that pipelines can't have and teams must prevent by construction; the <strong>promotion gate</strong> for memory; and the <strong>no-op detector</strong>. (The claim lease isn't a diagram — in the deployment it runs: a shared <code>team-board.sh</code> plus a pre-commit hook that refuses to commit another lane's files. Cadre ships the <em>protocol</em> rather than that binary, and says so: enforcement is the operator's to add — a hook, a wrapper, or a lock utility — and to label <em>enforced</em> or <em>advisory</em>.)</p>
 
 <p>Two more come from the cost side, where a persistent team's real risk isn't a crash — it's <em>quiet, recurring</em> spend. <strong>The QA cap:</strong> verification is a loop, and an unbounded loop is a bill — one agent captured the same screen <strong>30 times in a day</strong>, because nothing capped the retry. Cadre caps review at two rounds per artifact; a third is refused, forcing ship-or-escalate. <strong>Zero-token checks:</strong> watching for an event shouldn't cost money when nothing is happening, so routine "has anything changed?" checks run as plain scripts that never spend a model turn. A watcher that polled the model burned <strong>≈$8.03 across 312 turns</strong>; rebuilt as zero-token sentinels, idle cost is <strong>$0</strong>.</p>
 

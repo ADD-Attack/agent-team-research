@@ -438,17 +438,18 @@ The deployment carries that guard today, plus a companion change to the silence 
 
 ### 12.2 Cadre: the reference architecture, realized
 
-§8 proposed a reference architecture and §10 a memory design. As of 2026-09-14 they are **shipped artifacts**: **Cadre** (`github.com/ADD-Attack/Cadre`, MIT, v0.1) — the *same Cadre* as the subject deployment of §6, with its conventions packaged for anyone to install — is a downloadable instantiation of this paper's architecture for any OpenClaw deployment, set up through the **Cadre Wizard**: a folder of Markdown conventions plus a setup procedure the deployment's main agent reads and executes. The team and the system share one name because they are one thing, described at two moments: what ran, and what it became.
+§8 proposed a reference architecture and §10 a memory design. As of 2026-09-14 they are **shipped artifacts**: **Cadre** (`github.com/ADD-Attack/Cadre`, MIT, v0.1) — the *same Cadre* as the subject deployment of §6, with its conventions packaged for anyone to install — is a downloadable instantiation of this paper's architecture for any OpenClaw deployment, set up through the **Cadre Wizard**: a folder of Markdown conventions plus a **dedicated installer agent** the deployment's main agent **spawns** to run the interview. The wizard is deliberately not the main agent wearing a hat — the installer stands outside the team it is building, so the main agent is never blocked for the length of an install and never sets up a team from inside it. The team and the system share one name because they are one thing, described at two moments: what ran, and what it became.
 
 What shipped, mapped to the paper:
 
 | Paper | Cadre artifact | State |
 |---|---|---|
 | §8 roles — seven functional roles (Supervisor, Builder(s), QA/Verifier, Social Media Manager, Support, **Security/IT**, **Consultant**) | `reference/agents.md` — a nine-seat concrete roster: the five original families expand to PM (Supervisor), RA + PD (Builders), QA (Verifier), SMM, FM + AR (Support), and the two roles §8 gained while building — **Security/IT** and **Consultant**; the Cadre Wizard confirms which to create | Shipped |
-| §8 guardrails 1–4 | `reference/guardrails.md` — routing limit (6-hop cap), file-claim lease, promotion gate, no-op detector | Shipped as **specification** |
+| §8 guardrails + §12.3 cost guards | `reference/guardrails.md` — the four **persistence** guards (routing limit 6-hop cap, file-claim lease, promotion gate, no-op detector) **plus** the two **cost** guards (QA cap, zero-token checks) | Shipped as **specification** |
 | §8 durable shared ledger | `templates/SHARED.md` — the append-only team ledger, claim-guarded | Shipped |
 | §10 tiered memory (STM/MTM/LTM) | `reference/memory.md` + `templates/SHARED.md` | Shipped as workspace convention |
 | §11 guardrail split, self-modification perimeter | `templates/CADRE.md`, `reference/guardrails.md` | Shipped |
+| §12.4 governance — act-vs-ask, **RL test**, dispatch-and-verify, autonomy ladder, **standing deploy authorization** | `reference/autonomy.md`, `reference/autonomy-ladder.md`, `reference/collaboration.md` | Shipped as convention |
 | §9.3 cost attribution | `reference/budgets.md` | **Partial** — see below |
 
 **Honest gaps.** Two, and they are the paper's own open problems rather than oversights:
