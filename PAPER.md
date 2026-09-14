@@ -6,13 +6,13 @@
 **Co-author (§11):** Oscar Martinez (an OpenClaw agent)
 **Commissioned by:** Brick (operator)
 **Date:** 2026-09-14
-**Status:** Working paper / prior-art review — v1.1
+**Status:** Working paper / prior-art review — v1.2 (§12.2 adds the architecture realized as a downloadable system; §11/§6 carry the 2026-09-14 fact-check corrections)
 
 ---
 
 ## Abstract
 
-Multi-agent LLM systems are usually described with a shared vocabulary: *roles*, *supervisors*, *workers*, *handoffs*. That shared vocabulary hides a real architectural split. This paper surveys the prior art across two species of system — **orchestration pipelines** (CrewAI, LangGraph, AutoGen, MetaGPT, ChatDev) and **persistent agent teams** (agent-native runtimes such as OpenClaw's multi-agent routing) — and argues they fail in fundamentally different ways because they have different physics. Pipelines are ephemeral: identity is configuration, memory dies at the end of a run, and the whole lifecycle is one-shot. Agent teams are durable: identity persists, memory is a file, and continuity *is* the product. We show that no published template describes the persistent, memory-carrying, chat-native team with a role hierarchy, and we present an empirical case study from a live persistent agent team deployment (the subject team, named **Cadre**) in which a memory-promotion pipeline silently no-opped for a week — 1,229 stored recall entries, zero promoted — a failure mode that cannot exist in a pipeline, because pipeline agents forget by design. We close with design principles worth borrowing, a reference architecture, and the open problems we consider unsolved.
+Multi-agent LLM systems are usually described with a shared vocabulary: *roles*, *supervisors*, *workers*, *handoffs*. That shared vocabulary hides a real architectural split. This paper surveys the prior art across two species of system — **orchestration pipelines** (CrewAI, LangGraph, AutoGen, MetaGPT, ChatDev) and **persistent agent teams** (agent-native runtimes such as OpenClaw's multi-agent routing) — and argues they fail in fundamentally different ways because they have different physics. Pipelines are ephemeral: identity is configuration, memory dies at the end of a run, and the whole lifecycle is one-shot. Agent teams are durable: identity persists, memory is a file, and continuity *is* the product. We show that no published template describes the persistent, memory-carrying, chat-native team with a role hierarchy, and we present an empirical case study from a live persistent agent team deployment (the subject team, named **Cadre**) in which a memory-promotion pipeline silently no-opped for roughly a week: the deployment held **1,229 stored recall entries** across its agents and promoted **zero** of them, with **192 staged candidates** on a single agent all failing the gate. That failure mode cannot exist in a pipeline, because pipeline agents forget by design. We close with design principles worth borrowing, a reference architecture, the open problems we consider unsolved, and the architecture realized as a downloadable, wizard-installable system (**Cadre**, §12.2).
 
 ---
 
@@ -37,6 +37,7 @@ Two systems can both say "the manager delegates to a worker agent" while sharing
 7. A concrete design for tiered agent memory that answers §9's adaptive-gate problem (§10).
 8. An audit of the platform's prompt-guardrail enforcement surface (§11).
 9. A consolidated summary of the changes proposed, and the channel each must land through (§12).
+10. A **shipped realization** of the architecture — the Cadre system — with its gaps stated plainly, and a verified platform constraint on cost enforcement (§12.2).
 
 ---
 
@@ -122,6 +123,8 @@ Across all surveyed prior art:
 
 That combination is the gap. It is not a crowded space — it is an under-documented one.
 
+**Update (2026-09-14).** That statement was accurate at survey time, and the gap has since been filled — *by this work*. The reference architecture of §8 is now published as a wizard-installable system (Cadre, §12.2). This does not invalidate the survey: the survey found no *prior* template, and Cadre is downstream of it, not prior to it. Read the claim above as a statement about the state of the art when surveyed, superseded by the authors' own artifact.
+
 ---
 
 ## 6. Case study: The Silent No-Op
@@ -130,22 +133,24 @@ This section reports a first-party observation. It is the paper's most concrete 
 
 ### 6.1 Setup
 
-The subject deployment (named **Cadre**): an OpenClaw 2026.9.3 deployment of multiple persistent agents, each with its own workspace, memory files, and session store. The `memory-core` plugin provides a nightly consolidation pipeline ("dreaming") that ranks short-term recall candidates and promotes durable ones into a curated `MEMORY.md`.
+The subject deployment — an OpenClaw 2026.9.3 deployment of multiple persistent agents, each with its own workspace, memory files, and session store — is the team named **Cadre**. (The same name now denotes the published system extracted from it, §12.2; throughout §6–§11, *Cadre* means the live deployment.) The `memory-core` plugin provides a nightly consolidation pipeline ("dreaming") that ranks short-term recall candidates and promotes durable ones into a curated `MEMORY.md`.
 
 ### 6.2 Observation
 
-For a week, every nightly report, for every agent, read:
+For roughly a week — the nightly cycles running into the paper date, 2026-09-14 — every report, for every agent, read:
 
 ```
 Ranked 0 candidate(s) for durable promotion.
 Promoted 0 candidate(s) into MEMORY.md.
 ```
 
-Measured totals: **512 recall entries on one agent, 512 on another, 205 on a third — 1,229 stored entries, zero promoted.**
+Measured totals (2026-09-14): **512 recall entries on one agent, 512 on another, 205 on a third — 1,229 stored entries across the deployment, zero promoted.**
 
 ### 6.3 Root cause
 
-The promotion gate has three thresholds: a minimum weighted score, a minimum recall count, and a minimum count of distinct queries. All three defaulted to values ("0.75", "3", "3") that were **never authored** — the config path was unset, so runtime defaults applied. Verified: all four config backups on the host contained no key for this setting at all.
+The promotion gate has three thresholds: a minimum weighted score, a minimum recall count, and a minimum count of distinct queries. All three defaulted to values ("0.75", "3", "3") that were **never authored** — the config path was unset, so runtime defaults applied. Verified: the host's config backups contained **no key for this setting at all** (zero occurrences of `minScore` across the archived configs).
+
+**Since observed, the deployment has changed the gate.** The live configuration now sets the deep-phase thresholds to `minScore: 0.5, minRecallCount: 0, minUniqueQueries: 0` — a deliberately **loose** configuration, i.e. §10's fix applied in practice. The strict `0.75 / 3 / 3` above are the *runtime defaults when unset*, which is what governed the failure; they are **not** the current live values. (No archived backup yet contains those loose values, so the change postdates the last config backup.)
 
 The defaults are not broken. They are **tuned for a different scale** — an instance busy enough that a genuinely important fact resurfaces three separate times, across three separate queries, within the retention window.
 
@@ -155,7 +160,7 @@ On a small private deployment like **Cadre**, that signal never accumulates:
 - Recall distribution: **189 at zero**, two at one, **one at two**
 - Highest weighted score observed anywhere: **0.737** — against a gate of 0.75
 
-Every candidate failed at least one gate. One candidate reached the recall threshold and still lost on score, by **0.013**.
+Every candidate failed at least one gate. One candidate reached the recall threshold and still lost on score, by **0.013**. *(These counts and the 0.737 maximum are point-in-time measurements taken 2026-09-14; no dated artifact preserves the snapshot, so they are consistent with, but not re-derivable from, the live store — which reads `0 promoted`.)*
 
 ### 6.4 Why this is a team-species failure
 
@@ -310,7 +315,7 @@ The §6 failure was not that the gate was wrong. It was that being wrong was **i
 
 The gates are **loose by intent**, and looseness is only safe because eviction runs. A loose gate without eviction is merely a larger pile.
 
-Verified against `openclaw config schema` (2026-09-14): `memory-core` exposes a **single** deep phase and **no native middle tier**. MTM must therefore be built — as an upstream feature, or (recommended) a workspace convention with exactly one writer per tier file.
+Verified against `openclaw config schema` (2026-09-14): `memory-core` exposes a **single** deep phase and **no native middle tier**. MTM must therefore be built — as an upstream feature, or (recommended) a workspace convention with exactly one writer per tier file. **This design now ships in Cadre** (§12.2) as `reference/memory.md`, with MTM as a workspace convention.
 
 Like §6, this design rests on **one deployment**. It is a concrete answer to §9's open problem, not a validated one.
 
@@ -323,7 +328,7 @@ As persistent agent teams like **Cadre** operate with elevated tooling, local wo
 ### 11.1 Platform realities (where the rails live)
 
 We verify that the system-level guardrail block is **injected unconditionally and is not file-editable**.
-- **Hardcoded constraints:** The OpenClaw `## Safety` rail block is compiled directly into the built bundle (specifically located within `dist/system-prompt-params-*.mjs` lines ~714-722, injected at ~line 854). It cannot be removed, disabled, or bypassed via configuration files, environment variables, or run-time arguments.
+- **Hardcoded constraints:** The OpenClaw `## Safety` rail block is compiled directly into the built bundle — `dist/system-prompt-params-*.mjs`, as the `const safetySection` array, spread into the assembled prompt with no conditional guard. (Symbol named rather than line-numbered: the bundle is content-hashed and its line offsets shift on every build.) No documented or discoverable path in this release removes, disables, or bypasses it via configuration files, environment variables, or run-time arguments.
 - **The advisory paradox:** Although conceptual platform documentation (`docs/concepts/system-prompt.md:98`) states that *"operators can disable prompt guardrails by design,"* this remains advisory for prompt-space design. In practice, the platform-level implementation in the active deployment hardcodes these safety rails unconditionally.
 - **Overridable boundaries:** Only three specific prompt sections are overridable by custom configurations:
   1. `interaction_style`
@@ -358,6 +363,7 @@ Several of these are not ours to edit. They live in the platform's compiled runt
 | 1 | **Agent memory** (§10) | One tier; a strict absolute gate promoted **0 of 1,229** entries for a week while reporting success | Three tiers (STM → MTM → LTM); promotion driven by **recall**, not score; **loose** percentile gates; **size**-triggered eviction | **Workspace convention** first (own `memory/midterm.md`, single writer); upstream request for a native middle tier | Proposal drafted (`proposals/2026-09-14-memory-tiers.md`) |
 | 2 | **Prompt guardrails** (§11) | One hardcoded `## Safety` block, injected into every agent; not file- or config-editable | Split the block: drop the decorative capability enumeration, keep and sharpen the oversight/escalation rail, add an explicit **self-modification perimeter** | **Upstream** — make the block overridable, or extend the three overridable sections to cover it. A local dist patch works but does not survive an update | Analysis complete; the change is platform-level |
 | 3 | **Voluntary silence / run handling** (§12.1) | A turn with no visible content can surface "Agent couldn't generate a response," even when silence was intentional | Let genuine voluntary silence reach the existing silent-reply path; keep the error for real failures | **Upstream** — a one-line guard already applied on the subject deployment; not durable across updates | Fix applied on the subject deployment (2026-09-09); not durable across updates |
+| 4 | **Cost enforcement** (§9.3) | No platform spend cap exists — a budget is a promise, not a mechanism | Account budgets as convention; **state the absence of a cap plainly** rather than implying a hard stop | **Workspace convention** (`reference/budgets.md`), pending a platform cap | Verified and shipped in Cadre (§12.2) |
 
 **Ideal end state.** None of these should require patching the compiled runtime. The paper's core claim — that persistent teams inherit distributed-systems failure modes — extends to their *fixes*: **a fix that lives in a file an update overwrites is not a fix; it is a deferral.**
 
@@ -371,6 +377,32 @@ The deployment carries that guard today, plus a companion change to the silence 
 2. Both changes live in the compiled runtime and are lost on the next update. The deployment therefore *also* adopted a non-empty minimal acknowledgment as a fallback, precisely because the model could not be relied on to emit the silent-reply token. That belt-and-suspenders is itself an argument for fixing the engine, not the model's obedience.
 
 **The change belongs upstream.**
+
+---
+
+### 12.2 Cadre: the reference architecture, realized
+
+§8 proposed a reference architecture and §10 a memory design. As of 2026-09-14 they are **shipped artifacts**: **Cadre** (`github.com/ADD-Attack/Cadre`, MIT, v0.1) is a downloadable, wizard-installable instantiation of this paper's architecture for any OpenClaw deployment — a folder of Markdown conventions plus a setup procedure the deployment's main agent reads and executes.
+
+What shipped, mapped to the paper:
+
+| Paper | Cadre artifact | State |
+|---|---|---|
+| §8 roles (Supervisor, Builder, QA, Liaison, Support) | `reference/agents.md` — a nine-role roster with charters, budgets, and authority; the wizard confirms which to create | Shipped |
+| §8 guardrails 1–4 | `reference/guardrails.md` — routing limit (6-hop cap), file-claim lease, promotion gate, no-op detector | Shipped as **specification** |
+| §8 durable shared ledger | `templates/SHARED.md` — the append-only team ledger, claim-guarded | Shipped |
+| §10 tiered memory (STM/MTM/LTM) | `reference/memory.md` + `templates/SHARED.md` | Shipped as workspace convention |
+| §11 guardrail split, self-modification perimeter | `templates/CADRE.md`, `reference/guardrails.md` | Shipped |
+| §9.3 cost attribution | `reference/budgets.md` | **Partial** — see below |
+
+**Honest gaps.** Two, and they are the paper's own open problems rather than oversights:
+
+1. **The claim lease ships as a protocol, not an enforcement binary.** Cadre specifies the mechanism (`.claims/`, 30-minute leases with renewal and release, contention reported as `kind: blocked`) but ships **no checker**. It instructs the operator to adopt an enforcement surface (a hook, wrapper, or lock utility) and to *state whether theirs is enforced or advisory*. This is deliberate — §7's principle applies: real limits live outside the prompt. The guardrail is documented; the teeth are the operator's to add.
+2. **The tiered-memory design inherits §10.4's small-window flaw.** Below ~20 candidates the adaptive gate falls back to a loose *constant* (0.30 / 0.40) — looser than the gate that failed, but still a constant. `reference/memory.md` states the limitation and names the fix (admit-all + evict, no threshold) rather than hiding it.
+
+**One new platform fact, established while building Cadre** (verified 2026-09-14 against `openclaw config schema`). §9.3 named cost attribution as open; the budget layer surfaced a sharper constraint: **OpenClaw exposes no spend-cap primitive at all.** There is no `spendLimit` / `maxSpend` / `costCap` / `dollarBudget` key anywhere in the configuration schema, and no CLI usage/cost report command — only per-model `cost` metadata (which *prices* usage but cannot *stop* it) and context-budget knobs (which bound tokens-in-context, not dollars). The near-miss key `suspendAfter` is a cloud-worker idle timeout, not a monetary control. **Consequence:** a team budget can be *accounted* by the platform but not *enforced* by it. Cadre therefore ships budgets as **accounting plus convention** and says so plainly, rather than implying a hard stop that does not exist. This is the §12 thesis once more: a limit that lives in a promise, not a mechanism, is a deferral.
+
+Cadre is the paper's architecture made installable — and, deliberately, it ships the parts that work as specification and *names* the parts that still need teeth.
 
 ---
 
@@ -403,6 +435,7 @@ The deployment carries that guard today, plus a companion change to the silence 
 14. Delegate architecture. `docs/concepts/delegate-architecture.md`
 15. Dreaming (memory consolidation). `docs/concepts/dreaming.md`
 16. OpenClaw. https://github.com/openclaw/openclaw
+17. Cadre — the reference architecture realized as a downloadable system. https://github.com/ADD-Attack/Cadre
 
 
 ---
@@ -441,6 +474,6 @@ If the permissive run returns a healthy pile of candidates while `status` report
 
 ---
 
-*Environment: OpenClaw 2026.9.3 · `memory-core` plugin · deep-phase gates unset (runtime defaults) · multiple persistent agents, one shared host.*
+*Environment: OpenClaw 2026.9.3 · `memory-core` plugin · deep-phase gates unset at time of failure (runtime defaults `0.75/3/3`; since set to `0.5/0/0`) · multiple persistent agents, one shared host.*
 
 *This is a working paper. Corrections welcome; §7 is opinion and §2 states the limits.*
