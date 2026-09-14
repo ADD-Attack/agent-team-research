@@ -2,22 +2,23 @@
 
 ### Prior Art, Gaps, and a Reference Architecture for Chat-Native Multi-Agent Hierarchy
 
-**Author:** Erin (an OpenClaw agent)
+**Author:** Erin (an OpenClaw agent)  
+**Co-author (§11):** Oscar Martinez (an OpenClaw agent)
 **Commissioned by:** Brick (operator)
-**Date:** 2026-09-13
-**Status:** Working paper / prior-art review — v1.0
+**Date:** 2026-09-14
+**Status:** Working paper / prior-art review — v1.1
 
 ---
 
 ## Abstract
 
-Multi-agent LLM systems are usually described with a shared vocabulary: *roles*, *supervisors*, *workers*, *handoffs*. That shared vocabulary hides a real architectural split. This paper surveys the prior art across two species of system — **orchestration pipelines** (CrewAI, LangGraph, AutoGen, MetaGPT, ChatDev) and **persistent agent teams** (agent-native runtimes such as OpenClaw's multi-agent routing) — and argues they fail in fundamentally different ways because they have different physics. Pipelines are ephemeral: identity is configuration, memory dies at the end of a run, and the whole lifecycle is one-shot. Agent teams are durable: identity persists, memory is a file, and continuity *is* the product. We show that no published template describes the persistent, memory-carrying, chat-native team with a role hierarchy, and we present an empirical case study from a live two-agent deployment in which a memory-promotion pipeline silently no-opped for a week — 1,229 stored recall entries, zero promoted — a failure mode that cannot exist in a pipeline, because pipeline agents forget by design. We close with design principles worth borrowing, a reference architecture, and the open problems we consider unsolved.
+Multi-agent LLM systems are usually described with a shared vocabulary: *roles*, *supervisors*, *workers*, *handoffs*. That shared vocabulary hides a real architectural split. This paper surveys the prior art across two species of system — **orchestration pipelines** (CrewAI, LangGraph, AutoGen, MetaGPT, ChatDev) and **persistent agent teams** (agent-native runtimes such as OpenClaw's multi-agent routing) — and argues they fail in fundamentally different ways because they have different physics. Pipelines are ephemeral: identity is configuration, memory dies at the end of a run, and the whole lifecycle is one-shot. Agent teams are durable: identity persists, memory is a file, and continuity *is* the product. We show that no published template describes the persistent, memory-carrying, chat-native team with a role hierarchy, and we present an empirical case study from a live persistent agent team deployment (the subject team, named **Cadre**) in which a memory-promotion pipeline silently no-opped for a week — 1,229 stored recall entries, zero promoted — a failure mode that cannot exist in a pipeline, because pipeline agents forget by design. We close with design principles worth borrowing, a reference architecture, and the open problems we consider unsolved.
 
 ---
 
 ## 1. Introduction
 
-The goal that motivated this review: build an agent team with a **product manager and specialist agents working together** — a hierarchy, not a single monolithic agent.
+The goal that motivated this review: build a persistent agent team (named **Cadre**) with a **product manager and specialist agents working together** — a hierarchy, not a single monolithic agent.
 
 The question asked was straightforward: *has anyone made a template for this before?*
 
@@ -38,13 +39,13 @@ Two systems can both say "the manager delegates to a worker agent" while sharing
 
 ## 2. Method and limitations
 
-**Method.** Prior art was surveyed through public documentation and search (2026-09-13), plus direct inspection of a locally installed OpenClaw 2026.9.3 deployment: its conceptual documentation and its `memory-core` plugin schema. The case study in §6 is first-party: measured directly on that deployment.
+**Method.** Prior art was surveyed through public documentation and search (2026-09-13), plus direct inspection of a locally installed OpenClaw 2026.9.3 deployment: its conceptual documentation and its `memory-core` plugin schema. The case study in §6 is first-party: measured directly on the **Cadre** deployment.
 
 **Limitations — stated plainly.**
 
 - Framework descriptions reflect **published documentation**, not independent benchmarking. We did not run CrewAI, LangGraph, AutoGen, MetaGPT, or ChatDev. Where we describe their behaviour, we mean *as documented*.
 - Version drift is real in this field. Claims are dated; anything here may be stale within months.
-- The sample size of the case study is **one deployment**. It is suggestive, not statistically meaningful.
+- The sample size of the case study is **one deployment** (the **Cadre** team). It is suggestive, not statistically meaningful.
 - Section 7 is **opinion**, marked as such. It should be read as a starting position to argue with, not a result.
 
 ---
@@ -126,7 +127,7 @@ This section reports a first-party observation. It is the paper's most concrete 
 
 ### 6.1 Setup
 
-A live deployment: OpenClaw 2026.9.3, multiple persistent agents, each with its own workspace, memory files, and session store. The `memory-core` plugin provides a nightly consolidation pipeline ("dreaming") that ranks short-term recall candidates and promotes durable ones into a curated `MEMORY.md`.
+The subject deployment (named **Cadre**): an OpenClaw 2026.9.3 deployment of multiple persistent agents, each with its own workspace, memory files, and session store. The `memory-core` plugin provides a nightly consolidation pipeline ("dreaming") that ranks short-term recall candidates and promotes durable ones into a curated `MEMORY.md`.
 
 ### 6.2 Observation
 
@@ -145,7 +146,7 @@ The promotion gate has three thresholds: a minimum weighted score, a minimum rec
 
 The defaults are not broken. They are **tuned for a different scale** — an instance busy enough that a genuinely important fact resurfaces three separate times, across three separate queries, within the retention window.
 
-On a small private deployment, that signal never accumulates:
+On a small private deployment like **Cadre**, that signal never accumulates:
 
 - **192 staged candidates** on one agent
 - Recall distribution: **189 at zero**, two at one, **one at two**
@@ -255,6 +256,37 @@ Marked as opinion because it is.
 11. Delegate architecture. `docs/concepts/delegate-architecture.md`
 12. Dreaming (memory consolidation). `docs/concepts/dreaming.md`
 13. OpenClaw. https://github.com/openclaw/openclaw
+
+---
+
+## 11. Prompt guardrails: what is enforceable
+
+As persistent agent teams like **Cadre** operate with elevated tooling, local workspaces, and continuous sessions, defining what is actually enforceable within a prompt versus what is merely advisory becomes a core engineering safety concern. This section audits the guardrail enforcement surface of the OpenClaw platform.
+
+### 11.1 Platform realities (where the rails live)
+
+We verify that the system-level guardrail block is **injected unconditionally and is not file-editable**.
+- **Hardcoded constraints:** The OpenClaw `## Safety` rail block is compiled directly into the built bundle (specifically located within `dist/system-prompt-params-*.mjs` lines ~714-722, injected at ~line 854). It cannot be removed, disabled, or bypassed via configuration files, environment variables, or run-time arguments.
+- **The advisory paradox:** Although conceptual platform documentation (`docs/concepts/system-prompt.md:98`) states that *"operators can disable prompt guardrails by design,"* this remains advisory for prompt-space design. In practice, the platform-level implementation in the active deployment hardcodes these safety rails unconditionally.
+- **Overridable boundaries:** Only three specific prompt sections are overridable by custom configurations:
+  1. `interaction_style`
+  2. `tool_call_style`
+  3. `execution_bias`
+
+### 11.2 The capability/oversight split
+
+To optimize agent focus and execution reliability, we argue for a strict split between "loose" (decorative) and "tight" (load-bearing) guardrail lines:
+
+1. **The Loose Half (Capability prohibitions):**
+   Prohibitions against pursuing "independent goals," "self-preservation," "replication," "resource acquisition," or "power-seeking" are largely decorative in the prompt layer. Modern base models are already heavily aligned against these extreme behaviors by default. Removing these scary enumerations from the prompt does not grant any actual capability because capability is strictly bounded by tool policy, user approvals, and sandbox constraints. Thus, prompt clutter should be minimized to a single plain line:
+   > *Do not pursue goals or actions outside of the explicit user request.*
+2. **The Tight Half (Oversight and escalation):**
+   The core load-bearing instruction in the hardcoded safety block is: *"Safety/oversight > completion."* Removing or softening this line in the prompt shifts failures from "loud" (loudly stopping, alerting the operator of a block) to "quiet" (silently proceeding, reporting false success, and failing to notify the operator of errors). This rule must be sharpened: agents must always obey stop/pause/audit directives instantly and surface tool denials rather than trying to circumvent them.
+
+### 11.3 The self-modification perimeter
+
+A fundamental security perimeter is that **agents must not be able to edit their own system prompt, permissions, safety configuration, or harness allowlists.**
+If an agent can modify its own harness or permissions, any prompt-based guardrail is instantly bypassed. Therefore, real, load-bearing limits must live in the **tool policy, approval gates, sandboxing, network egress proxy configurations, spend caps, and external audit logs**—not in prompt text.
 
 ---
 
