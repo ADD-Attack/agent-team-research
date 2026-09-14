@@ -246,7 +246,7 @@ The asymmetry is deliberate: **the inbox accepts peer messages; the outbox never
 **Guardrails.**
 
 1. Routing limit — a hard cap on agent-to-agent hops.
-2. File-claim lease — one writer per file, enforced, not advisory.
+2. File-claim lease — one writer per file, enforced, not advisory. *(Implemented, not merely specified: the subject deployment runs it as `tools/team-board.sh` plus a pre-commit hook that refuses to commit another lane's files.)*
 3. Promotion gate — an explicit policy for what enters long-term memory.
 4. No-op detector / heartbeat — assert artifacts exist.
 
@@ -425,6 +425,26 @@ What shipped, mapped to the paper:
 **One new platform fact, established while building Cadre** (verified 2026-09-14 against `openclaw config schema`). §9.3 named cost attribution as open; the budget layer surfaced a sharper constraint: **OpenClaw exposes no spend-cap primitive at all.** There is no `spendLimit` / `maxSpend` / `costCap` / `dollarBudget` key anywhere in the configuration schema, and no CLI usage/cost report command — only per-model `cost` metadata (which *prices* usage but cannot *stop* it) and context-budget knobs (which bound tokens-in-context, not dollars). The near-miss key `suspendAfter` is a cloud-worker idle timeout, not a monetary control. **Consequence:** a team budget can be *accounted* by the platform but not *enforced* by it. Cadre therefore ships budgets as **accounting plus convention** and says so plainly, rather than implying a hard stop that does not exist. This is the §12 thesis once more: a limit that lives in a promise, not a mechanism, is a deferral.
 
 Cadre is the paper's architecture made installable — and, deliberately, it ships the parts that work as specification and *names* the parts that still need teeth.
+
+### 12.3 Cost safety for persistent teams
+
+A persistent team's distinctive failure is not a crash — it is **silent, recurring spend**. A pipeline that burns money stops when the run ends; a team that burns money does so every cycle, indefinitely, while every log reports success. This is §6's silent no-op in the cost layer, and it is the layer the paper had not yet named. Two mechanisms, both shipped by Cadre, address it, and they share one thesis: **the fix is mechanism, not discipline.**
+
+**Zero-token condition triggering.** Continuous checks ("is there new mail?", "did the build finish?") are usually implemented as a model turn: an agent wakes, calls a tool, reports. That makes *idleness itself* expensive — the cost of watching scales with the number of things watched and how often, not with the number of events. The alternative is to run the check as a **deterministic headless script** (a *sentinel*) that never spends a model turn; the model wakes only when the condition fires. The subject deployment measured the difference: a model-polling watcher consumed **≈$8.03 across 312 model turns**; after rewriting the same checks as zero-token sentinels, idle cost fell to **$0** — the team costs nothing when nothing is happening. This is the paper's most concrete cost number, and it is a *positive* result: a persistent team can be made cheap to leave running.
+
+**The QA cap.** Verification is a loop, and an unbounded loop is a bill. The subject deployment caps review at **two rounds per artifact**; a third is mechanically refused, forcing ship-or-escalate over another pass. The motivating case was a screen one agent captured **30 times in a single day** — nothing in the workflow capped the retry, so the cheapest available action (capture it again) was taken until an operator noticed. A cap turns an open-ended loop into a bounded one and hands the decision back to the operator at the point where more automation stops helping. Like every §8 guardrail, it ships as specification-plus-convention: the rule and the script, with enforcement left to the operator.
+
+Both are one-deployment observations, with the same caveat as §6. The dollar figure is measured; the QA cap is a convention with a motivating anecdote, not a benchmark.
+
+### 12.4 Governance: acting without asking
+
+A persistent team is useful only if it can act while the operator is away — and safe only if "away" has a definition. Five patterns, shipped as Cadre conventions rather than left to judgment, make that boundary explicit. They are **architecture proposals from one deployment — not validated**:
+
+- **The act-vs-ask contract.** Safe *and* reversible ⇒ act and report; otherwise ask. The default is action for reversible work, and the ask is reserved for genuine forks.
+- **The RL test** — the same contract as a mechanical check: *is it local? can one git command undo it? does it spend new money? is it public?* All four favourable ⇒ initiate.
+- **Dispatch-and-verify.** A dispatcher that hands work off **owns an armed check-in** until the lane is verified complete. Delegation without verification is how "running" gets mistaken for "done."
+- **The autonomy ladder (L0–L4).** A lane earns authority in steps, each with a rollback. Autonomy is granted, measured, and revocable — not switched on.
+- **Standing deploy authorization.** The PM gates routine deploys by judgment within a stated scope and **reports after**, so routine work does not queue on the operator's attention. The operator retains revocation.
 
 ---
 
