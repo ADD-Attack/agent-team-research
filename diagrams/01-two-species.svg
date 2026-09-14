@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" width="1000" height="560" role="img" aria-labelledby="fig1-title fig1-desc" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif">
+  <title id="fig1-title">Two species of multi-agent system: ephemeral orchestration pipeline versus persistent agent team</title>
+  <desc id="fig1-desc">A side-by-side comparison of two architectures. LEFT, labelled Orchestration Pipeline: a single large rounded box represents one process, containing an orchestrator that routes to three worker nodes connected in sequence. Annotations read: ephemeral, identity is a config string, memory dies at run end, one-shot lifecycle of kickoff to result, cheap and deterministic and replayable. A small timeline below shows a short line with a single execution loop. RIGHT, labelled Persistent Agent Team: three separate boxes, each containing its own workspace, durable memory file, and session database, all joined to a shared message bus. Annotations read: durable identity, memory survives because it is a file, long-lived, human in the loop through a chat channel, inherits distributed-systems failure modes. A timeline below shows a long continuous line labelled runs for weeks. A footer contrasts the two: pipelines forget by design, teams fail by forgetfulness.</desc>
+  <defs>
+    <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1000" height="560" fill="#f8fafc"/>
+  <text x="40" y="46" font-size="24" font-weight="700" fill="#0f172a">Two species of multi-agent system</text>
+  <text x="40" y="72" font-size="14" fill="#64748b">Same vocabulary ("agents", "roles", "supervisor"). Different physics.</text>
+
+  <!-- LEFT panel -->
+  <rect x="30" y="100" width="455" height="380" rx="12" fill="#eef2ff" stroke="#6366f1" stroke-width="2"/>
+  <text x="257" y="132" font-size="16" font-weight="700" fill="#312e81" text-anchor="middle">ORCHESTRATION PIPELINE</text>
+  <text x="257" y="154" font-size="12" fill="#6366f1" text-anchor="middle">CrewAI · LangGraph · AutoGen · MetaGPT · ChatDev</text>
+
+  <rect x="60" y="176" width="395" height="150" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="257" y="196" font-size="11.5" fill="#64748b" text-anchor="middle">one process · one run</text>
+
+  <rect x="80" y="210" width="110" height="52" rx="8" fill="#c7d2fe" stroke="#4338ca" stroke-width="1.5"/>
+  <text x="135" y="241" font-size="12.5" font-weight="700" fill="#1e1b4b" text-anchor="middle">Orchestrator</text>
+  <rect x="215" y="210" width="90" height="52" rx="8" fill="#e0e7ff" stroke="#4338ca" stroke-width="1.5"/>
+  <text x="260" y="241" font-size="12.5" fill="#1e1b4b" text-anchor="middle">Worker A</text>
+  <rect x="330" y="210" width="90" height="52" rx="8" fill="#e0e7ff" stroke="#4338ca" stroke-width="1.5"/>
+  <text x="375" y="241" font-size="12.5" fill="#1e1b4b" text-anchor="middle">Worker B</text>
+  <path d="M 190 236 L 213 236" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a1)"/>
+  <path d="M 305 236 L 328 236" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#a1)"/>
+
+  <text x="80" y="292" font-size="12" fill="#4338ca">&#8226; identity is a config string</text>
+  <text x="80" y="311" font-size="12" fill="#4338ca">&#8226; memory dies at run end</text>
+  <text x="260" y="292" font-size="12" fill="#4338ca">&#8226; cheap, deterministic</text>
+  <text x="260" y="311" font-size="12" fill="#4338ca">&#8226; replayable, testable</text>
+
+  <line x1="70" y1="400" x2="180" y2="400" stroke="#4338ca" stroke-width="3"/>
+  <circle cx="180" cy="400" r="5" fill="#4338ca"/>
+  <text x="192" y="404" font-size="11.5" fill="#4338ca">one-shot: kick off &#8594; result &#8594; process exits</text>
+  <text x="257" y="452" font-size="12.5" font-style="italic" fill="#4f46e5" text-anchor="middle">has no memory problem &#8212; it has no memory</text>
+
+  <!-- RIGHT panel -->
+  <rect x="515" y="100" width="455" height="380" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+  <text x="742" y="132" font-size="16" font-weight="700" fill="#064e3b" text-anchor="middle">PERSISTENT AGENT TEAM</text>
+  <text x="742" y="154" font-size="12" fill="#059669" text-anchor="middle">OpenClaw multi-agent · chat-native role teams</text>
+
+  <rect x="545" y="180" width="115" height="120" rx="9" fill="#ffffff" stroke="#047857" stroke-width="1.6"/>
+  <text x="602" y="202" font-size="12" font-weight="700" fill="#064e3b" text-anchor="middle">Supervisor</text>
+  <text x="602" y="224" font-size="10.5" fill="#047857" text-anchor="middle">workspace</text>
+  <text x="602" y="242" font-size="10.5" fill="#047857" text-anchor="middle">MEMORY.md</text>
+  <text x="602" y="260" font-size="10.5" fill="#047857" text-anchor="middle">session DB</text>
+
+  <rect x="685" y="180" width="115" height="120" rx="9" fill="#ffffff" stroke="#047857" stroke-width="1.6"/>
+  <text x="742" y="202" font-size="12" font-weight="700" fill="#064e3b" text-anchor="middle">Worker</text>
+  <text x="742" y="224" font-size="10.5" fill="#047857" text-anchor="middle">workspace</text>
+  <text x="742" y="242" font-size="10.5" fill="#047857" text-anchor="middle">MEMORY.md</text>
+  <text x="742" y="260" font-size="10.5" fill="#047857" text-anchor="middle">session DB</text>
+
+  <rect x="825" y="180" width="115" height="120" rx="9" fill="#ffffff" stroke="#047857" stroke-width="1.6"/>
+  <text x="882" y="202" font-size="12" font-weight="700" fill="#064e3b" text-anchor="middle">QA / Liaison</text>
+  <text x="882" y="224" font-size="10.5" fill="#047857" text-anchor="middle">workspace</text>
+  <text x="882" y="242" font-size="10.5" fill="#047857" text-anchor="middle">MEMORY.md</text>
+  <text x="882" y="260" font-size="10.5" fill="#047857" text-anchor="middle">session DB</text>
+
+  <rect x="545" y="318" width="395" height="34" rx="8" fill="#a7f3d0" stroke="#047857" stroke-width="1.4"/>
+  <text x="742" y="340" font-size="12" fill="#064e3b" text-anchor="middle">shared message bus &#8212; sessions, DMs, channels</text>
+  <path d="M 602 300 L 602 316" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#a1)"/>
+  <path d="M 742 300 L 742 316" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#a1)"/>
+  <path d="M 882 300 L 882 316" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <text x="555" y="374" font-size="12" fill="#065f46">&#8226; durable identity &#183; memory is a file</text>
+  <text x="555" y="392" font-size="12" fill="#065f46">&#8226; long-lived &#183; human in the loop</text>
+  <text x="555" y="410" font-size="12" fill="#065f46">&#8226; inherits distributed-systems failure modes</text>
+
+  <line x1="555" y1="436" x2="900" y2="436" stroke="#047857" stroke-width="3"/>
+  <circle cx="900" cy="436" r="5" fill="#047857"/>
+  <text x="742" y="458" font-size="11.5" fill="#047857" text-anchor="middle">runs for weeks &#8212; continuity is the product</text>
+
+  <text x="500" y="516" font-size="13" font-weight="600" fill="#334155" text-anchor="middle">Pipelines forget by design. Teams fail by forgetfulness.</text>
+</svg>
