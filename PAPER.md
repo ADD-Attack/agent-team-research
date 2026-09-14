@@ -204,23 +204,27 @@ Marked as opinion because it is.
 
 ## 8. Reference architecture
 
-![Reference architecture for a persistent agent team](./diagrams/02-reference-architecture.svg)
+![The project pipeline: a wizard runs once at setup, then work moves from the Requirements Analyst to the Project Designer to the Project Manager (workers in its scope) to QA to the finished product, with support roles on call beside the line and a rework arrow from the PM back to the Requirements Analyst](./diagrams/07-project-pipeline.svg)
 
-**Roles.**
+The architecture is easier to state as **the path a project takes** than as an org chart. A flat "supervisor dispatches to specialists" picture understates the two things that matter: the order, and the loop.
 
-Five role *families* covered the architecture generically; building it out (§12.2) added two more, and the realization expands all seven into named seats. Names differ; the function does not.
+**The flow.** The operator configures the team once, through a wizard, and then hands work in. Every project enters at the **Requirements Analyst** and moves along a fixed sequence:
 
-- **Supervisor** — owns the plan, decomposes work, dispatches, adjudicates. Does not do the work.
-- **Builder(s)** — do the work in their specialization.
-- **QA / Verifier** — independent check; must be a *different agent* than the builder, or it is not verification.
-- **Liaison** — relays, unblocks, carries messages between the operator and a busy supervisor.
-- **Support** — the personal/operational lane, unbothered by project work.
-- **Security / IT** — owns the exposure surface: audits configuration, permissions, and the self-modification perimeter (§11.3). **Advises, never edits** — an agent able to rewrite its own guardrails is not a guardrail.
-- **Consultant** — an independent second opinion and red team. Holds no authority; its value is *disagreement on demand*.
+1. **Requirements Analyst** — intake, clarification, scope. Nothing enters anywhere else.
+2. **Project Designer** — architecture, approach, specifications.
+3. **Project Manager** — owns the plan and dispatches. **The workers sit in the PM's scope**: the PM tasks and tracks them, rather than the operator driving each one by hand.
+4. **QA / Verifier** — an independent check on the way out; must be a *different agent* than the builder, or it is not verification.
+5. **Finished product.**
 
-The last two are not in the surveyed prior art. They emerged from building the architecture out (§12.2): a team that can modify itself needs a role whose only job is to watch the perimeter, and one whose only job is to argue with the plan. Both are cheap to omit and expensive to omit *silently*.
+**Rework.** A scope change or a new feature is *not* patched in mid-stream. It returns **all the way to the Requirements Analyst** and runs the pipeline again. It costs a lap; it buys a specification — the enforced-intermediate-artifact discipline the pipeline literature got right (MetaGPT's PRD-before-code), applied to a durable team.
+
+**Support roles ride beside the line, never on it.** **Security / IT** — owns the exposure surface and the self-modification perimeter (§11.3); **advises, never edits**, because an agent able to rewrite its own guardrails is not a guardrail. **Consultant** — an independent second opinion and red team; holds no authority, its value is *disagreement on demand*. Plus **Social Media Manager**, **Finance Manager** and **Agent Resources**. They attach to whichever project needs them and go quiet when it doesn't; none is a mandatory station.
+
+Abstracted, the seats reduce to the families used elsewhere in this paper: **Supervisor** (PM), **Builder(s)** (RA, PD and the workers), **QA / Verifier**, **Liaison** (SMM), **Support** (FM and AR), plus the two the flow adds — **Security / IT** and **Consultant**. Names differ; the function does not. The last two are not in the surveyed prior art: a team that can modify itself needs a role whose only job is to watch the perimeter, and one whose only job is to argue with the plan. Both are cheap to omit and expensive to omit *silently*.
 
 **Durable layer.**
+
+![The durable layer: per-agent long-term memory, a shared team ledger, per-agent session stores, and a shared task board](./diagrams/08-durable-layer.svg)
 
 - **Per-agent long-term memory** — append-only, human-readable, private to one agent, one writer.
 - **Shared team memory** — a single append-only ledger (e.g. `SHARED.md`) that **every agent reads at session start** and any agent may append to **under a claim lease**. It holds team-scoped truth — decisions with provenance, file ownership, standing conventions, environment facts — never per-persona notes or scratch. *A ledger, not a scratchpad.* This is the orthogonal axis to the per-agent tiers of §10: those are ordered by **recency**, this is scoped by **team**.

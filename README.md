@@ -62,17 +62,24 @@ This failure mode cannot exist in the pipeline species, because pipeline agents 
 
 ## Figures
 
-Both diagrams are SVG with screen-reader `<title>`/`<desc>` metadata. Full text descriptions, so no image is required:
+All diagrams are SVG with screen-reader `<title>`/`<desc>` metadata. Full text descriptions, so no image is required:
 
 ### Figure 1 — Two species of multi-agent system
 *(`diagrams/01-two-species.svg`)*
 
 Side-by-side. **Left, Orchestration Pipeline:** one process containing an orchestrator routing to workers. Annotations: identity is a config string; memory dies at run end; cheap, deterministic, replayable; one-shot lifecycle. **Right, Persistent Agent Team:** three separate agents, each with its own workspace, memory file, and session DB, joined by a shared message bus. Annotations: durable identity; memory is a file; long-lived; human in the loop; inherits distributed-systems failure modes. Footer: *Pipelines forget by design. Teams fail by forgetfulness.*
 
-### Figure 2 — Reference architecture
-*(`diagrams/02-reference-architecture.svg`)*
+### Figure 2 — How a project runs (the project pipeline)
+*(`diagrams/07-project-pipeline.svg`)*
 
-Vertical. A human operator connects through one chat channel to a **Supervisor**, which dispatches to four specialists: Builder, QA/Verifier, Liaison, Support. All agents read/write a **shared durable layer** (append-only MEMORY.md, per-agent session stores, shared task board). A dashed verification loop returns from QA to the supervisor, labelled *evidence before claims*. Four **guardrails** are called out: routing limit, file-claim lease, promotion gate, no-op detector.
+Left-to-right flow. A **human operator** connects through one chat channel to a **wizard**, which runs **once at install** to confirm roles and budgets. The flow then drops into the pipeline: **Requirements Analyst** (intake, clarify, scope) → **Project Designer** (architecture, approach, specifications) → **Project Manager** (plans, dispatches, tracks; **the workers are in its scope**) → **QA / Verifier** (independent check, *evidence before claims*) → **finished product**. A dashed red **rework** arrow returns from the PM all the way to the Requirements Analyst: a scope change or new feature runs the pipeline again rather than being patched mid-stream. Along the bottom, a dashed panel lists **support roles on call as needed** — Security/IT, Consultant, Social Media Manager, Finance Manager, Agent Resources — beside the line, never on it.
+
+### Figure 3 — The durable layer
+*(`diagrams/08-durable-layer.svg`)*
+
+Four cells. **Per-agent long-term memory:** MEMORY.md, append-only, curated, human-readable, private to one agent, one writer. **Shared team memory:** SHARED.md, a single append-only team ledger, read by every agent at session start and appended to under a claim lease. **Per-agent session stores:** durable SQLite chat history, local to each agent. **Shared task board:** claims recording who owns which file *right now* — two writers on one file is a data-loss bug teams must prevent by construction. Footer: *Memory is the continuity layer, not a cache.*
+
+> The remainder of the paper's figures (two-species taxonomy, three-tier memory cascade, retention by use) are described in §3, §4 and §10 respectively.
 
 ---
 

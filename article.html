@@ -387,11 +387,6 @@
 
 <h3>The structure underneath</h3>
 
-<figure>
-  <img src="./diagrams/02-reference-architecture.svg" alt="Reference architecture diagram. A human operator connects through one chat channel to a supervisor, which dispatches to six specialists: a builder, a QA verifier, a liaison, a support agent, a Security/IT agent and a consultant. All agents read and write a shared durable layer of an append-only memory file, per-agent session stores, a shared task board and a team ledger. A dashed verification loop returns from QA to the supervisor, labelled evidence before claims. Four guardrails are listed: routing limit, file-claim lease, promotion gate and a heartbeat/no-op detector.">
-  <figcaption><b>Figure 7 — The reference architecture.</b> A supervisor that plans but doesn't build; specialists who do; a verifier who must be a genuinely <em>different</em> agent; a role that only watches the perimeter and one that only argues with the plan; and a shared durable layer underneath.</figcaption>
-</figure>
-
 <p>Seven role <em>families</em>, expanded into named seats in the Cadre edition (the roster in §3). Names differ between deployments; the function does not.</p>
 
 <ul>
@@ -407,6 +402,11 @@
 <p>The last two aren't in any of the surveyed prior art. They emerged from building the architecture out: a team that can modify itself needs one role whose only job is to watch the perimeter, and another whose only job is to argue with the plan. Both are cheap to omit and expensive to omit <em>silently</em>.</p>
 
 <p>Underneath, a <strong>durable layer</strong> every agent reads at session start — per-agent long-term memory (append-only, one writer), a <strong>shared team ledger</strong> any agent may append to under a claim lease (decisions with provenance, file ownership, standing conventions; <em>a ledger, not a scratchpad</em>), per-agent session stores, and a shared task board recording who owns which file <em>right now</em>.</p>
+
+<figure>
+  <img src="./diagrams/08-durable-layer.svg" alt="Four-cell diagram of the durable layer. Per-agent long-term memory: MEMORY.md, append-only, curated, human-readable, private to one agent, one writer. Shared team memory: SHARED.md, a single append-only team ledger, read by all and appended to under a claim lease. Per-agent session stores: durable SQLite chat history, local to each agent and surviving restart. Shared task board: claims recording who owns which file right now, since two writers on one file is a data-loss bug teams must prevent by construction.">
+  <figcaption><b>Figure 7 — The durable layer.</b> The part every agent reads before it does anything: what each agent remembers privately, what the team remembers together, what actually happened, and who owns what <em>right now</em>.</figcaption>
+</figure>
 </section>
 
 <section id="guardrails" class="reveal">
