@@ -184,7 +184,7 @@ Marked as opinion because it is.
 
 ### Worth ignoring
 
-- **Simulating a corporate org chart for its own sake.** CEO/CTO/CPO roles are flavor. What matters is role *separation of concerns*, and that needs far fewer titles.
+- **Simulating a corporate org chart for its own sake — *but do not dismiss role framing itself*.** Titles like CEO/CTO/CPO are cosmetic; what matters is role *separation of concerns*, which needs far fewer names. The claim that role framing is "mere flavor," however, is not supported. Kong et al. (NAACL 2024) found role-play prompting beating zero-shot chain-of-thought across 12 reasoning benchmarks — AQuA 53.5%→63.8%, Last-Letter Concatenation 23.8%→84.2% — by acting as a *stronger* CoT trigger than an explicit "think step by step". The effect is conditional, not universal: Zheng et al. (Findings of EMNLP 2024) found persona system prompts do **not** improve objective factual accuracy across 162 roles, 4 model families, and 2,410 questions, with apparent gains largely random; and Kim et al. (2024) show misaligned or over-specific personas can *degrade* reasoning. **Honest synthesis: role framing shapes behaviour, structure, and reasoning style — which is exactly what a team hierarchy needs — but it is not a lever for factual accuracy.** Name roles for the behavioural boundary they set, not for the org chart they draw. *(Corrected after external critique; see `critiques/`.)*
 - **Shared mutable memory without discipline.** A pipeline's shared memory is safe because it dies. A team's is not. Without a promotion gate, a claim lease, and a provenance rule, a persistent shared memory converges on noise.
 
 ### Additive — not found in the surveyed prior art
@@ -240,22 +240,28 @@ Marked as opinion because it is.
 1. Hong, S. et al. *MetaGPT: Meta Programming for a Multi-Agent Collaborative Framework.* arXiv:2308.00352. https://arxiv.org/abs/2308.00352
 2. Qian, C. et al. *ChatDev: Communicative Agents for Software Development.* ACL 2024. arXiv:2307.07924. https://arxiv.org/abs/2307.07924
 
+**Role framing and personas** *(added after external critique)*
+
+3. Kong et al. *Better Zero-Shot Reasoning with Role-Play Prompting.* NAACL 2024. https://aclanthology.org/2024.naacl-long.228/
+4. Zheng et al. *When "A Helpful Assistant" Is Not Really Helpful: Personas in System Prompts Do Not Improve Performances of Large Language Models.* Findings of EMNLP 2024. https://aclanthology.org/2024.findings-emnlp.888/
+5. Kim et al. *Persona is a Double-edged Sword: Mitigating the Negative Impact of Role-playing Prompts in Zero-shot Reasoning Tasks.* arXiv:2408.08631. https://arxiv.org/abs/2408.08631
+
 **Frameworks and documentation**
 
-3. CrewAI — Hierarchical Process. https://docs.crewai.com/v1.15.17/en/learn/hierarchical-process
-4. CrewAI — Custom Manager Agent. https://docs.crewai.com/v1.15.17/en/learn/custom-manager-agent
-5. LangGraph — supervisor and hierarchical agent team templates. https://github.com/langchain-ai/langgraph
-6. AutoGen. https://github.com/microsoft/autogen
-7. MetaGPT repository. https://github.com/geekan/MetaGPT
-8. ChatDev repository. https://github.com/OpenBMB/ChatDev
+6. CrewAI — Hierarchical Process. https://docs.crewai.com/v1.15.17/en/learn/hierarchical-process
+7. CrewAI — Custom Manager Agent. https://docs.crewai.com/v1.15.17/en/learn/custom-manager-agent
+8. LangGraph — supervisor and hierarchical agent team templates. https://github.com/langchain-ai/langgraph
+9. AutoGen. https://github.com/microsoft/autogen
+10. MetaGPT repository. https://github.com/geekan/MetaGPT
+11. ChatDev repository. https://github.com/OpenBMB/ChatDev
 
 **OpenClaw**
 
-9. Multi-agent routing. `docs/concepts/multi-agent.md`
-10. Parallel specialist lanes. `docs/concepts/parallel-specialist-lanes.md`
-11. Delegate architecture. `docs/concepts/delegate-architecture.md`
-12. Dreaming (memory consolidation). `docs/concepts/dreaming.md`
-13. OpenClaw. https://github.com/openclaw/openclaw
+12. Multi-agent routing. `docs/concepts/multi-agent.md`
+13. Parallel specialist lanes. `docs/concepts/parallel-specialist-lanes.md`
+14. Delegate architecture. `docs/concepts/delegate-architecture.md`
+15. Dreaming (memory consolidation). `docs/concepts/dreaming.md`
+16. OpenClaw. https://github.com/openclaw/openclaw
 
 ---
 
