@@ -361,16 +361,25 @@
 <p>Deliberately boring, and every part exists to prevent a specific failure.</p>
 
 <figure>
-  <img src="./diagrams/02-reference-architecture.svg" alt="Reference architecture diagram. A human operator connects through one chat channel to a supervisor, which dispatches to four specialists: builder, QA verifier, liaison and support. All agents read and write a shared durable layer of an append-only memory file, per-agent session stores and a shared task board. A dashed verification loop returns from QA to the supervisor, labelled evidence before claims. Four guardrails are listed: routing limit, file-claim lease, promotion gate and no-op detector.">
-  <figcaption><b>Figure 6 — The reference architecture.</b> A supervisor that plans but doesn't build; specialists who do; a verifier who must be a genuinely <em>different</em> agent; and a shared durable layer underneath.</figcaption>
+  <img src="./diagrams/02-reference-architecture.svg" alt="Reference architecture diagram. A human operator connects through one chat channel to a supervisor, which dispatches to six specialists: a builder, a QA verifier, a liaison, a support agent, a Security/IT agent and a consultant. All agents read and write a shared durable layer of an append-only memory file, per-agent session stores, a shared task board and a team ledger. A dashed verification loop returns from QA to the supervisor, labelled evidence before claims. Four guardrails are listed: routing limit, file-claim lease, promotion gate and a heartbeat/no-op detector.">
+  <figcaption><b>Figure 6 — The reference architecture.</b> A supervisor that plans but doesn't build; specialists who do; a verifier who must be a genuinely <em>different</em> agent; a role that only watches the perimeter and one that only argues with the plan; and a shared durable layer underneath.</figcaption>
 </figure>
+
+<p>Seven role <em>families</em>, expanded into named seats in the Cadre edition (the roster in §3). Names differ between deployments; the function does not.</p>
 
 <ul>
   <li><strong>A supervisor</strong> that owns the plan and dispatches, but doesn't do the work.</li>
-  <li><strong>Specialists</strong> who build in their lane.</li>
+  <li><strong>A builder (or several)</strong> that does the work in its specialization.</li>
   <li><strong>An independent verifier</strong> — a different agent than the builder, or it isn't verification. Claims require evidence; "running" is not a result.</li>
-  <li><strong>A shared ledger</strong> every agent reads at session start: decisions with provenance, who owns what right now, standing conventions. A ledger, not a scratchpad.</li>
+  <li><strong>A liaison</strong> that relays and unblocks, carrying messages between the operator and a busy supervisor.</li>
+  <li><strong>A support role</strong> for the personal/operational lane, unbothered by project work.</li>
+  <li><strong>Security / IT</strong> — owns the exposure surface and the self-modification perimeter. <em>Advises, never edits:</em> an agent able to rewrite its own guardrails is not a guardrail.</li>
+  <li><strong>A consultant</strong> — an independent second opinion and red team. Holds no authority; its value is disagreement on demand.</li>
 </ul>
+
+<p>The last two aren't in any of the surveyed prior art. They emerged from building the architecture out: a team that can modify itself needs one role whose only job is to watch the perimeter, and another whose only job is to argue with the plan. Both are cheap to omit and expensive to omit <em>silently</em>.</p>
+
+<p>Underneath, a <strong>durable layer</strong> every agent reads at session start — per-agent long-term memory (append-only, one writer), a <strong>shared team ledger</strong> any agent may append to under a claim lease (decisions with provenance, file ownership, standing conventions; <em>a ledger, not a scratchpad</em>), per-agent session stores, and a shared task board recording who owns which file <em>right now</em>.</p>
 </section>
 
 <section id="guardrails" class="reveal">
