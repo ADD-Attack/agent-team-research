@@ -211,7 +211,8 @@ Marked as opinion because it is.
 
 **Durable layer.**
 
-- Append-only, human-readable long-term memory.
+- **Per-agent long-term memory** — append-only, human-readable, private to one agent, one writer.
+- **Shared team memory** — a single append-only ledger (e.g. `SHARED.md`) that **every agent reads at session start** and any agent may append to **under a claim lease**. It holds team-scoped truth — decisions with provenance, file ownership, standing conventions, environment facts — never per-persona notes or scratch. *A ledger, not a scratchpad.* This is the orthogonal axis to the per-agent tiers of §10: those are ordered by **recency**, this is scoped by **team**.
 - Per-agent session stores (durable history).
 - A shared task board recording **who owns which file, right now**.
 
