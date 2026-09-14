@@ -225,7 +225,7 @@ Marked as opinion because it is.
 
 ## 9. Open problems
 
-1. **Memory quality at small scale.** Filtering tuned for volume fails at low volume (§6). The unsolved question is an *adaptive* gate: one that calibrates to the instance's actual recall distribution rather than assuming one.
+1. **Memory quality at small scale.** Filtering tuned for volume fails at low volume (§6). The question is an *adaptive* gate: one that calibrates to the instance's actual recall distribution rather than assuming one. **§10 answers this with a concrete design** — tiered memory, loose percentile gates, size-triggered eviction. What remains open is the small-window fallback, which still needs a calibration rule that is loose without being arbitrary.
 2. **Determinism.** Pipelines are replayable; teams are not. There is no established practice for reproducing a persistent team's behaviour after the fact.
 3. **Cost attribution.** When agents coordinate by chatting, token cost is diffuse across sessions. Per-project accounting is an open engineering problem.
 4. **Verification independence.** How do you guarantee a verifier is genuinely independent of the builder it checks, rather than a second instance of the same priors?
@@ -233,35 +233,82 @@ Marked as opinion because it is.
 
 ---
 
-## 10. References
+## 10. A design for tiered memory
 
-**Papers**
+§9 named the adaptive gate as an open problem. This section answers it.
 
-1. Hong, S. et al. *MetaGPT: Meta Programming for a Multi-Agent Collaborative Framework.* arXiv:2308.00352. https://arxiv.org/abs/2308.00352
-2. Qian, C. et al. *ChatDev: Communicative Agents for Software Development.* ACL 2024. arXiv:2307.07924. https://arxiv.org/abs/2307.07924
+The design below is **first-party**. It was built for the live deployment described in §6, directly in response to that failure, and is published as a standalone proposal alongside this paper (`proposals/2026-09-14-memory-tiers.md`).
 
-**Role framing and personas** *(added after external critique)*
+![Three-tier memory cascade: STM promoted to MTM promoted to LTM by recall, with size-triggered eviction.](./diagrams/03-memory-tiers.svg)
 
-3. Kong et al. *Better Zero-Shot Reasoning with Role-Play Prompting.* NAACL 2024. https://aclanthology.org/2024.naacl-long.228/
-4. Zheng et al. *When "A Helpful Assistant" Is Not Really Helpful: Personas in System Prompts Do Not Improve Performances of Large Language Models.* Findings of EMNLP 2024. https://aclanthology.org/2024.findings-emnlp.888/
-5. Kim et al. *Persona is a Double-edged Sword: Mitigating the Negative Impact of Role-playing Prompts in Zero-shot Reasoning Tasks.* arXiv:2408.08631. https://arxiv.org/abs/2408.08631
+### 10.1 The inversion
 
-**Frameworks and documentation**
+Today's design is **strict in, permanent out**: a high entry bar filters candidates and whatever clears it stays forever. That is the shape that failed — the bar was calibrated for a volume the instance never reached.
 
-6. CrewAI — Hierarchical Process. https://docs.crewai.com/v1.15.17/en/learn/hierarchical-process
-7. CrewAI — Custom Manager Agent. https://docs.crewai.com/v1.15.17/en/learn/custom-manager-agent
-8. LangGraph — supervisor and hierarchical agent team templates. https://github.com/langchain-ai/langgraph
-9. AutoGen. https://github.com/microsoft/autogen
-10. MetaGPT repository. https://github.com/geekan/MetaGPT
-11. ChatDev repository. https://github.com/OpenBMB/ChatDev
+The proposed design inverts it: **loose in, size-bounded out.** Admission is cheap. **Recurrence** — not admission — earns an entry a higher tier. **Size** — not age — decides what is dropped. Quality comes from churn and eviction rather than from a strict gate.
 
-**OpenClaw**
+> **Loose promotion. Quality by eviction. Recall is the only vote that counts.**
 
-12. Multi-agent routing. `docs/concepts/multi-agent.md`
-13. Parallel specialist lanes. `docs/concepts/parallel-specialist-lanes.md`
-14. Delegate architecture. `docs/concepts/delegate-architecture.md`
-15. Dreaming (memory consolidation). `docs/concepts/dreaming.md`
-16. OpenClaw. https://github.com/openclaw/openclaw
+### 10.2 Three tiers
+
+| Tier | Store | Churn | Budget (size cap) | Contents |
+|---|---|---|---|---|
+| **STM** — short-term | staged candidates / session recall | high | ~256 KB | raw snippets, recent observations |
+| **MTM** — mid-term | `memory/midterm.md` *(new)* | moderate | ~128 KB | consolidated, recurring knowledge |
+| **LTM** — long-term | `MEMORY.md` | low (budget-bounded) | ~64 KB | curated, append-only, human-readable |
+
+Caps are tunable defaults. LTM's cap should track the platform's bootstrap-safe file budget.
+
+### 10.3 The cascade
+
+```
+STM  ──recalled──▶  MTM  ──recalled again──▶  LTM
+ │                    │
+ └── over budget ─────┴──────▶ evicted
+```
+
+Promotion is driven by **recall**; weighted score is a tie-breaker, never the trigger. Long-term memory is exempt from automatic eviction — exceeding its budget flags for human curation instead.
+
+### 10.4 Adaptive gates (deliberately loose)
+
+Thresholds are **percentiles of the instance's own observed distribution**, not constants. Each is clamped so a quiet window cannot block everything and a busy one cannot flood.
+
+```
+STM → MTM:  τ = clamp(P60(scores), 0.30, 0.55)    # top ~40%
+            promote if score ≥ τ and recallCount ≥ 1 and uniqueQueries ≥ 1
+
+MTM → LTM:  τ = clamp(P75(scores), 0.40, 0.70)    # top ~25%
+            promote if score ≥ τ and recallCount ≥ 2 and uniqueQueries ≥ 1
+```
+
+**Small windows.** Below roughly 20 candidates a percentile is meaningless. The design falls back to fixed **loose** absolutes (0.30 and 0.40) — never to a strict default, because a strict fallback is precisely the §6 failure reproduced.
+
+### 10.5 Eviction — size-triggered, never time-based
+
+Memory is not lost because it is *old*. It is lost when a tier **exceeds its budget** and something has to give:
+
+```
+value = recallCount        # primary
+      , score              # secondary
+      , recency            # tie-break only
+```
+
+Lowest value is evicted first. A frequently-recalled old entry outlives a rarely-recalled new one — which is the entire point. Age never triggers eviction on its own.
+
+### 10.6 Making silence loud
+
+The §6 failure was not that the gate was wrong. It was that being wrong was **invisible**. Two valves:
+
+1. **No-op detector.** Promoting 0 while the window held ≥ 20 candidates is an **anomaly under a loose gate**, not a quiet week. It warns.
+2. **Assert on artifacts.** A healthy cycle must produce a visible change in some tier. No change is a failed run, not a silent success.
+
+### 10.7 Status and limits
+
+The gates are **loose by intent**, and looseness is only safe because eviction runs. A loose gate without eviction is merely a larger pile.
+
+Verified against `openclaw config schema` (2026-09-14): `memory-core` exposes a **single** deep phase and **no native middle tier**. MTM must therefore be built — as an upstream feature, or (recommended) a workspace convention with exactly one writer per tier file.
+
+Like §6, this design rests on **one deployment**. It is a concrete answer to §9's open problem, not a validated one.
 
 ---
 
@@ -293,6 +340,38 @@ To optimize agent focus and execution reliability, we argue for a strict split b
 
 A fundamental security perimeter is that **agents must not be able to edit their own system prompt, permissions, safety configuration, or harness allowlists.**
 If an agent can modify its own harness or permissions, any prompt-based guardrail is instantly bypassed. Therefore, real, load-bearing limits must live in the **tool policy, approval gates, sandboxing, network egress proxy configurations, spend caps, and external audit logs**—not in prompt text.
+
+---
+
+## 12. References
+
+**Papers**
+
+1. Hong, S. et al. *MetaGPT: Meta Programming for a Multi-Agent Collaborative Framework.* arXiv:2308.00352. https://arxiv.org/abs/2308.00352
+2. Qian, C. et al. *ChatDev: Communicative Agents for Software Development.* ACL 2024. arXiv:2307.07924. https://arxiv.org/abs/2307.07924
+
+**Role framing and personas** *(added after external critique)*
+
+3. Kong et al. *Better Zero-Shot Reasoning with Role-Play Prompting.* NAACL 2024. https://aclanthology.org/2024.naacl-long.228/
+4. Zheng et al. *When "A Helpful Assistant" Is Not Really Helpful: Personas in System Prompts Do Not Improve Performances of Large Language Models.* Findings of EMNLP 2024. https://aclanthology.org/2024.findings-emnlp.888/
+5. Kim et al. *Persona is a Double-edged Sword: Mitigating the Negative Impact of Role-playing Prompts in Zero-shot Reasoning Tasks.* arXiv:2408.08631. https://arxiv.org/abs/2408.08631
+
+**Frameworks and documentation**
+
+6. CrewAI — Hierarchical Process. https://docs.crewai.com/v1.15.17/en/learn/hierarchical-process
+7. CrewAI — Custom Manager Agent. https://docs.crewai.com/v1.15.17/en/learn/custom-manager-agent
+8. LangGraph — supervisor and hierarchical agent team templates. https://github.com/langchain-ai/langgraph
+9. AutoGen. https://github.com/microsoft/autogen
+10. MetaGPT repository. https://github.com/geekan/MetaGPT
+11. ChatDev repository. https://github.com/OpenBMB/ChatDev
+
+**OpenClaw**
+
+12. Multi-agent routing. `docs/concepts/multi-agent.md`
+13. Parallel specialist lanes. `docs/concepts/parallel-specialist-lanes.md`
+14. Delegate architecture. `docs/concepts/delegate-architecture.md`
+15. Dreaming (memory consolidation). `docs/concepts/dreaming.md`
+16. OpenClaw. https://github.com/openclaw/openclaw
 
 ---
 

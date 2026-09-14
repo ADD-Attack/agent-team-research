@@ -26,6 +26,7 @@ Multi-agent systems share a vocabulary — *roles*, *supervisors*, *workers*, *h
 | §7 | **Design principles** — what to borrow, what to ignore (marked as opinion) |
 | §8 | **Reference architecture** — roles, durable layer, guardrails |
 | §9 | **Open problems** — 5 unsolved |
+| §10 | **A design for tiered memory** — STM/MTM/LTM cascade, loose adaptive gates, size-triggered eviction |
 | §11 | **Prompt guardrails** — what is enforceable (platform constraints & the self-modification perimeter) |
 | App. A | Candidate project names |
 
