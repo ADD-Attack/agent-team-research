@@ -412,11 +412,12 @@ The subject deployment already carries that exact guard, plus a companion change
 
 ## Appendix A — Candidate project names
 
-*Unranked; supplied as raw material, not recommendation.*
+**Chosen: Cadre** — confirmed by the operator, 2026-09-14. *A small permanent nucleus of specialists that can expand: exactly the model — a durable core plus disposable subagents.*
+
+The remaining candidates are retained for provenance, not as live options:
 
 | Name | Rationale |
 |---|---|
-| **Cadre** | A small permanent nucleus of specialists that can expand. Exactly the model: a durable core plus disposable subagents. |
 | **Bridge Crew** | Naval command hierarchy — captain, officers, watch. Maps to supervisor + specialists. |
 | **Loom** | Weaves persistent threads and memory together. "Threads" is native vocabulary here. |
 | **Mycelium** | A persistent, memory-carrying network. Fits the thesis that continuity is the product. |
