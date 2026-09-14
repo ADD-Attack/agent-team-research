@@ -243,6 +243,38 @@ The asymmetry is deliberate: **the inbox accepts peer messages; the outbox never
 
 **Why it matters.** If peer exchanges route through outboxes, the operator is cc'd on everything, the doorway batches noise, and **real blockers get missed**. The two paths are a routing decision, not a style preference — collapsing them is a bug.
 
+**Collaboration: dispatch vs. message.**
+
+Two agents that can talk are not yet a team. Collaboration is a *topology* — a set of separately gated operations — not a property an agent has. The first distinction a reader needs is that **spawning an agent and messaging an agent are different operations, with different allowlists**:
+
+| Mechanism | What it does | Gate |
+|---|---|---|
+| **Dispatch (spawn)** | starts a new run under the target's own brain, tools and eyes | `agents.defaults.subagents.allowAgents` |
+| **Message** | delivers text to an existing agent's session | `tools.agentToAgent.allow` |
+
+**They do not overlap by default.** On the subject deployment the PM could **spawn only two designated agents**, while **all six** standing agents could **message** one another. "Can they talk?" and "can they be spawned?" are therefore two separate questions, and a refusal is a *routing fact, not a config bug* — the correct response is to fall back to messaging, not to edit the allowlist. A spawn gate can also be **cached in the running session**, so a mid-run change may not take effect until restart.
+
+**The lifecycle of delegated work.** `operator → dispatch → agent works (and may message peers) → handoff *with evidence* → dispatcher verifies → check-in retired → report`. Each stage carries a guard.
+
+**The guards, as a set.** They are best read together, because each removes one way a collaborating team fails that a pipeline cannot:
+
+| Guard | Failure it removes |
+|---|---|
+| Routing limit (6-hop cap) | collaboration that **loops** |
+| File-claim lease | collaboration that **collides** |
+| Dispatch-and-verify | collaboration that **silently stalls** |
+| Evidence over status (verifier ≠ builder) | collaboration that **self-certifies** |
+
+Pipeline failures are crashes; team failures are loops, collisions, stalls and quiet self-certification.
+
+**Escalation topology.** The **doorway** batches an agent's messages to the operator. A single doorway is a **single point of failure** — the only route between a busy agent and the operator — so a durable team designates a relay. And **break-glass is not a default**: a direct high-severity path should not be treated as live unless the operator has enabled it.
+
+**Headless safety.** An agent with no conversation surface must **deny `ask_user`**, or it blocks forever; the denial is what makes the prompt safe to refuse. Such an agent escalates by *writing* (`kind: blocked` / `kind: question`), never by opening a blocking prompt.
+
+**Channel silence.** In a shared channel, a participant emits one clean message or nothing. Intermediate reasoning stays internal — flooding a shared room is noise, not collaboration.
+
+**Thesis.** Collaboration is a topology, not a vibe. Two agents that can talk are not yet a team; a team is two agents that can talk **and** stop, split, hand off, and escalate on cue.
+
 **Guardrails.**
 
 1. Routing limit — a hard cap on agent-to-agent hops.
