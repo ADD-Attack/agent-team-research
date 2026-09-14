@@ -474,9 +474,11 @@ A persistent team is useful only if it can act while the operator is away — an
 
 - **The act-vs-ask contract.** Safe *and* reversible ⇒ act and report; otherwise ask. The default is action for reversible work, and the ask is reserved for genuine forks.
 - **The RL test** — the same contract as a mechanical check: *is it local? can one git command undo it? does it spend new money? is it public?* All four favourable ⇒ initiate.
-- **Dispatch-and-verify.** A dispatcher that hands work off **owns an armed check-in** until the lane is verified complete. Delegation without verification is how "running" gets mistaken for "done."
+- **Dispatch-and-verify.** A dispatcher that hands work off **owns an armed check-in** until the lane is verified complete. Delegation without verification is how "running" gets mistaken for "done." *(Mechanics in §8; this is the governance side of the same rule.)*
 - **The autonomy ladder (L0–L4).** A lane earns authority in steps, each with a rollback. Autonomy is granted, measured, and revocable — not switched on.
 - **Standing deploy authorization.** The PM gates routine deploys by judgment within a stated scope and **reports after**, so routine work does not queue on the operator's attention. The operator retains revocation.
+
+The collaboration guards themselves — routing limit, claim lease, dispatch-and-verify, evidence-over-status — are specified in §8.
 
 ---
 
