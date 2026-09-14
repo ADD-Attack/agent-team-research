@@ -206,7 +206,7 @@ Marked as opinion because it is.
 
 ## 8. Reference architecture
 
-![The project pipeline: the Cadre Wizard runs once at setup, then work moves from the Requirements Analyst to the Project Designer to the Project Manager (workers in its scope) to QA to the finished product, with support roles on call beside the line and a rework path from the finished product back to the Requirements Analyst](./diagrams/07-project-pipeline.svg)
+![The project pipeline: the Cadre Wizard runs once at setup, then work moves from the Requirements Analyst to the Project Designer to the Project Manager (workers in its scope) to QA to the finished product; if QA finds the requirements unmet it has an option to send the work back to the Project Manager, and a rework path runs from the finished product back to the Requirements Analyst, with support roles on call beside the line](./diagrams/07-project-pipeline.svg)
 
 The architecture is easier to state as **the path a project takes** than as an org chart. A flat "supervisor dispatches to specialists" picture understates the two things that matter: the order, and the loop.
 
@@ -215,10 +215,10 @@ The architecture is easier to state as **the path a project takes** than as an o
 1. **Requirements Analyst** — intake, clarification, scope. Nothing enters anywhere else.
 2. **Project Designer** — architecture, approach, specifications.
 3. **Project Manager** — owns the plan and dispatches. **The workers sit in the PM's scope**: the PM tasks and tracks them, rather than the operator driving each one by hand.
-4. **QA / Verifier** — an independent check on the way out; must be a *different agent* than the builder, or it is not verification.
+4. **QA / Verifier** — an independent check on the way out; must be a *different agent* than the builder, or it is not verification. If the requirements are not met, QA has an option to send the work **back to the Project Manager** — the shortest loop that can fix it.
 5. **Finished product.**
 
-**Rework.** The loop leaves from the finished product, not mid-flight. Once something ships, two things send work back to the start: a **scope change or new feature** to what just shipped, or a **new product** entirely. Either way it re-enters at the Requirements Analyst and runs the pipeline again — it is *not* patched in mid-stream. It costs a lap; it buys a specification — the enforced-intermediate-artifact discipline the pipeline literature got right (MetaGPT's PRD-before-code), applied to a durable team.
+**Rework.** Work is never patched mid-flight; when it comes back, it re-enters at a defined gate — and there are two exits, shortest first. If **QA** finds the requirements unmet, the work returns to the **Project Manager**, the station that owns the plan and can re-dispatch, rather than continuing to ship or running all the way back to intake. If something has already **shipped**, two things send it back to the start: a **scope change or new feature** to what just shipped, or a **new product** entirely. Either way it re-enters at the Requirements Analyst and runs the pipeline again. It costs a lap; it buys a specification — the enforced-intermediate-artifact discipline the pipeline literature got right (MetaGPT's PRD-before-code), applied to a durable team.
 
 **Support roles ride beside the line, never on it.** **Security / IT** — owns the exposure surface and the self-modification perimeter (§11.3); **advises, never edits**, because an agent able to rewrite its own guardrails is not a guardrail. **Consultant** — an independent second opinion and red team; holds no authority, its value is *disagreement on demand*. Plus **Social Media Manager**, **Finance Manager** and **Agent Resources**. They attach to whichever project needs them and go quiet when it doesn't; none is a mandatory station.
 
