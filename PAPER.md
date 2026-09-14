@@ -222,7 +222,7 @@ The architecture is easier to state as **the path a project takes** than as an o
 
 **Support roles ride beside the line, never on it.** **Security / IT** — owns the exposure surface and the self-modification perimeter (§11.3); **advises, never edits**, because an agent able to rewrite its own guardrails is not a guardrail. **Consultant** — an independent second opinion and red team; holds no authority, its value is *disagreement on demand*. It is also the one seat deliberately allowed the **heavier models and deeper reasoning**, spent to clarify a hard problem or research a novel challenge rather than to guess cheaply. Plus **Social Media Manager**, **Finance Manager** and **Agent Resources**. They attach to whichever project needs them and go quiet when it doesn't; none is a mandatory station. Alongside project duty they also carry **scheduled, repetitive upkeep** — health checks, backups, housekeeping — that keeps the flow environment healthy between projects.
 
-Abstracted, the seats reduce to the families used elsewhere in this paper: **Supervisor** (PM), **Builder(s)** (RA, PD and the workers), **QA / Verifier**, **Liaison** (SMM), **Support** (FM and AR), plus the two the flow adds — **Security / IT** and **Consultant**. Names differ; the function does not. The last two are not in the surveyed prior art: a team that can modify itself needs a role whose only job is to watch the perimeter, and one whose only job is to argue with the plan. Both are cheap to omit and expensive to omit *silently*.
+Abstracted, the seats reduce to the families used elsewhere in this paper: **Supervisor** (PM), **Builder(s)** (RA, PD and the workers), **QA / Verifier**, **Social Media Manager**, **Support** (FM and AR), plus the two the flow adds — **Security / IT** and **Consultant**. Names differ; the function does not. The last two are not in the surveyed prior art: a team that can modify itself needs a role whose only job is to watch the perimeter, and one whose only job is to argue with the plan. Both are cheap to omit and expensive to omit *silently*.
 
 **Durable layer.**
 
@@ -444,7 +444,7 @@ What shipped, mapped to the paper:
 
 | Paper | Cadre artifact | State |
 |---|---|---|
-| §8 roles — seven functional roles (Supervisor, Builder(s), QA/Verifier, Liaison, Support, **Security/IT**, **Consultant**) | `reference/agents.md` — a nine-seat concrete roster: the five original families expand to PM (Supervisor), RA + PD (Builders), QA (Verifier), SMM (Liaison), FM + AR (Support), and the two roles §8 gained while building — **Security/IT** and **Consultant**; the Cadre Wizard confirms which to create | Shipped |
+| §8 roles — seven functional roles (Supervisor, Builder(s), QA/Verifier, Social Media Manager, Support, **Security/IT**, **Consultant**) | `reference/agents.md` — a nine-seat concrete roster: the five original families expand to PM (Supervisor), RA + PD (Builders), QA (Verifier), SMM, FM + AR (Support), and the two roles §8 gained while building — **Security/IT** and **Consultant**; the Cadre Wizard confirms which to create | Shipped |
 | §8 guardrails 1–4 | `reference/guardrails.md` — routing limit (6-hop cap), file-claim lease, promotion gate, no-op detector | Shipped as **specification** |
 | §8 durable shared ledger | `templates/SHARED.md` — the append-only team ledger, claim-guarded | Shipped |
 | §10 tiered memory (STM/MTM/LTM) | `reference/memory.md` + `templates/SHARED.md` | Shipped as workspace convention |
