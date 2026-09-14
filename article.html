@@ -373,7 +373,7 @@
 <h3>The flow</h3>
 
 <figure>
-  <img src="./diagrams/07-project-pipeline.svg" alt="Flow diagram. At top left a human operator connects through one chat channel to the Cadre Wizard, which runs once at install to confirm roles and budgets. The flow then drops into a horizontal project pipeline: Requirements Analyst (intake, clarify, scope), then Project Designer (architecture, approach, specifications), then Project Manager (plans, dispatches, tracks; holds the workers in its scope), then QA verifier (independent check, evidence before claims; if requirements are not met, an option to send the work back to the Project Manager), ending in the finished, shipped product. A dashed amber path runs from the QA verifier back to the Project Manager, labelled requirements not met. A dashed red rework path runs from the finished product all the way back to the Requirements Analyst, labelled: a new product, or a scope change or new feature, either way goes back to the Requirements Analyst. Along the bottom, a dashed panel lists support roles on call as needed: Security/IT, Consultant, Social Media Manager, Finance Manager and Agent Resources.">
+  <img src="./diagrams/07-project-pipeline.svg" alt="Flow diagram. At top left a human operator connects through one chat channel to the Cadre Wizard, which runs once at install to confirm roles and budgets. The flow then drops into a horizontal project pipeline: Requirements Analyst (intake, clarify, scope), then Project Designer (architecture, approach, specifications), then Project Manager (plans, dispatches, tracks; holds the workers in its scope), then QA verifier (independent check, evidence before claims; if requirements are not met, an option to send the work back to the Project Manager), ending in the finished, shipped product. A dashed amber path runs from the QA verifier back to the Project Manager, labelled requirements not met. A dashed blue path runs from the Project Manager back to the Requirements Analyst, labelled new requirements. A dashed red rework path runs from the finished product all the way back to the Requirements Analyst, labelled: a new product, or a scope change or new feature, either way goes back to the Requirements Analyst. Along the bottom, a dashed panel lists support roles on call as needed: Security/IT, Consultant, Social Media Manager, Finance Manager and Agent Resources.">
   <figcaption><b>Figure 6 — How a project runs.</b> The Cadre Wizard is a one-time door at setup. After that, every project enters at the Requirements Analyst and leaves as a finished product — with support roles on call <em>beside</em> the line, never stations <em>on</em> it.</figcaption>
 </figure>
 
@@ -388,10 +388,11 @@
   <li><strong>Finished product.</strong></li>
 </ul>
 
-<p>Three rules give the line its shape, and each is deliberate friction:</p>
+<p>Four rules give the line its shape, and each is deliberate friction:</p>
 
 <ul>
   <li><strong>QA can bounce work back to the PM.</strong> Verification isn't only a green light. If the build doesn't meet the requirements, QA returns it to the <strong>Project Manager</strong> — the shortest loop that can actually fix it — rather than passing it through or pushing it all the way back to intake. It costs a lap; it doesn't cost a re-spec.</li>
+  <li><strong>The PM can raise new requirements.</strong> Planning sometimes surfaces a requirement intake missed. It goes back to the <strong>Requirements Analyst</strong> — the one place requirements are meant to live — rather than being quietly absorbed mid-plan.</li>
   <li><strong>Rework after shipping leaves from the finished product.</strong> Once something ships, two things send work back to the start: <em>scope changes and new features</em> for what just shipped, or a <em>new product</em> entirely. Either way it re-enters at the Requirements Analyst and runs the pipeline again — never patched in mid-stream. It costs a lap; it buys a specification. This is the enforced-intermediate-artifact discipline the pipeline literature got right, applied to a team.</li>
   <li><strong>Support roles ride beside the line, not on it.</strong> Security/IT, Consultant, Social Media, Finance and Agent Resources attach to whichever project needs them and go quiet when it doesn't. None is a mandatory station.</li>
 </ul>
