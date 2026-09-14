@@ -217,7 +217,12 @@
 
 <p><em>Names, because these two get tangled:</em> a <strong>persistent agent team</strong> is the <em>kind</em> of system — the category. <strong>Cadre</strong> is one instance of it: a specific roster and set of conventions a deployment installs. Cadre <em>is</em> a persistent agent team; not every persistent agent team is Cadre.</p>
 
-<p>The entry point is a <strong>wizard</strong> — and it is a conversation, not a script. It doesn't sit there waiting to be invoked: it opens by asking whether you're ready to start Cadre, then interviews you — what you want the team for, which roles you need, what to call them, what they may spend. It shows you what it found before asking anything, and it <strong>writes nothing until you confirm each step</strong>. A wizard that installs silently is a bug.</p>
+<p>The entry point is the <strong>Cadre Wizard</strong> — and it is a conversation, not a script. It doesn't sit there waiting to be invoked: it opens by asking whether you're ready to start Cadre, then interviews you — what you want the team for, which roles you need, what to call them, what they may spend. It shows you what it found before asking anything, and it <strong>writes nothing until you confirm each step</strong>. A Cadre Wizard that installs silently is a bug.</p>
+
+<figure>
+  <img src="./assets/cadre-wizard.png" alt="The Cadre Wizard: a green frog in a purple wizard robe holding a glowing sigil" width="200">
+  <figcaption><b>The Cadre Wizard.</b></figcaption>
+</figure>
 
 <div class="callout">
   <span class="label">Why plain files matter</span>
@@ -250,7 +255,7 @@
 <section id="box" class="reveal">
 <h2>3. What's in the box<a class="anchor" href="#box" aria-label="link to this section">§</a></h2>
 
-<p>Cadre ships <strong>roles</strong>, not opinions about which roles you must have. The wizard presents the roster as a checklist; you deselect what you don't want.</p>
+<p>Cadre ships <strong>roles</strong>, not opinions about which roles you must have. The Cadre Wizard presents the roster as a checklist; you deselect what you don't want.</p>
 
 <table>
   <caption>The standard roster. Take what you need; add the rest later.</caption>
@@ -367,14 +372,14 @@
 <h3>The flow</h3>
 
 <figure>
-  <img src="./diagrams/07-project-pipeline.svg" alt="Flow diagram. At top left a human operator connects through one chat channel to a wizard, which runs once at install to confirm roles and budgets. The flow then drops into a horizontal project pipeline: Requirements Analyst (intake, clarify, scope), then Project Designer (architecture, approach, specifications), then Project Manager (plans, dispatches, tracks; holds the workers in its scope), then QA verifier (independent check, evidence before claims), ending in the finished, shipped product. A dashed red rework path runs from the finished product all the way back to the Requirements Analyst, labelled: a new product, or a scope change or new feature, either way goes back to the Requirements Analyst. Along the bottom, a dashed panel lists support roles on call as needed: Security/IT, Consultant, Social Media Manager, Finance Manager and Agent Resources.">
-  <figcaption><b>Figure 6 — How a project runs.</b> The wizard is a one-time door at setup. After that, every project enters at the Requirements Analyst and leaves as a finished product — with support roles on call <em>beside</em> the line, never stations <em>on</em> it.</figcaption>
+  <img src="./diagrams/07-project-pipeline.svg" alt="Flow diagram. At top left a human operator connects through one chat channel to the Cadre Wizard, which runs once at install to confirm roles and budgets. The flow then drops into a horizontal project pipeline: Requirements Analyst (intake, clarify, scope), then Project Designer (architecture, approach, specifications), then Project Manager (plans, dispatches, tracks; holds the workers in its scope), then QA verifier (independent check, evidence before claims), ending in the finished, shipped product. A dashed red rework path runs from the finished product all the way back to the Requirements Analyst, labelled: a new product, or a scope change or new feature, either way goes back to the Requirements Analyst. Along the bottom, a dashed panel lists support roles on call as needed: Security/IT, Consultant, Social Media Manager, Finance Manager and Agent Resources.">
+  <figcaption><b>Figure 6 — How a project runs.</b> The Cadre Wizard is a one-time door at setup. After that, every project enters at the Requirements Analyst and leaves as a finished product — with support roles on call <em>beside</em> the line, never stations <em>on</em> it.</figcaption>
 </figure>
 
 <p>Walk it once:</p>
 
 <ul>
-  <li><strong>The wizard runs once</strong>, at install — it configures the team, then gets out of the way. It is not part of the day-to-day flow.</li>
+  <li><strong>The Cadre Wizard runs once</strong>, at install — it configures the team, then gets out of the way. It is not part of the day-to-day flow.</li>
   <li><strong>Requirements Analyst</strong> — where every project enters: intake, clarification, scope. Nothing starts anywhere else.</li>
   <li><strong>Project Designer</strong> — turns the requirement into an architecture and an approach.</li>
   <li><strong>Project Manager</strong> — owns the plan and dispatches. <strong>The workers are in the PM's scope:</strong> the PM holds them, tasks them and tracks them, rather than the operator driving each one by hand.</li>

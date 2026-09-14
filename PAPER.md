@@ -10,9 +10,11 @@
 
 ---
 
+<img src="./assets/cadre-wizard.png" alt="The Cadre Wizard" width="200">
+
 ## Abstract
 
-Multi-agent LLM systems are usually described with a shared vocabulary: *roles*, *supervisors*, *workers*, *handoffs*. That shared vocabulary hides a real architectural split. This paper surveys the prior art across two species of system — **orchestration pipelines** (CrewAI, LangGraph, AutoGen, MetaGPT, ChatDev) and **persistent agent teams** (agent-native runtimes such as OpenClaw's multi-agent routing) — and argues they fail in fundamentally different ways because they have different physics. Pipelines are ephemeral: identity is configuration, memory dies at the end of a run, and the whole lifecycle is one-shot. Agent teams are durable: identity persists, memory is a file, and continuity *is* the product. We show that no published template describes the persistent, memory-carrying, chat-native team with a role hierarchy, and we present an empirical case study from a live persistent agent team deployment (the subject team, named **Cadre**) in which a memory-promotion pipeline silently no-opped for roughly a week: the deployment held **1,229 stored recall entries** across its agents and promoted **zero** of them, with **192 staged candidates** on a single agent all failing the gate. That failure mode cannot exist in a pipeline, because pipeline agents forget by design. We close with design principles worth borrowing, a reference architecture, the open problems we consider unsolved, and the architecture realized as a downloadable, wizard-installable system (**Cadre**, §12.2).
+Multi-agent LLM systems are usually described with a shared vocabulary: *roles*, *supervisors*, *workers*, *handoffs*. That shared vocabulary hides a real architectural split. This paper surveys the prior art across two species of system — **orchestration pipelines** (CrewAI, LangGraph, AutoGen, MetaGPT, ChatDev) and **persistent agent teams** (agent-native runtimes such as OpenClaw's multi-agent routing) — and argues they fail in fundamentally different ways because they have different physics. Pipelines are ephemeral: identity is configuration, memory dies at the end of a run, and the whole lifecycle is one-shot. Agent teams are durable: identity persists, memory is a file, and continuity *is* the product. We show that no published template describes the persistent, memory-carrying, chat-native team with a role hierarchy, and we present an empirical case study from a live persistent agent team deployment (the subject team, named **Cadre**) in which a memory-promotion pipeline silently no-opped for roughly a week: the deployment held **1,229 stored recall entries** across its agents and promoted **zero** of them, with **192 staged candidates** on a single agent all failing the gate. That failure mode cannot exist in a pipeline, because pipeline agents forget by design. We close with design principles worth borrowing, a reference architecture, the open problems we consider unsolved, and the architecture realized as a downloadable system you set up through the **Cadre Wizard** (**Cadre**, §12.2).
 
 ---
 
@@ -123,7 +125,7 @@ Across all surveyed prior art:
 
 That combination is the gap. It is not a crowded space — it is an under-documented one.
 
-**Update (2026-09-14).** That statement was accurate at survey time, and the gap has since been filled — *by this work*. The reference architecture of §8 is now published as a wizard-installable system (Cadre, §12.2). This does not invalidate the survey: the survey found no *prior* template, and Cadre is downstream of it, not prior to it. Read the claim above as a statement about the state of the art when surveyed, superseded by the authors' own artifact.
+**Update (2026-09-14).** That statement was accurate at survey time, and the gap has since been filled — *by this work*. The reference architecture of §8 is now published as an installable system (Cadre, §12.2), set up through the **Cadre Wizard**. This does not invalidate the survey: the survey found no *prior* template, and Cadre is downstream of it, not prior to it. Read the claim above as a statement about the state of the art when surveyed, superseded by the authors' own artifact.
 
 ---
 
@@ -133,7 +135,7 @@ This section reports a first-party observation. It is the paper's most concrete 
 
 ### 6.1 Setup
 
-The subject deployment — an OpenClaw 2026.9.3 deployment of multiple persistent agents, each with its own workspace, memory files, and session store — is the team named **Cadre**. (There is **one Cadre, not two**: the live team. §12.2 describes that same team's conventions packaged as an installable system — a distillation of it, not a separate system. Throughout §6–§11, *Cadre* means the team as it runs in production.) The `memory-core` plugin provides a nightly consolidation pipeline ("dreaming") that ranks short-term recall candidates and promotes durable ones into a curated `MEMORY.md`.
+The subject deployment — an OpenClaw 2026.9.3 deployment of multiple persistent agents, each with its own workspace, memory files, and session store — is the team named **Cadre**. (§12.2 packages those same conventions as an installable system, set up through the **Cadre Wizard**.) The `memory-core` plugin provides a nightly consolidation pipeline ("dreaming") that ranks short-term recall candidates and promotes durable ones into a curated `MEMORY.md`.
 
 ### 6.2 Observation
 
@@ -204,11 +206,11 @@ Marked as opinion because it is.
 
 ## 8. Reference architecture
 
-![The project pipeline: a wizard runs once at setup, then work moves from the Requirements Analyst to the Project Designer to the Project Manager (workers in its scope) to QA to the finished product, with support roles on call beside the line and a rework path from the finished product back to the Requirements Analyst](./diagrams/07-project-pipeline.svg)
+![The project pipeline: the Cadre Wizard runs once at setup, then work moves from the Requirements Analyst to the Project Designer to the Project Manager (workers in its scope) to QA to the finished product, with support roles on call beside the line and a rework path from the finished product back to the Requirements Analyst](./diagrams/07-project-pipeline.svg)
 
 The architecture is easier to state as **the path a project takes** than as an org chart. A flat "supervisor dispatches to specialists" picture understates the two things that matter: the order, and the loop.
 
-**The flow.** The operator configures the team once, through a wizard, and then hands work in. Every project enters at the **Requirements Analyst** and moves along a fixed sequence:
+**The flow.** The operator configures the team once, through the **Cadre Wizard**, and then hands work in. Every project enters at the **Requirements Analyst** and moves along a fixed sequence:
 
 1. **Requirements Analyst** — intake, clarification, scope. Nothing enters anywhere else.
 2. **Project Designer** — architecture, approach, specifications.
@@ -436,13 +438,13 @@ The deployment carries that guard today, plus a companion change to the silence 
 
 ### 12.2 Cadre: the reference architecture, realized
 
-§8 proposed a reference architecture and §10 a memory design. As of 2026-09-14 they are **shipped artifacts**: **Cadre** (`github.com/ADD-Attack/Cadre`, MIT, v0.1) — the *same Cadre* as the subject deployment of §6, with its conventions packaged for anyone to install — is a downloadable, wizard-installable instantiation of this paper's architecture for any OpenClaw deployment: a folder of Markdown conventions plus a setup procedure the deployment's main agent reads and executes. The team and the system share one name because they are one thing, described at two moments: what ran, and what it became.
+§8 proposed a reference architecture and §10 a memory design. As of 2026-09-14 they are **shipped artifacts**: **Cadre** (`github.com/ADD-Attack/Cadre`, MIT, v0.1) — the *same Cadre* as the subject deployment of §6, with its conventions packaged for anyone to install — is a downloadable instantiation of this paper's architecture for any OpenClaw deployment, set up through the **Cadre Wizard**: a folder of Markdown conventions plus a setup procedure the deployment's main agent reads and executes. The team and the system share one name because they are one thing, described at two moments: what ran, and what it became.
 
 What shipped, mapped to the paper:
 
 | Paper | Cadre artifact | State |
 |---|---|---|
-| §8 roles — seven functional roles (Supervisor, Builder(s), QA/Verifier, Liaison, Support, **Security/IT**, **Consultant**) | `reference/agents.md` — a nine-seat concrete roster: the five original families expand to PM (Supervisor), RA + PD (Builders), QA (Verifier), SMM (Liaison), FM + AR (Support), and the two roles §8 gained while building — **Security/IT** and **Consultant**; the wizard confirms which to create | Shipped |
+| §8 roles — seven functional roles (Supervisor, Builder(s), QA/Verifier, Liaison, Support, **Security/IT**, **Consultant**) | `reference/agents.md` — a nine-seat concrete roster: the five original families expand to PM (Supervisor), RA + PD (Builders), QA (Verifier), SMM (Liaison), FM + AR (Support), and the two roles §8 gained while building — **Security/IT** and **Consultant**; the Cadre Wizard confirms which to create | Shipped |
 | §8 guardrails 1–4 | `reference/guardrails.md` — routing limit (6-hop cap), file-claim lease, promotion gate, no-op detector | Shipped as **specification** |
 | §8 durable shared ledger | `templates/SHARED.md` — the append-only team ledger, claim-guarded | Shipped |
 | §10 tiered memory (STM/MTM/LTM) | `reference/memory.md` + `templates/SHARED.md` | Shipped as workspace convention |
