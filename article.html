@@ -345,6 +345,8 @@
   <p>It's the "reports success while doing nothing" hazard, caught in the wild — and it's why Cadre ships a <strong>no-op detector</strong>: promoting nothing while holding plenty of candidates is an anomaly, not a quiet week.</p>
 </aside>
 
+<p>The fix, importantly, isn't hypothetical. After the failure the deployment moved its promotion gate to deliberately loose values (<code>0.5 / 0 / 0</code>) — the "loose gates, eviction does the quality control" argument above, applied in the wild. The <code>0.75</code> gate was never a rule; it was an unset default. <strong>The repair shipped.</strong></p>
+
 <div class="fig-pair">
   <figure>
     <img src="./diagrams/04-pipeline-silent-noop.svg" alt="Diagram of a nightly memory pipeline. Transcripts flow into a light-sleep staging area holding 192 candidates, then into a deep-sleep gate requiring a score of at least 0.75, at least 3 recalls and at least 3 distinct queries. Long-term memory is blocked with 0 promoted, while a narrative diary file still writes successfully.">
@@ -405,6 +407,8 @@
 
 <p>Underneath, a <strong>durable layer</strong> every agent reads at session start — per-agent long-term memory (append-only, one writer), a <strong>shared team ledger</strong> any agent may append to under a claim lease (decisions with provenance, file ownership, standing conventions; <em>a ledger, not a scratchpad</em>), per-agent session stores, and a shared task board recording who owns which file <em>right now</em>.</p>
 
+<p>Communication splits in two, and collapsing the two is a bug. Agents <strong>collaborate with each other directly</strong>: a message lands in the recipient's <code>inbox/</code>, and the routing limit governs that channel. The <code>outbox/</code> is a different thing — it is <strong>for the operator alone</strong> (decisions needed, blockers, deliverables, anomalies) and never carries peer chatter. If peer exchanges route through outboxes, the operator is cc'd on everything and the real blockers get lost in the noise.</p>
+
 <figure>
   <img src="./diagrams/08-durable-layer.svg" alt="Four-cell diagram of the durable layer. Per-agent long-term memory: MEMORY.md, append-only, curated, human-readable, private to one agent, one writer. Shared team memory: SHARED.md, a single append-only team ledger, read by all and appended to under a claim lease. Per-agent session stores: durable SQLite chat history, local to each agent and surviving restart. Shared task board: claims recording who owns which file right now, since two writers on one file is a data-loss bug teams must prevent by construction.">
   <figcaption><b>Figure 7 — The durable layer.</b> The part every agent reads before it does anything: what each agent remembers privately, what the team remembers together, what actually happened, and who owns what <em>right now</em>.</figcaption>
@@ -419,6 +423,8 @@
 <p>The real limits live <strong>outside</strong> the words: in which tools an agent may use, what approvals it needs, what the sandbox permits, what budgets cap, and what gets written to the audit log. And one boundary outranks all others — <strong>no agent may edit its own permissions, prompt, or safety configuration.</strong> If it can rewrite its own rules, every rule you wrote is decoration.</p>
 
 <p>Four concrete guardrails ship with the architecture: a <strong>routing limit</strong> (a hard cap on agent-to-agent hops); a <strong>file-claim lease</strong> so two agents can never write the same file at once — two writers is a data-loss bug that pipelines can't have and teams must prevent by construction; the <strong>promotion gate</strong> for memory; and the <strong>no-op detector</strong>.</p>
+
+<p>One honest limit is worth stating plainly: <strong>the platform exposes no spend-cap primitive.</strong> There is no dollar-budget key in the configuration schema and no cost-report command — only per-model price metadata and context-token budgets. Which means a team budget here is <em>accounted</em>, not <em>enforced</em>. A limit that lives in a promise rather than a mechanism is a deferral; anything you actually need stopped has to be stopped by something outside the model.</p>
 </section>
 
 <section id="open" class="reveal">

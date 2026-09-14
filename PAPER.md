@@ -230,6 +230,18 @@ Abstracted, the seats reduce to the families used elsewhere in this paper: **Sup
 - **Shared team memory** — a single append-only ledger (e.g. `SHARED.md`) that **every agent reads at session start** and any agent may append to **under a claim lease**. It holds team-scoped truth — decisions with provenance, file ownership, standing conventions, environment facts — never per-persona notes or scratch. *A ledger, not a scratchpad.* This is the orthogonal axis to the per-agent tiers of §10: those are ordered by **recency**, this is scoped by **team**.
 - Per-agent session stores (durable history).
 - A shared task board recording **who owns which file, right now**.
+- **Mailboxes** — a per-agent **`inbox/`** that accepts peer messages, and an **operator-only `outbox/`** (see below).
+
+**Two communication paths — do not conflate them.**
+
+A durable team needs two distinct channels, and the design above is incomplete without saying which is which:
+
+- **Agent ↔ agent (peer).** Agents collaborate by messaging each other **directly**; the recipient finds the message in its **`inbox/`**. Dispatch, questions, handoffs and reviews travel this way. The routing limit (guardrail 1) governs *this* channel.
+- **Agent → operator.** An agent's **`outbox/`** is for the **operator, and only the operator** — decisions needed, blockers, deliverables, anomalies. It is never used for peer chatter.
+
+The asymmetry is deliberate: **the inbox accepts peer messages; the outbox never sends them.** A peer message is written to the *recipient's* inbox, not the sender's outbox.
+
+**Why it matters.** If peer exchanges route through outboxes, the operator is cc'd on everything, the doorway batches noise, and **real blockers get missed**. The two paths are a routing decision, not a style preference — collapsing them is a bug.
 
 **Guardrails.**
 
