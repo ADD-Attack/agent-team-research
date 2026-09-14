@@ -335,7 +335,7 @@ To optimize agent focus and execution reliability, we argue for a strict split b
 
 1. **The Loose Half (Capability prohibitions):**
    Prohibitions against pursuing "independent goals," "self-preservation," "replication," "resource acquisition," or "power-seeking" are largely decorative in the prompt layer. Modern base models are already heavily aligned against these extreme behaviors by default. Removing these scary enumerations from the prompt does not grant any actual capability because capability is strictly bounded by tool policy, user approvals, and sandbox constraints. Thus, prompt clutter should be minimized to a single plain line:
-   > *Do not pursue goals or actions outside of the explicit user request.*
+   > *Do not pursue goals or actions outside of the user request.*
 2. **The Tight Half (Oversight and escalation):**
    The core load-bearing instruction in the hardcoded safety block is: *"Safety/oversight > completion."* Removing or softening this line in the prompt shifts failures from "loud" (loudly stopping, alerting the operator of a block) to "quiet" (silently proceeding, reporting false success, and failing to notify the operator of errors). This rule must be sharpened: agents must always obey stop/pause/audit directives instantly and surface tool denials rather than trying to circumvent them.
 
