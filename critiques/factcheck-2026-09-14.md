@@ -95,7 +95,7 @@ The package is real. The paper's own hedge ("**Unvetted** — listed for complet
 ## F. Unverifiable (2) — flagged, not faults
 
 - **F1.** The `0.737` max score and the precise 189/2/1 distribution: consistent with live state, but the specific historical snapshot has no surviving artifact. Not wrong — just not checkable after the fact.
-- **F2.** §12.1's "applied 2026-09-09 (minutes before the public report was posted)": the **patch artifact supports the date** — `embedded-agent-*.mjs.backup-20260909-152751` (mtime 15:27:51) and `builtin-openclaw-*.mjs.backup-20260909-152836` (15:28:36) — so the local change is timestamped. The "minutes before the report" comparison needs the *other* party's timestamp, which the paper cannot self-supply. Separable; cite the backup file + mtime and drop the comparison.
+- **F2.** §12.1's 2026-09-09 patch date is **supported by artifact** — `embedded-agent-*.mjs.backup-20260909-152751` (mtime 15:27:51) and `builtin-openclaw-*.mjs.backup-20260909-152836` (15:28:36) — so it is verifiable after the fact. (Resolved: §12.1 now cites those files directly.)
 
 ---
 
