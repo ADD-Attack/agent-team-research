@@ -187,7 +187,7 @@
     <li><a href="#why">Why a team at all</a></li>
     <li><a href="#box">What's in the box</a></li>
     <li><a href="#memory">Memory: designed on purpose</a></li>
-    <li><a href="#incident">One incident, as illustration</a></li>
+    <li><a href="#incident">A cautionary example</a></li>
     <li><a href="#architecture">The architecture</a></li>
     <li><a href="#guardrails">Guardrails</a></li>
     <li><a href="#open">What's still unsolved</a></li>
@@ -335,12 +335,12 @@
 </section>
 
 <section id="incident" class="reveal">
-<h2>5. One incident, as illustration<a class="anchor" href="#incident" aria-label="link to this section">§</a></h2>
+<h2>5. A cautionary example<a class="anchor" href="#incident" aria-label="link to this section">§</a></h2>
 
 <aside class="casenote">
-  <h3>A single example — not the point of Cadre</h3>
+  <h3>The silent no-op</h3>
   <p>While building this, one deployment hit a memorable failure: a memory pipeline whose thresholds were set for a much larger system, so for a week it stored <strong>1,229</strong> memories and promoted <strong>zero</strong>. Nothing errored. Every log said success.</p>
-  <p>It's a useful illustration of the "reports success while doing nothing" hazard — and it's why Cadre ships a <strong>no-op detector</strong>: promoting nothing while holding plenty of candidates is an anomaly, not a quiet week. But it's one incident in one deployment. It is not what Cadre is about; it's a reason one of its guardrails exists.</p>
+  <p>It's the "reports success while doing nothing" hazard, caught in the wild — and it's why Cadre ships a <strong>no-op detector</strong>: promoting nothing while holding plenty of candidates is an anomaly, not a quiet week.</p>
 </aside>
 
 <div class="fig-pair">
