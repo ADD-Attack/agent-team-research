@@ -316,10 +316,10 @@
 </div>
 
 <div class="entry">
-<h3>8. Synaptic homeostasis<span class="tag design">needs a design call</span></h3>
+<h3>8. Communication-rate control<span class="tag design">needs a design call</span></h3>
 <p class="field"><span class="k">Neuroscience</span> Neurons scale the strength of their own excitatory synapses up or down to keep their firing within a workable range — a cell-level rule whose consequences show up network-wide.</p>
 <p class="field"><span class="k">Borrowed mechanism</span> A global cap on how much any one agent may broadcast into the shared channel per unit of work.</p>
-<p class="field"><span class="k">Design consequence</span> Complements the autonomy ladder. The ladder governs <em>what an agent may do</em>; homeostasis governs <em>how much it may say</em>. A loud seat is a real failure mode in a chat-native team, and permission rules do not address it.</p>
+<p class="field"><span class="k">Design consequence</span> Complements the autonomy ladder. The ladder governs <em>what an agent may do</em>; this governs <em>how much it may say</em>. A loud seat is a real failure mode in a chat-native team, and permission rules do not address it. Honest labelling: a fixed cap is rate limiting, not homeostasis — the biology names the problem, it does not supply the controller. A real homeostatic version would need a measured set point and error feedback.</p>
 <p class="lands">Lands in: §7 (Guardrails).</p>
 </div>
 
@@ -368,10 +368,10 @@
 <p>These are about the team as a structure that persists, gets damaged, and coordinates.</p>
 
 <div class="entry">
-<h3>13. Critical periods<span class="tag design">needs a design call</span></h3>
+<h3>13. Critical periods<span class="tag open">open question</span></h3>
 <p class="field"><span class="k">Neuroscience</span> Early experience shapes a system far more than later experience; there are windows during which a change sticks easily and after which it barely lands at all.</p>
 <p class="field"><span class="k">Borrowed mechanism</span> The install-time choices — roles, names, budgets, the shape of the roster — have outsized permanence compared with anything changed later.</p>
-<p class="field"><span class="k">Design consequence</span> This is the argument for <em>confirm before writing</em>. Early choices are the ones that stick, so the Wizard's insistence on proposing and waiting at every step is not politeness — it is the recognition that these particular decisions are disproportionately costly to reverse.</p>
+<p class="field"><span class="k">Design consequence</span> This is a reason for <em>confirm before writing</em> — but the premise is asserted here, not measured: that install-time choices really are disproportionately costly to reverse is exactly what would need showing. Approval should follow consequence and reversibility, which can be assessed directly, rather than chronological earliness. Floated, not settled.</p>
 <p class="lands">Lands in: §1 (the Wizard) · §7 (confirm before writing).</p>
 </div>
 
@@ -387,7 +387,7 @@
 <h3>15. Oscillation and binding by synchrony<span class="tag open">open question</span></h3>
 <p class="field"><span class="k">Neuroscience</span> Separately-located regions coordinate by firing in phase; synchrony is one way distributed activity is bound into a single percept or action.</p>
 <p class="field"><span class="k">Borrowed mechanism</span> Cadence — a shared heartbeat and mailbox rhythm — as the team's synchrony: the thing that makes separate agents act as one team rather than a queue of strangers.</p>
-<p class="field"><span class="k">Design consequence</span> Suggests that <em>when</em> agents act may matter as much as <em>what</em> they say, which is testable — but the mapping is the softest here, and it is included as a pointer rather than a design.</p>
+<p class="field"><span class="k">Design consequence</span> Suggests that <em>when</em> agents act may matter as much as <em>what</em> they say, which is testable — but the mapping is the softest here, and it is included as a pointer rather than a design. A shared cadence can synchronise <em>load</em> rather than information, so the honest comparator is asynchronous, event-driven coordination.</p>
 <p class="lands">Lands in: §6 or §8.</p>
 </div>
 </section>
