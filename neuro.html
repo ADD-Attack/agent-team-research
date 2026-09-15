@@ -230,7 +230,7 @@
 <section id="why" class="reveal">
 <h2>Why borrow a brain<a class="anchor" href="#why" aria-label="link to this section">§</a></h2>
 
-<p>The working paper already steals two ideas from neuroscience: <strong>tiered consolidation with recall-driven eviction</strong> (memory, §4) and the <strong>REM-style "dreaming"</strong> pass that replays and rewrites. This essay widens the borrowing. It is not a claim that a team of language-model agents <em>is</em> a brain — it is a claim that brains have spent a billion years solving the exact problems a persistent team now hits: how to keep a record honest, how to route effort, how to survive damage, and how to decide what to forget.</p>
+<p>The working paper already steals two ideas from neuroscience: <strong>tiered consolidation with recall-driven eviction</strong> (memory, §10) and the <strong>REM-style "dreaming"</strong> pass that replays and rewrites. This essay widens the borrowing. It is not a claim that a team of language-model agents <em>is</em> a brain — it is a claim that brains have spent a billion years solving the exact problems a persistent team now hits: how to keep a record honest, how to route effort, how to survive damage, and how to decide what to forget.</p>
 
 <div class="callout">
   <span class="label">The rule this document runs on</span>
@@ -238,6 +238,8 @@
 </div>
 
 <p>Each entry carries a status. <span class="tag build">ready to build</span> means a concrete mechanism is specifiable today from primitives the runtime already has. <span class="tag design">needs a design call</span> means the mechanism is real but carries a cost or a tradeoff someone has to choose. <span class="tag open">open question</span> means the mapping is interesting and unearned — floated, not settled.</p>
+
+<p>Section pointers below (<em>Lands in: …</em>) follow the numbering of the companion article <a href="./article.html">Building an AI Team That Lasts</a>; where the working paper's own numbering is meant it is written as “paper §N”.</p>
 </section>
 
 <section id="error" class="reveal">
@@ -248,7 +250,7 @@
 <div class="entry">
 <h3>1. Prediction error<span class="tag build">ready to build</span></h3>
 <p class="field"><span class="k">Neuroscience</span> Midbrain dopamine neurons do not encode reward — they encode the <em>gap between expected and received reward</em>. Firing rises above baseline for better-than-predicted outcomes and dips below it for worse; once a reward is fully predicted, the response vanishes. Learning is driven by surprise, not by volume of experience.</p>
-<p class="field"><span class="k">Borrowed mechanism</span> Every stage records what it <em>expects</em> to be true on success, and the divergence between expectation and outcome is the only thing that triggers revision. A stage that never states an expectation cannot learn, and cannot fail loudly.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> Every stage records what it <em>expects</em> to be true on success, and the divergence between expectation and outcome is what forces a revision — a planned change to goals or constraints can also revise, but a stage that states no expectation cannot notice it failed. A stage that never states an expectation cannot learn, and cannot fail loudly.</p>
 <p class="field"><span class="k">Design consequence</span> This is the theory-level explanation of §5's silent no-op. The pipeline ran, produced nothing, and reported success — because nothing in it had recorded an expectation that "nothing" could violate. Give each stage a stated expectation and a comparison step, and a no-op becomes a signal rather than a quiet week. It also supplies the natural trigger for the gates: a violated expectation, not a status report.</p>
 <p class="lands">Lands in: §5 (reframe the incident as a missing prediction-error signal) · §7 (the comparison is what trips a gate).</p>
 </div>
@@ -287,7 +289,7 @@
 <h3>5. Salience gating<span class="tag design">needs a design call</span></h3>
 <p class="field"><span class="k">Neuroscience</span> Not everything that arrives at the senses reaches the cortex. Thalamic and related gating decides what is passed upstream for the expensive work, based on salience rather than completeness.</p>
 <p class="field"><span class="k">Borrowed mechanism</span> An explicit gate in front of the store that decides what is even <em>eligible</em> to be written — distinct from the policy that decides what must be evicted afterwards.</p>
-<p class="field"><span class="k">Design consequence</span> The paper currently runs admission and eviction together under one phrase ("loose in, bounded out"). They are two different jobs: the gate controls volume and noise, eviction controls capacity. Separating them makes each tunable — and makes "why is this in memory?" answerable.</p>
+<p class="field"><span class="k">Design consequence</span> The paper already separates them — §10.4 sets admission, §10.5 sets eviction (size-triggered, never time-based), and “loose in, size-bounded out” is its compression of two distinct controls. What is genuinely missing is a <em>shared</em> record of why an entry was admitted, promoted or evicted: without it “why is this in memory?” has no answer even though the two jobs are separate.</p>
 <p class="lands">Lands in: §4 (memory).</p>
 </div>
 
@@ -315,7 +317,7 @@
 
 <div class="entry">
 <h3>8. Synaptic homeostasis<span class="tag design">needs a design call</span></h3>
-<p class="field"><span class="k">Neuroscience</span> Neurons scale their synaptic strength up or down globally to stay within a workable dynamic range, so runaway excitation is prevented at the network level rather than cell by cell.</p>
+<p class="field"><span class="k">Neuroscience</span> Neurons scale their synaptic strength up or down globally to stay within a workable dynamic range, so a neuron's own firing and excitatory synapses stay within a workable dynamic range — a cell-level rule whose consequences show up network-wide.</p>
 <p class="field"><span class="k">Borrowed mechanism</span> A global cap on how much any one agent may broadcast into the shared channel per unit of work.</p>
 <p class="field"><span class="k">Design consequence</span> Complements the autonomy ladder. The ladder governs <em>what an agent may do</em>; homeostasis governs <em>how much it may say</em>. A loud seat is a real failure mode in a chat-native team, and permission rules do not address it.</p>
 <p class="lands">Lands in: §7 (Guardrails).</p>
@@ -339,7 +341,7 @@
 <h3>10. The spacing effect and the forgetting curve<span class="tag design">needs a design call</span></h3>
 <p class="field"><span class="k">Neuroscience</span> Retention decays along a characteristic forgetting curve, steepest immediately after learning. Distributed practice at widening intervals beats massed practice for the same total effort.</p>
 <p class="field"><span class="k">Borrowed mechanism</span> A maintenance pass that re-touches a memory at widening intervals — so keeping something alive costs a little, spread out, instead of everything, at once.</p>
-<p class="field"><span class="k">Design consequence</span> Complements the paper's use-driven eviction: recall decides <em>whether</em> a memory survives; a spacing schedule decides <em>when it is asked about</em>, which is what keeps the recall signal honest rather than accidental.</p>
+<p class="field"><span class="k">Design consequence</span> Complements the paper's use-driven eviction: recall decides <em>whether</em> a memory survives; a maintenance pass decides <em>when a record is re-checked</em>. The hazard is the reverse of honest: if a scheduled touch is <em>counted</em> as demand, the schedule manufactures the very signal it consumes and keeps a low-value entry alive on its own evidence. Maintenance reads and demand reads must therefore be separate event types — only demand votes. The paper's trigger stays size-based; this pass does not evict.</p>
 <p class="lands">Lands in: §4 (memory maintenance).</p>
 </div>
 
@@ -354,7 +356,7 @@
 <div class="entry">
 <h3>12. Sleep consolidation and glymphatic clearance<span class="tag build">ready to build</span></h3>
 <p class="field"><span class="k">Neuroscience</span> Sleep is not downtime. Traces are replayed and stabilised into durable form largely during sleep, and the glymphatic system flushes metabolic waste that accumulates during waking. Offline time performs two jobs: consolidate, and clear.</p>
-<p class="field"><span class="k">Borrowed mechanism</span> A scheduled maintenance window that does the same pair: promote what was recalled, drop what was not, and run the housekeeping — health checks, backups, index rebuilds — that the working day never has room for.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> A scheduled maintenance window that does the same pair: consolidate what was recalled, run the housekeeping — health checks, backups, index rebuilds — that the working day never has room for, and evict only when a tier is over budget (size-triggered, as §10.5 requires; long-term memory is exempt from automatic eviction and flags for human curation instead).</p>
 <p class="field"><span class="k">Design consequence</span> This is the <em>why</em> beneath the scheduled-upkeep line in the pipeline figure. Naming it a consolidation window gives it a spine and separates it from ordinary cron: it is not just periodic work, it is the pass that makes the record durable and clears the waste.</p>
 <p class="lands">Lands in: §4 (memory) · §6 (support roles and scheduled upkeep).</p>
 </div>
@@ -407,7 +409,7 @@
 <section id="refs" class="reveal">
 <h2>References<a class="anchor" href="#refs" aria-label="link to this section">§</a></h2>
 
-<p style="font:.88rem/1.6 ui-sans-serif,system-ui,sans-serif;color:var(--muted)">Neuroscience sources, numbered to match the entries above one-for-one. Standard primary literature; author and year are the reliable handle for each.</p>
+<p style="font:.88rem/1.6 ui-sans-serif,system-ui,sans-serif;color:var(--muted)">Neuroscience sources, numbered to match the entries above one-for-one. A mix of primary papers, reviews and books — not all primary literature; author and year are the reliable handle for each.</p>
 
 <ol class="refs">
   <li><strong>Prediction error.</strong> Schultz, W., Dayan, P. &amp; Montague, P. R. "A neural substrate of prediction and reward." <em>Science</em> 275, 1593–1599 (1997).</li>
