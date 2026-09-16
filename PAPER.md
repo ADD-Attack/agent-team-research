@@ -8,6 +8,8 @@
 **Date:** 2026-09-14
 **Status:** Working paper / prior-art review — v1.2 (§12.2 adds the architecture realized as a downloadable system; §11/§6 carry the 2026-09-14 fact-check corrections)
 
+> **Authorship, provenance, and AI contribution.** Brick (the human operator) commissioned this work, set its scope, made the accept/reject call on every claim, and takes responsibility for its content and integrity. The agents named above are named *as* agents because this paper's subject is the deployment that produced it — disclosure, not concealment. Erin wrote and revised the manuscript and carried out the prior-art survey; Oscar Martinez carried out the §11 fact-check audit. All agent output was reviewed, corrected, and released by the operator. For a journal or conference submission the arrangement would become a human author plus an AI-contribution disclosure, per ICMJE / COPE / WAME guidance.
+
 ---
 
 <img src="./assets/cadre-wizard.png" alt="The Cadre Wizard" width="200">
