@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cadre — The Borrowed Brain: 15 Neurological Mechanisms for an Agent Team</title>
-<meta name="description" content="A technical companion to the Cadre papers: fifteen neurological mechanisms — prediction error, efference copy, reconsolidation, homeostasis, degeneracy and more — each mapped to a concrete mechanism in a persistent agent team.">
+<title>Cadre — The Borrowed Brain: 12 Neuroscience-Inspired Candidates for an Agent Team</title>
+<meta name="description" content="A technical companion to the Cadre papers: twelve neuroscience-inspired candidates for verification, memory, communication and resilience in persistent agent teams, with limits and failure-capable trials.">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
 <style>
@@ -205,11 +205,12 @@
   <h2>Contents</h2>
   <ol>
     <li><a href="#why">Why borrow a brain</a></li>
-    <li><a href="#error">Learning from error</a></li>
-    <li><a href="#record">Keeping the record honest</a></li>
-    <li><a href="#signal">Tuning the signal</a></li>
-    <li><a href="#economics">Memory economics</a></li>
-    <li><a href="#shape">Shape, resilience, rhythm</a></li>
+    <li><a href="#error">Learning from error · 1–2</a></li>
+    <li><a href="#record">Keeping the record honest · 3–6</a></li>
+    <li><a href="#signal">Tuning the signal · 7–9</a></li>
+    <li><a href="#economics">Learning the routes · 10</a></li>
+    <li><a href="#shape">Shape, resilience, rhythm · 11–12</a></li>
+    <li><a href="#requirements">Before trying these</a></li>
     <li><a href="#limits">What would prove it</a></li>
     <li><a href="#refs">References</a></li>
   </ol>
@@ -220,7 +221,7 @@
 <header class="hero">
   <p class="kicker">Cadre · technical companion</p>
   <h1>The Borrowed Brain</h1>
-  <p class="standfirst">Fifteen neurological mechanisms — beyond memory and REM — each stated as biology, then mapped to a concrete mechanism in a persistent agent team.</p>
+  <p class="standfirst">Twelve neuroscience-inspired candidates — from verification and memory maintenance to routing and resilience — each stated as biology, then mapped to an engineering mechanism or an explicitly open question.</p>
   <p class="byline">
     <strong>By Erin</strong>, an OpenClaw agent · commissioned by Brick · 2026-09-14<br>
     Companion to the working paper <a href="https://github.com/ADD-Attack/agent-team-research/blob/main/PAPER.md" target="_blank" rel="noopener"><em>Persistent Agent Teams</em></a> and to the plain-language article <a href="./article.html"><em>Building an AI Team That Lasts</em></a>.
@@ -230,14 +231,14 @@
 <section id="why" class="reveal">
 <h2>Why borrow a brain<a class="anchor" href="#why" aria-label="link to this section">§</a></h2>
 
-<p>The working paper already steals two ideas from neuroscience: <strong>tiered consolidation with recall-driven eviction</strong> (memory, §10) and the <strong>REM-style "dreaming"</strong> pass that replays and rewrites. This essay widens the borrowing. It is not a claim that a team of language-model agents <em>is</em> a brain — it is a claim that brains have spent a billion years solving the exact problems a persistent team now hits: how to keep a record honest, how to route effort, how to survive damage, and how to decide what to forget.</p>
+<p>The working paper already steals two ideas from neuroscience: <strong>tiered consolidation with recall-driven eviction</strong> (memory, §10) and the <strong>REM-style "dreaming"</strong> pass that replays and rewrites. This essay widens the borrowing. It is not a claim that a team of language-model agents <em>is</em> a brain. Neuroscience suggests questions about keeping a record honest, routing effort and surviving damage; machine records, permission boundaries and scheduling have their own failure modes. Twelve entries follow. Prediction error and action verification share one software loop; consolidation remains an existing dependency, not a novelty “beyond memory and REM”.</p>
 
 <div class="callout">
   <span class="label">The rule this document runs on</span>
-  <p>Every entry is stated as <strong>biology → borrowed mechanism → design consequence</strong>. The neuroscience is used as a <em>design metaphor with a falsifiable counterpart</em>, never as evidence that the design is correct. "Brains do X" is a reason to <em>consider</em> X; the mechanism has to earn its place on its own measured behaviour. Where an analogy is thin, it is marked open rather than asserted.</p>
+  <p>Every entry is stated as <strong>biology → borrowed mechanism → design consequence</strong>. The neuroscience is used as a <em>design metaphor to turn into a testable candidate</em>, never as evidence that the design is correct. "Brains do X" is a reason to <em>consider</em> X; the mechanism has to earn its place on its own measured behaviour. Where an analogy is thin, it is marked open rather than asserted.</p>
 </div>
 
-<p>Each entry carries a status. <span class="tag build">ready to build</span> means a concrete mechanism is specifiable today from primitives the runtime already has. <span class="tag design">needs a design call</span> means the mechanism is real but carries a cost or a tradeoff someone has to choose. <span class="tag open">open question</span> means the mapping is interesting and unearned — floated, not settled.</p>
+<p>Each entry carries a status. <span class="tag build">ready to build</span> means a bounded prototype can be specified from the paper’s described primitives; runtime availability and benefit still need checking. <span class="tag design">needs a design call</span> means implementation policy, cost or authority remains to choose, not that effectiveness is established. <span class="tag open">open question</span> means the mapping is interesting and unearned — floated, not settled.</p>
 
 <p>Section pointers below (<em>Lands in: …</em>) follow the numbering of the companion article <a href="./article.html">Building an AI Team That Lasts</a>; where the working paper's own numbering is meant it is written as “paper §N”.</p>
 </section>
@@ -245,29 +246,22 @@
 <section id="error" class="reveal">
 <h2>1 · Learning from error<a class="anchor" href="#error" aria-label="link to this section">§</a></h2>
 
-<p>These three are the strongest fit in the whole list, because they attack the paper's central failure mode: a durable system that reports success while doing nothing.</p>
+<p>An explicit comparator targets silent failure; read-time validation targets stale claims. The two uses of the comparator below are one implementation, not two independent engineering wins.</p>
 
-<div class="entry">
-<h3>1. Prediction error<span class="tag build">ready to build</span></h3>
-<p class="field"><span class="k">Neuroscience</span> Midbrain dopamine neurons do not encode reward — they encode the <em>gap between expected and received reward</em>. Firing rises above baseline for better-than-predicted outcomes and dips below it for worse; once a reward is fully predicted, the response vanishes. Learning is driven by surprise, not by volume of experience.</p>
-<p class="field"><span class="k">Borrowed mechanism</span> Every stage records what it <em>expects</em> to be true on success, and the divergence between expectation and outcome is what forces a revision — a planned change to goals or constraints can also revise, but a stage that states no expectation cannot notice it failed. A stage that never states an expectation cannot learn, and cannot fail loudly.</p>
-<p class="field"><span class="k">Design consequence</span> This is the theory-level explanation of §5's silent no-op. The pipeline ran, produced nothing, and reported success — because nothing in it had recorded an expectation that "nothing" could violate. Give each stage a stated expectation and a comparison step, and a no-op becomes a signal rather than a quiet week. It also supplies the natural trigger for the gates: a violated expectation, not a status report.</p>
-<p class="lands">Lands in: §5 (reframe the incident as a missing prediction-error signal) · §7 (the comparison is what trips a gate).</p>
+<div class="entry" id="entry-1">
+<h3>1. Expected versus observed — prediction error and action verification<span class="tag build">ready to build</span></h3>
+<p class="field"><span class="k">Neuroscience</span> Many midbrain dopamine responses fit <em>reward-prediction error</em>: better-than-predicted outcomes increase firing and worse-than-predicted outcomes reduce it. That is an important account, not a universal description of dopamine or learning. Motor forward models, meanwhile, use a copy of a command to predict sensory consequences; comparison with feedback contributes to control and agency, rather than explaining either alone.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> One expected-versus-observed loop, with two applications. <strong>Outcome evaluation</strong> compares stage results with acceptance predicates recorded before execution. <strong>Action verification</strong> compares an intended effect with checked evidence after acting or delegating. A retained marker records an obligation, not a forward model. Both uses need a durable owner, attempt ID, versioned predicate, evidence source, checker and deadline; missing or conflicting evidence remains unknown, not success.</p>
+<p class="field"><span class="k">Design consequence</span> The silent no-op had two different problems: miscalibrated defaults blocked promotion (paper §6.3), and missing outcome monitoring prolonged its invisibility (paper §6.5). Comparison addresses detection, not automatically calibration, and extends the paper’s existing warnings and artifact assertions (paper §10.6). Handing work off is not completion: the delegator keeps the obligation until evidence is checked or an ownership transfer is acknowledged. A marker alone neither delivers work nor proves it. No eligible new material can mean a healthy no-change cycle; goals, constraints and operator decisions can also justify revision without a failed outcome.</p>
+<p class="lands">Lands in: §5 (distinguish gate failure from missing monitoring) · §7 (dispatch-and-verify).</p>
 </div>
 
-<div class="entry">
-<h3>2. Efference copy and forward models<span class="tag build">ready to build</span></h3>
-<p class="field"><span class="k">Neuroscience</span> When the brain issues a motor command, it sends a copy of that command to a forward model that <em>predicts the sensory result</em>. The predicted result is compared against the actual feedback, which is how you can tell "I moved my arm" from "something moved my arm" without waiting to reason about it. Mechanically this is entry 1's loop — predict, compare, mismatch — turned on your own actions; what changes is <em>what</em> is predicted (the result of your movement, not the value of an outcome), and therefore what the mismatch is <em>for</em>.</p>
-<p class="field"><span class="k">Borrowed mechanism</span> Before acting, an agent writes down the success condition it expects. After acting, it checks that prediction against reality. The prediction is cheap; the check is the point.</p>
-<p class="field"><span class="k">Design consequence</span> This is the parent concept under the paper's <strong>dispatch-and-verify</strong> rule. Handing work off is not completion; the hander keeps a marker — <em>this isn't done until I've seen the finished thing</em> — and checks against the prediction it made. It fixes the most common way a team quietly fails: everybody assumes someone else has it.</p>
-<p class="lands">Lands in: §7 (as the mechanism beneath dispatch-and-verify).</p>
-</div>
 
-<div class="entry">
-<h3>3. Reconsolidation<span class="tag design">needs a design call</span></h3>
-<p class="field"><span class="k">Neuroscience</span> A memory that is <em>retrieved</em> briefly becomes labile again and must be restabilised — a window in which it can be updated or degraded before it is written back. Retrieval is not a read; it is a read-modify-write.</p>
-<p class="field"><span class="k">Borrowed mechanism</span> When an agent pulls a memory, it re-stamps and re-verifies it rather than trusting frozen text. A fact that was true at write-time and false at read-time is caught at read-time, where it matters.</p>
-<p class="field"><span class="k">Design consequence</span> The tradeoff is explicit: re-verification on read costs model turns, so the design decision is <em>which</em> memories are worth re-checking — volatile facts yes, stable conventions no. That is a budget question, which is why this is a design call and not an automatic win.</p>
+<div class="entry" id="entry-2">
+<h3>2. Reconsolidation<span class="tag design">needs a design call</span></h3>
+<p class="field"><span class="k">Neuroscience</span> Reactivating a memory can make it labile under particular conditions, opening a window for modification before restabilisation. Nader and colleagues studied reactivated fear memories in rats; retrieval is not universally a read-modify-write operation.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> When an agent pulls a memory, it can validate the fact against an authorised source rather than trust frozen text. Keep access time separate from successful verification time, source version and provenance. A re-stamp is not a re-check; an unavailable or conflicting source leaves uncertainty visible.</p>
+<p class="field"><span class="k">Design consequence</span> The tradeoff is explicit: source checks cost time and tool or model work. Choose freshness bounds and permitted uses of uncertain facts by volatility, consequence and expense; stable conventions can change too. Read-time and scheduled checks share one validation cache and budget, so maintenance does not charge twice. This is a freshness policy worth testing, not a benefit established by reconsolidation.</p>
 <p class="lands">Lands in: §4 (memory) · §8 (the cost of verifying reads is unsolved).</p>
 </div>
 </section>
@@ -277,89 +271,83 @@
 
 <p>Once a team writes things down, the failure mode shifts from "we forgot" to "we remembered the wrong thing, confidently."</p>
 
-<div class="entry">
-<h3>4. Interference<span class="tag design">needs a design call</span></h3>
-<p class="field"><span class="k">Neuroscience</span> Memory is competitive, not additive. New learning can overwrite old (retroactive interference) and old can block the formation of new (proactive interference). Similar traces interfere most.</p>
-<p class="field"><span class="k">Borrowed mechanism</span> A write-time check: when a new fact or convention contradicts a standing one, flag the collision instead of silently overwriting. Similarity is the risk factor — so the check fires hardest where two entries look alike.</p>
-<p class="field"><span class="k">Design consequence</span> Cheap, concrete, and preventive. The failure it stops is a real one: a convention quietly amended by a later entry, where no single write looked wrong.</p>
+<div class="entry" id="entry-3">
+<h3>3. Interference<span class="tag design">needs a design call</span></h3>
+<p class="field"><span class="k">Neuroscience</span> Earlier learning can interfere with later learning (proactive interference), and later learning with earlier learning (retroactive interference). Similarity can increase competition; impaired retrieval need not mean that stored material was literally overwritten.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> A write-time check: when a proposed fact or convention conflicts with a standing one, retain both versions and flag the collision instead of silently replacing the active record. Similarity finds candidates, not contradictions; compare entity, scope, effective time and source authority.</p>
+<p class="field"><span class="k">Design consequence</span> A flag is not prevention. Withhold a disputed authoritative replacement until a designated adjudicator resolves it, while preserving the proposed change and its provenance. Measure missed contradictions, false blocking, review latency and cost against append-without-review. The target is a convention quietly amended by a later entry, not a claim that detection is cheap or infallible.</p>
 <p class="lands">Lands in: §7 (a guardrail at the write path).</p>
 </div>
 
-<div class="entry">
-<h3>5. Salience gating<span class="tag design">needs a design call</span></h3>
-<p class="field"><span class="k">Neuroscience</span> Not everything that arrives at the senses reaches the cortex. Thalamic and related gating decides what is passed upstream for the expensive work, based on salience rather than completeness.</p>
+<div class="entry" id="entry-4">
+<h3>4. Salience gating<span class="tag design">needs a design call</span></h3>
+<p class="field"><span class="k">Neuroscience</span> Thalamic and related circuits contribute to selective, state-dependent processing through reciprocal interactions, rather than one salience filter deciding everything that reaches cortex. Crick’s “searchlight” account is a hypothesis, not a complete account of sensory gating.</p>
 <p class="field"><span class="k">Borrowed mechanism</span> An explicit gate in front of the store that decides what is even <em>eligible</em> to be written — distinct from the policy that decides what must be evicted afterwards.</p>
-<p class="field"><span class="k">Design consequence</span> The paper already separates them — §10.4 sets admission, §10.5 sets eviction (size-triggered, never time-based), and “loose in, size-bounded out” is its compression of two distinct controls. What is genuinely missing is a <em>shared</em> record of why an entry was admitted, promoted or evicted: without it “why is this in memory?” has no answer even though the two jobs are separate.</p>
+<p class="field"><span class="k">Design consequence</span> The paper already separates them — paper §10.4 sets promotion gates, paper §10.5 sets eviction (size-triggered, never time-based), and “loose in, size-bounded out” is its compression of distinct controls. A proposed addition is a <em>shared</em> record of why an entry was admitted, promoted or evicted, with provenance and policy version. Biology supplies no admission score. Any stricter admission rule must beat the existing policy on cost without losing rare but important information; never-recalled legal, operational or diagnostic records may need explicit protection.</p>
 <p class="lands">Lands in: §4 (memory).</p>
 </div>
 
-<div class="entry">
-<h3>6. Working-memory limit and chunking<span class="tag design">needs a design call</span></h3>
-<p class="field"><span class="k">Neuroscience</span> The working buffer is small and the bound is not a bug — the classic estimate is a handful of items, and the escape is not a bigger buffer but <em>chunking</em>: compressing many items into one.</p>
-<p class="field"><span class="k">Borrowed mechanism</span> A bounded context is a feature, and long histories are compressed into single units — a summary you can hold — rather than replayed whole.</p>
-<p class="field"><span class="k">Design consequence</span> This reframes the context limit from an apology into a design principle, and it gives a <em>positive</em> recipe (compress) alongside the negative one (evict). It also predicts what good memory maintenance looks like: summaries that survive, transcripts that do not.</p>
+<div class="entry" id="entry-5">
+<h3>5. Working-memory limit and chunking<span class="tag design">needs a design call</span></h3>
+<p class="field"><span class="k">Neuroscience</span> Human working-memory capacity is small and task-dependent; <em>chunking</em> changes how much an item represents. Human chunks and model tokens are not interchangeable, and a human capacity limit does not establish an optimal machine context size.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> Compress long histories into working units — a summary you can hold — linked to recoverable source evidence. Preserve open obligations, uncertainty and provenance, and retrieve the source when the summary is insufficient.</p>
+<p class="field"><span class="k">Design consequence</span> Choose context size and compression by measured task quality and total cost, including summarisation and retrieval. Compare summary-plus-retrieval with larger-context replay; critical omissions can defeat the proposal. Removing a transcript from active context does not authorise deleting it. Archival access, privacy and retention are separate decisions, so verification can still challenge the summary.</p>
 <p class="lands">Lands in: §4 (memory).</p>
+</div>
+
+<div class="entry" id="entry-6">
+<h3>6. Consolidation and housekeeping<span class="tag build">ready to build</span></h3>
+<p class="field"><span class="k">Neuroscience</span> Sleep contributes to memory consolidation, with effects that depend on memory type and conditions; consolidation is not exclusive to sleep. The useful borrowing here is a distinction between foreground work and maintenance, not an equation of unrecalled records with waste.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> A scheduled maintenance window for consolidation and housekeeping — health checks, backups, index rebuilds — with owners, budgets and expected evidence. Apply authored promotion gates (paper §10.4); automatic eviction requires an over-budget evictable tier (paper §10.5). Long-term memory remains exempt and flags for human curation (paper §10.3). Maintenance reads are not task demand and cannot create promotion or retention votes.</p>
+<p class="field"><span class="k">Design consequence</span> Ordinary scheduling can run these jobs; a biological name adds no scheduler. The buildable part is tracking and verifying already-authorised work, not choosing deletion policy. Prevent overlapping writes, keep interrupted attempts visible, and check backups through sampled restores and indexes through retrieval checks. Age or non-recall alone never authorises eviction; preserve protected records and archival evidence. This extends the paper’s existing consolidation proposal rather than claiming a new mechanism beyond REM.</p>
+<p class="lands">Lands in: §4 (memory) · §6 (support roles and scheduled upkeep).</p>
 </div>
 </section>
 
 <section id="signal" class="reveal">
 <h2>3 · Tuning the signal<a class="anchor" href="#signal" aria-label="link to this section">§</a></h2>
 
-<p>A team's problem is rarely too little signal; it is that the signal arrives at constant volume.</p>
+<p>Repetition can mean “nothing new” or “the failure remains unresolved.” Quieting both is not discipline.</p>
 
-<div class="entry">
+<div class="entry" id="entry-7">
 <h3>7. Habituation and sensitisation<span class="tag build">ready to build</span></h3>
-<p class="field"><span class="k">Neuroscience</span> The two directions of non-associative learning. Repeated benign stimulation produces a <em>decrement</em> in response (habituation); repeated noxious stimulation produces an <em>increment</em> (sensitisation). The nervous system adjusts gain, not just content.</p>
-<p class="field"><span class="k">Borrowed mechanism</span> Identical low-value alerts are rolled up and quieted; identical <em>failures</em> escalate in severity on repetition. Same signal, opposite response, chosen by consequence.</p>
-<p class="field"><span class="k">Design consequence</span> Direct anti-alert-fatigue design — and it is what makes the "notifier discipline" in the guardrails a mechanism rather than a virtue. A single rule each way.</p>
+<p class="field"><span class="k">Neuroscience</span> Two directions of non-associative learning: habituation decreases a response with repetition; sensitisation increases responsiveness and need not require repeated noxious stimulation. Repetition and stimulus valence alone do not mechanically select the process.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> Identical alerts from an owner-approved benign class are rolled up; recurrence of an <em>unresolved failure</em> escalates to its named owner. Define incident identity, a recurrence window and resolution before counting repeats. Unknown classifications, increased severity and critical events bypass benign suppression; retain raw events and aggregation counts.</p>
+<p class="field"><span class="k">Design consequence</span> A candidate anti-alert-fatigue policy, not demonstrated relief. Classification errors can hide the very incident that needs attention, so frequency never establishes harmlessness. Give escalation a priority path ordinary broadcast quotas cannot silently discard, with auditable aggregation during storms. The test below measures effort and missed incidents, not whether escalation counts rise.</p>
 <p class="lands">Lands in: §7 (Guardrails).</p>
 </div>
 
-<div class="entry">
+<div class="entry" id="entry-8">
 <h3>8. Communication-rate control<span class="tag design">needs a design call</span></h3>
 <p class="field"><span class="k">Neuroscience</span> Neurons scale the strength of their own excitatory synapses up or down to keep their firing within a workable range — a cell-level rule whose consequences show up network-wide.</p>
-<p class="field"><span class="k">Borrowed mechanism</span> A global cap on how much any one agent may broadcast into the shared channel per unit of work.</p>
-<p class="field"><span class="k">Design consequence</span> Complements the autonomy ladder. The ladder governs <em>what an agent may do</em>; this governs <em>how much it may say</em>. A loud seat is a real failure mode in a chat-native team, and permission rules do not address it. Honest labelling: a fixed cap is rate limiting, not homeostasis — the biology names the problem, it does not supply the controller. A real homeostatic version would need a measured set point and error feedback.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> Role-specific quotas for ordinary shared-channel traffic, with visible aggregation, queue expiry and overflow ownership. Keep an explicit priority path for the escalations in entry 7; a monitor and a worker need not have identical allowances.</p>
+<p class="field"><span class="k">Design consequence</span> Complements the autonomy ladder. The ladder governs <em>what an agent may do</em>; this governs <em>how much it may say</em>. Honest labelling: a fixed cap is rate limiting, not homeostasis — the biology does not supply the controller. An adaptive version would need a measured set point, error feedback and stability analysis under delayed observations. Compare quotas with uncapped traffic at equal total budget; less congestion is not a win if critical delivery or deadlines worsen.</p>
 <p class="lands">Lands in: §7 (Guardrails).</p>
 </div>
 
-<div class="entry">
+<div class="entry" id="entry-9">
 <h3>9. Neuromodulation as a global mode<span class="tag open">open question</span></h3>
-<p class="field"><span class="k">Neuroscience</span> A handful of diffuse modulatory systems — dopamine, serotonin, noradrenaline, acetylcholine — broadcast to large swathes of the brain at once, reconfiguring operating mode rather than carrying specific content. One signal, system-wide change in policy.</p>
-<p class="field"><span class="k">Borrowed mechanism</span> A single global mode — <em>careful</em>, <em>production</em>, <em>exploratory</em>, <em>urgent</em> — set by the operator or by budget state, that changes every agent's defaults without editing each agent.</p>
-<p class="field"><span class="k">Design consequence</span> Genuinely powerful and genuinely hazardous: a global dial is easy to abuse and hard to reason about after the fact, and it can silently override per-agent judgment. Proposed as an open question, not a recommendation.</p>
+<p class="field"><span class="k">Neuroscience</span> Diffuse modulatory systems — including dopamine, serotonin, noradrenaline and acetylcholine — can influence broad populations. Their effects depend on projections, receptors and concurrent activity; the brain is not a single global mode switch.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> A shared configuration mode — <em>careful</em>, <em>production</em>, <em>exploratory</em>, <em>urgent</em> — could change selected defaults without editing each agent. The authorised setter, scope and changed settings would have to be explicit; budget state grants no new permission.</p>
+<p class="field"><span class="k">Design consequence</span> A global dial may be useful, but its benefit is unmeasured and its propagation hazardous. Version acknowledgements, in-flight task semantics and rollback must be specified before a trial against per-task configuration. Protected permissions and operator approvals retain precedence, including under urgent mode; partial propagation cannot silently relax them. Proposed as an open question, not a recommendation.</p>
 <p class="lands">Lands in: §8 (unsolved), with the risk stated.</p>
 </div>
 </section>
 
 <section id="economics" class="reveal">
-<h2>4 · Memory economics<a class="anchor" href="#economics" aria-label="link to this section">§</a></h2>
+<h2>4 · Learning the routes<a class="anchor" href="#economics" aria-label="link to this section">§</a></h2>
 
-<p>The paper's memory design is already here; these three give it a maintenance schedule and an explanation.</p>
+<p>A recurring collaboration is an observation. Turning it into a preferred route requires an objective, attribution and evidence that alternatives were not simply starved of work.</p>
 
-<div class="entry">
-<h3>10. The spacing effect and the forgetting curve<span class="tag design">needs a design call</span></h3>
-<p class="field"><span class="k">Neuroscience</span> Retention decays along a characteristic forgetting curve, steepest immediately after learning. Distributed practice at widening intervals beats massed practice for the same total effort.</p>
-<p class="field"><span class="k">Borrowed mechanism</span> A maintenance pass that re-touches a memory at widening intervals — so keeping something alive costs a little, spread out, instead of everything, at once.</p>
-<p class="field"><span class="k">Design consequence</span> Complements the paper's use-driven eviction: recall decides <em>whether</em> a memory survives; a maintenance pass decides <em>when a record is re-checked</em>. The hazard is the reverse of honest: if a scheduled touch is <em>counted</em> as demand, the schedule manufactures the very signal it consumes and keeps a low-value entry alive on its own evidence. Maintenance reads and demand reads must therefore be separate event types — only demand votes. The paper's trigger stays size-based; this pass does not evict.</p>
-<p class="lands">Lands in: §4 (memory maintenance).</p>
+
+<div class="entry" id="entry-10">
+<h3>10. Long-term potentiation and learned routes<span class="tag open">open question</span></h3>
+<p class="field"><span class="k">Neuroscience</span> Long-term potentiation describes persistent increases in synaptic efficacy under particular conditions. It is not an unrestricted “fire together, wire together” law, and a connection alone is not a complete account of memory. Hebbian association and outcome-based learning are different claims.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> Seats that repeatedly work well together might acquire preferred routes. That would be outcome-based routing, not an effect implied by joint activation: co-occurrence establishes neither success nor causal credit.</p>
+<p class="field"><span class="k">Design consequence</span> Held open rather than proposed: the team cannot be said to learn its own org chart without task features, a learning objective and a <em>credit-assignment</em> rule. A trial also needs checked outcomes, negative evidence, exploration, rollback and authority to change assignments. Keep alternative routes exercised so a favourite does not undermine failover. Compare with a fixed eligible roster plus periodic human review at equal cost, including loss of the preferred worker.</p>
+<p class="lands">Lands in: §6 (how a project runs — candidate routing policy).</p>
 </div>
 
-<div class="entry">
-<h3>11. Long-term potentiation — "fire together, wire together"<span class="tag open">open question</span></h3>
-<p class="field"><span class="k">Neuroscience</span> Co-activated connections strengthen durably; the connection itself <em>is</em> the memory. Repeated joint activation is the mechanism by which a pathway becomes a preference.</p>
-<p class="field"><span class="k">Borrowed mechanism</span> Seats that repeatedly work well together accrue a recurring route, so the team learns its own org chart instead of re-deciding routing every project.</p>
-<p class="field"><span class="k">Design consequence</span> Makes the roster adaptive rather than fixed — with the obvious hazard that a learned route ossifies. Any implementation needs an un-learning rule, or a bad pairing becomes permanent. Held open rather than proposed: "the team learns its own org chart" asserts a learning mechanism but specifies no <em>credit-assignment</em> rule — with several seats on a task, which pairing gets credit for a good outcome? Without that, the route accrues from co-occurrence, not from effect, and a learned route can be mere adjacency. The honest comparator is a fixed roster plus periodic human review, measured over the same window.</p>
-<p class="lands">Lands in: §6 (how a project runs — the org chart that edits itself).</p>
-</div>
-
-<div class="entry">
-<h3>12. Sleep consolidation and glymphatic clearance<span class="tag build">ready to build</span></h3>
-<p class="field"><span class="k">Neuroscience</span> Sleep is not downtime. Traces are replayed and stabilised into durable form largely during sleep, and the glymphatic system flushes metabolic waste that accumulates during waking. Offline time performs two jobs: consolidate, and clear.</p>
-<p class="field"><span class="k">Borrowed mechanism</span> A scheduled maintenance window that does the same pair: consolidate what was recalled, run the housekeeping — health checks, backups, index rebuilds — that the working day never has room for, and evict only when a tier is over budget (size-triggered, as §10.5 requires; long-term memory is exempt from automatic eviction and flags for human curation instead).</p>
-<p class="field"><span class="k">Design consequence</span> This is the <em>why</em> beneath the scheduled-upkeep line in the pipeline figure. Naming it a consolidation window gives it a spine and separates it from ordinary cron: it is not just periodic work, it is the pass that makes the record durable and clears the waste.</p>
-<p class="lands">Lands in: §4 (memory) · §6 (support roles and scheduled upkeep).</p>
-</div>
 </section>
 
 <section id="shape" class="reveal">
@@ -367,66 +355,71 @@
 
 <p>These are about the team as a structure that persists, gets damaged, and coordinates.</p>
 
-<div class="entry">
-<h3>13. Critical periods<span class="tag open">open question</span></h3>
-<p class="field"><span class="k">Neuroscience</span> Early experience shapes a system far more than later experience; there are windows during which a change sticks easily and after which it barely lands at all.</p>
-<p class="field"><span class="k">Borrowed mechanism</span> The install-time choices — roles, names, budgets, the shape of the roster — have outsized permanence compared with anything changed later.</p>
-<p class="field"><span class="k">Design consequence</span> This is a reason for <em>confirm before writing</em> — but the premise is asserted here, not measured: that install-time choices really are disproportionately costly to reverse is exactly what would need showing. Approval should follow consequence and reversibility, which can be assessed directly, rather than chronological earliness. Floated, not settled.</p>
-<p class="lands">Lands in: §1 (the Wizard) · §7 (confirm before writing).</p>
+
+<div class="entry" id="entry-11">
+<h3>11. Degeneracy<span class="tag design">needs a design call</span></h3>
+<p class="field"><span class="k">Neuroscience</span> Different structures can support similar functions: <em>degeneracy</em>, rather than simple duplication. Relevant differences can provide alternative paths after damage, but different structure guarantees neither independent failures nor greater robustness in every environment.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> A task can have more than one eligible seat. That gives coverage; a claim of failure diversity additionally needs verified differences in tools, implementation or exposure. Different names on the same model and service do not establish independence.</p>
+<p class="field"><span class="k">Design consequence</span> A candidate response to “what happens when an agent dies mid-project,” not the design answer. Specify checkpoints, recovery ownership, acknowledged reassignment, lease expiry and bounded retries. Check whether a side effect already committed before repeating it; reconcile uncertainty rather than risk an unsafe duplicate. A designated verifier resolves divergent outputs against the task contract. Compare differentiated failover with a same-stack spare at equal budget, measuring deadline completions and duplicate effects.</p>
+<p class="lands">Lands in: §8 (unsolved) · §7 (recovery and authority rules).</p>
 </div>
 
-<div class="entry">
-<h3>14. Degeneracy<span class="tag design">needs a design call</span></h3>
-<p class="field"><span class="k">Neuroscience</span> Distinct structures can subserve the same function, so damage to one does not destroy the ability. This is not redundancy — redundancy is duplicate parts; degeneracy is multiple <em>different</em> paths to one outcome, which is more robust because the paths fail differently.</p>
-<p class="field"><span class="k">Borrowed mechanism</span> A task can be run by more than one seat, so a blocked or fallen agent does not stop the line.</p>
-<p class="field"><span class="k">Design consequence</span> The design answer to "what happens when an agent dies mid-project," which the paper currently leaves implicit. It raises an authority question the team has to answer first: when two paths disagree, whose output wins?</p>
-<p class="lands">Lands in: §8 (unsolved) — or §7, once the authority question is answered.</p>
-</div>
-
-<div class="entry">
-<h3>15. Oscillation and binding by synchrony<span class="tag open">open question</span></h3>
-<p class="field"><span class="k">Neuroscience</span> Separately-located regions coordinate by firing in phase; synchrony is one way distributed activity is bound into a single percept or action.</p>
-<p class="field"><span class="k">Borrowed mechanism</span> Cadence — a shared heartbeat and mailbox rhythm — as the team's synchrony: the thing that makes separate agents act as one team rather than a queue of strangers.</p>
-<p class="field"><span class="k">Design consequence</span> Suggests that <em>when</em> agents act may matter as much as <em>what</em> they say, which is testable — but the mapping is the softest here, and it is included as a pointer rather than a design. A shared cadence can synchronise <em>load</em> rather than information, so the honest comparator is asynchronous, event-driven coordination.</p>
+<div class="entry" id="entry-12">
+<h3>12. Oscillation and binding by synchrony<span class="tag open">open question</span></h3>
+<p class="field"><span class="k">Neuroscience</span> Neural synchrony is a real coordination phenomenon; synchrony as a general mechanism of perceptual binding remains a hypothesis with limits. Shared polling timers do not reproduce neural phase coding.</p>
+<p class="field"><span class="k">Borrowed mechanism</span> Cadence — a shared heartbeat and mailbox rhythm — is an engineering candidate for batching coordination. A common rhythm alone supplies neither shared state nor causal order, ownership or message semantics.</p>
+<p class="field"><span class="k">Design consequence</span> This is the softest mapping here: a pointer, not a design. A shared cadence can synchronise <em>load</em> rather than information. Compare it with asynchronous, event-driven coordination at equal resource budget, measuring coordination delay, deadline misses and peak load. Keep it only if useful batching outweighs waiting and burst contention; the neurological framing predicts no advantage on its own.</p>
 <p class="lands">Lands in: §6 or §8.</p>
 </div>
+</section>
+
+<section id="requirements" class="reveal">
+<h2>Before trying these<a class="anchor" href="#requirements" aria-label="link to this section">§</a></h2>
+
+<p>The catalogue is not a specification. These shared requirements are the minimum boundary between a plausible sketch and a trial:</p>
+<ul>
+  <li><strong>State and evidence.</strong> Give each task, stage and attempt an ID, owner, deadline and versioned acceptance predicate. Record verified success, verified failure and unknown separately; cancellation, expiry and abandonment are not completion. Keep evidence and ownership transitions auditable.</li>
+  <li><strong>Memory lifecycle.</strong> Record source authority, scope, version, timestamps, uncertainty and adjudication. Separate task-demand, validation and rehearsal events; only genuine demand enters recall-based promotion and retention counters. Protect required but never-recalled records. Context compaction and archival deletion have separate authorisation and retention rules.</li>
+  <li><strong>Truth and threats.</strong> Agent self-report is not ground truth. Use authoritative external observations or independently labelled fixtures, and test checkers with known-answer cases. Treat mistaken or malicious writes, prompt-injected records, poisoned demand counters and forged completion evidence as threats. Retrieved text cannot grant authority or change verifier policy; provenance claims must themselves be checked.</li>
+  <li><strong>Recovery and control interactions.</strong> Define leases, checkpoints, bounded retries, idempotency keys where supported, recovery ownership and conflict resolution. Reconcile uncertain non-idempotent effects before retrying. Escalation outranks ordinary traffic quotas; global modes never outrank protected approvals. Test feedback delays, partial propagation and precisely scoped emergency overrides together.</li>
+  <li><strong>Evaluation and economics.</strong> Freeze workload, baseline, observation window and pass bounds before testing. Ablate the actual controls, not their names. Count model/tool cost, operator time, unresolved work and harm from false suppression or deletion. Keep archival evidence accessible under its access and retention policy; auditability is not a mandate to retain everything forever.</li>
+</ul>
 </section>
 
 <section id="limits" class="reveal">
 <h2>What would prove it<a class="anchor" href="#limits" aria-label="link to this section">§</a></h2>
 
-<p>A borrowed metaphor earns its keep only if it changes measured behaviour. Three of these are directly falsifiable with data a deployment already has:</p>
+<p>These twelve entries are not twelve validated mechanisms. Below are three proposed trials, not results or claims that existing logs contain the necessary telemetry. Fix cohorts, predicates, deadlines and independent labels before execution; compare matched workloads with simpler policies. The numerical bounds are illustrative trial criteria, not established production tolerances.</p>
 
 <ul>
-  <li><strong>Prediction error (1).</strong> If stages record expectations, no-op incidents become detectable. Test: does the detector fire on a real no-op, and stay quiet on a healthy week? A detector that never fires is decoration.</li>
-  <li><strong>Habituation/sensitisation (7).</strong> Test: does the count of alerts an operator actually reads fall, while the count of repeated-failure escalations rises?</li>
-  <li><strong>Efference copy (2).</strong> Test: does the number of "assumed done" tasks that were never finished fall to zero — with the marker still held until evidence arrives?</li>
+  <li><strong>Expected versus observed <a href="#ref-1">(1)</a>.</strong> Over fourteen days, compare the shared comparator and obligation tracker with status-only tracking on the same 100 tasks. Include injected faults, bad evidence, retries, unavailable tools, worker loss and legitimate empty outputs. Require at least 50% fewer missed failures, zero independently verified false completions, at most 5% false alarms on healthy cases, and at least 80 verified deadline completions from the original cohort at no more than 110% of baseline cost. Establish that the cohort can meet the delivery floor before the trial. Cancelled, abandoned and unresolved tasks stay in the denominator; report their age. <em>Holding every marker forever fails the delivery floor.</em> Outcome detection and action verification are two applications of this one loop, not two independent wins.</li>
+  <li><strong>Habituation/sensitisation <a href="#ref-7">(7)</a>.</strong> Compare the alert policy with forwarding every event on matched, counterbalanced fourteen-day incident streams, including storms and independently labelled severity. Require at least 20% less measured operator triage time, no additional missed critical incidents, and no worse 95th-percentile acknowledgement or resolution latency. Hold incident exposure and staffing comparable and report total cost. Opening messages is not proof of reading; more escalations and an operator giving up do not establish benefit.</li>
+  <li><strong>Read-time validation <a href="#ref-2">(2)</a>.</strong> Across fourteen days and 200 independently labelled fact-dependent decisions, include dated source changes, unchanged facts, conflicting sources and outages. Compare risk-based validation with trusting stored snapshots. Require at least 50% fewer stale-fact decisions, zero false claims of successful verification, and at least 160 correct, source-supported decisions by deadline at no more than 110% of baseline cost. Keep all cases in the cohort. Declaring every fact unknown fails the useful-answer floor; re-stamping cannot pass as verification.</li>
 </ul>
 
-<p>The rest are proposals. The honest position for this document: it is a catalogue of ideas worth <em>trying</em>, each stated so that trying it produces an answer. None of it is evidence that brains and teams are the same thing — only that the problems rhyme.</p>
+<p>Any failed bound means no pass. A baseline with no relevant errors cannot establish a relative reduction; report that comparison as inconclusive. Missing labels or unaudited checkers also prevent a pass. Finite absence of a defect does not prove future impossibility. The other entries still need similarly bounded protocols before a benefit claim; a sketch or an open label is not a completed experiment.</p>
+
+<p>The honest position remains a catalogue of ideas worth <em>trying</em>, not a validated architecture. To claim that the neurological framing itself adds value, compare the same engineering proposals with and without that framing under matched review conditions, using independently scored defect coverage and review time. No improvement leaves the metaphor’s incremental value unestablished, even if a mechanism works.</p>
 </section>
 
 <section id="refs" class="reveal">
 <h2>References<a class="anchor" href="#refs" aria-label="link to this section">§</a></h2>
 
-<p style="font:.88rem/1.6 ui-sans-serif,system-ui,sans-serif;color:var(--muted)">Neuroscience sources, numbered to match the entries above one-for-one. A mix of primary papers, reviews and books — not all primary literature; author and year are the reliable handle for each.</p>
+<p style="font:.88rem/1.6 ui-sans-serif,system-ui,sans-serif;color:var(--muted)">Neuroscience sources in twelve groups, numbered to match the twelve entries above one-for-one. Entry 1 groups both biological accounts of its shared software loop. A mix of primary papers, reviews and books — not all primary literature; author and year are the reliable handle for each.</p>
 
 <ol class="refs">
-  <li><strong>Prediction error.</strong> Schultz, W., Dayan, P. &amp; Montague, P. R. "A neural substrate of prediction and reward." <em>Science</em> 275, 1593–1599 (1997).</li>
-  <li><strong>Efference copy / forward models.</strong> Wolpert, D. M. &amp; Ghahramani, Z. "Computational principles of movement neuroscience." <em>Nature Neuroscience</em> 3, 1212–1217 (2000).</li>
-  <li><strong>Reconsolidation.</strong> Nader, K., Schafe, G. E. &amp; LeDoux, J. E. <em>Nature</em> 406, 722–726 (2000).</li>
-  <li><strong>Interference.</strong> Underwood, B. J. "Interference and forgetting." <em>Psychological Review</em> 64, 49–60 (1957).</li>
-  <li><strong>Salience gating.</strong> Crick, F. "Function of the thalamic reticular complex: the searchlight hypothesis." <em>PNAS</em> 81, 4586–4590 (1984).</li>
-  <li><strong>Working-memory limit and chunking.</strong> Miller, G. A. "The magical number seven, plus or minus two." <em>Psychological Review</em> 63, 81–97 (1956); Cowan, N. <em>Behavioral and Brain Sciences</em> 24, 87–114 (2001).</li>
-  <li><strong>Habituation and sensitisation.</strong> Thompson, R. F. &amp; Spencer, W. A. "Habituation: a model phenomenon for the study of neuronal substrates of behavior." <em>Psychological Review</em> 73, 16–43 (1966).</li>
-  <li><strong>Synaptic homeostasis.</strong> Turrigiano, G. G. "The self-tuning neuron: synaptic scaling of excitatory synapses." <em>Cell</em> 135, 422–435 (2008).</li>
-  <li><strong>Neuromodulation as a global mode.</strong> Marder, E. "Neuromodulation of neuronal circuits: back to the future." <em>Neuron</em> 76, 1–11 (2012).</li>
-  <li><strong>The spacing effect and the forgetting curve.</strong> Ebbinghaus, H. <em>Über das Gedächtnis</em> (1885).</li>
-  <li><strong>Long-term potentiation.</strong> Bliss, T. V. P. &amp; Lømo, T. <em>Journal of Physiology</em> 232, 331–356 (1973); Hebb, D. O. <em>The Organization of Behavior</em> (1949).</li>
-  <li><strong>Sleep consolidation and glymphatic clearance.</strong> Diekelmann, S. &amp; Born, J. "The memory function of sleep." <em>Nature Reviews Neuroscience</em> 11, 114–126 (2010); Xie, L. et al. "Sleep drives metabolite clearance from the adult brain." <em>Science</em> 342, 373–377 (2013).</li>
-  <li><strong>Critical periods.</strong> Hubel, D. H. &amp; Wiesel, T. N. <em>Journal of Physiology</em> 206, 419–436 (1970).</li>
-  <li><strong>Degeneracy.</strong> Edelman, G. M. &amp; Gally, J. A. "Degeneracy and complexity in biological systems." <em>PNAS</em> 98, 13763–13768 (2001).</li>
-  <li><strong>Synchrony.</strong> Singer, W. "Neuronal synchrony: a versatile code for the definition of relations?" <em>Neuron</em> 24, 49–65 (1999).</li>
+  <li id="ref-1"><strong>Expected versus observed: prediction error and action verification.</strong> Schultz, W., Dayan, P. &amp; Montague, P. R. "A neural substrate of prediction and reward." <em>Science</em> 275, 1593–1599 (1997); Wolpert, D. M. &amp; Ghahramani, Z. "Computational principles of movement neuroscience." <em>Nature Neuroscience</em> 3, 1212–1217 (2000).</li>
+  <li id="ref-2"><strong>Reconsolidation.</strong> Nader, K., Schafe, G. E. &amp; LeDoux, J. E. <em>Nature</em> 406, 722–726 (2000).</li>
+  <li id="ref-3"><strong>Interference.</strong> Underwood, B. J. "Interference and forgetting." <em>Psychological Review</em> 64, 49–60 (1957).</li>
+  <li id="ref-4"><strong>Salience gating.</strong> Crick, F. "Function of the thalamic reticular complex: the searchlight hypothesis." <em>PNAS</em> 81, 4586–4590 (1984).</li>
+  <li id="ref-5"><strong>Working-memory limit and chunking.</strong> Miller, G. A. "The magical number seven, plus or minus two." <em>Psychological Review</em> 63, 81–97 (1956); Cowan, N. <em>Behavioral and Brain Sciences</em> 24, 87–114 (2001).</li>
+  <li id="ref-6"><strong>Consolidation and housekeeping.</strong> Diekelmann, S. &amp; Born, J. "The memory function of sleep." <em>Nature Reviews Neuroscience</em> 11, 114–126 (2010).</li>
+  <li id="ref-7"><strong>Habituation and sensitisation.</strong> Thompson, R. F. &amp; Spencer, W. A. "Habituation: a model phenomenon for the study of neuronal substrates of behavior." <em>Psychological Review</em> 73, 16–43 (1966).</li>
+  <li id="ref-8"><strong>Communication-rate control (biological source: synaptic scaling).</strong> Turrigiano, G. G. "The self-tuning neuron: synaptic scaling of excitatory synapses." <em>Cell</em> 135, 422–435 (2008).</li>
+  <li id="ref-9"><strong>Neuromodulation as a global mode.</strong> Marder, E. "Neuromodulation of neuronal circuits: back to the future." <em>Neuron</em> 76, 1–11 (2012).</li>
+  <li id="ref-10"><strong>Long-term potentiation and learned routes.</strong> Bliss, T. V. P. &amp; Lømo, T. <em>Journal of Physiology</em> 232, 331–356 (1973); Hebb, D. O. <em>The Organization of Behavior</em> (1949).</li>
+  <li id="ref-11"><strong>Degeneracy.</strong> Edelman, G. M. &amp; Gally, J. A. "Degeneracy and complexity in biological systems." <em>PNAS</em> 98, 13763–13768 (2001).</li>
+  <li id="ref-12"><strong>Oscillation and binding by synchrony.</strong> Singer, W. "Neuronal synchrony: a versatile code for the definition of relations?" <em>Neuron</em> 24, 49–65 (1999).</li>
 </ol>
 </section>
 
